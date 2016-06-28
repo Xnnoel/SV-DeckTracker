@@ -2,6 +2,7 @@
 #define FRMWINDOW_H
 
 #include <QMainWindow>
+#include "perceptualhash.h"
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
@@ -9,6 +10,7 @@
 
 namespace Ui {
 class frmWindow;
+enum class STATE{TITLE, START, INGAME};
 }
 
 class frmWindow : public QMainWindow
@@ -29,6 +31,7 @@ private:
     Ui::frmWindow *ui;
 
     cv::Mat matTexture;
+    ulong64 matTexturePhash;
     cv::Mat mat;
 
     HDC hdcScreen;
@@ -36,6 +39,7 @@ private:
     HBITMAP hbmp;
     HWND handle;
     int counter;
+    int ignoreNext;
 
     int height;
     int width;
@@ -46,6 +50,8 @@ private:
     int boxWidth;
     int boxLeft;
     int boxTop;
+
+    Ui::STATE curState;
 };
 
 #endif // FRMWINDOW_H

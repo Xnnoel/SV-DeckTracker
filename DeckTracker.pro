@@ -13,10 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    perceptualhash.cpp \
         frmwindow.cpp
 
+
 HEADERS  += frmwindow.h \
+    perceptualhash.h \
     asmopencv.h
+
 
 FORMS    += frmwindow.ui
 
