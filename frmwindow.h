@@ -34,14 +34,15 @@ private:
 
     cv::Mat matTexture;
     ulong64 matTexturePhash;
+
+
     cv::Mat mat;
 
     HDC hdcScreen;
     HDC hdc;
     HBITMAP hbmp;
     HWND handle;
-    int counter;
-    int ignoreNext;
+
 
     // bounding box for window
     int height;
@@ -69,7 +70,8 @@ private:
 
     //debug stuff
     cv::Mat resultMat;
-
+    int counter;
+    int ignoreNext;
 };
 
 #endif // FRMWINDOW_H

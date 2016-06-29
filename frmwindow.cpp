@@ -36,6 +36,7 @@ frmWindow::frmWindow(QWidget *parent) :
     mat = 0;
     matTexture = 0;
 
+
     if (handle != 0)
     {
         // Start the update loop to check for cards in images
@@ -54,10 +55,14 @@ frmWindow::frmWindow(QWidget *parent) :
         boxWidth = (int)round(0.4735 * width);
         boxHeight = (int)round(0.1965 * height);
 
+
         cardLeft = (int)round(0.5699 * width + left);
         cardTop = (int)round(0.4157 * height + top);
         cardWidth = (int)round(0.210 * width);
         cardHeight = (int)round(0.4606 * height);
+
+
+
 
         //create bitmap and screen to save rect
         hdcScreen = GetDC(NULL);
@@ -143,7 +148,6 @@ frmWindow::frmWindow(QWidget *parent) :
         matTexturePhash = PerceptualHash::phash(matTexture);
 
 
-
         if (!matTexture.data)
         {
             setWindowTitle("hi");
@@ -153,7 +157,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(50);
+        timer->start(20);
     }
 }
 
@@ -170,6 +174,7 @@ void frmWindow::update()
     //decrement all if exist
     if (ignoreNext > 0)ignoreNext--;
 
+
     //otherwise check for card
     PrintWindow(handle, hdc, PW_CLIENTONLY);
 
@@ -177,6 +182,8 @@ void frmWindow::update()
 
     QRect boxRect;
     QPixmap drawer;
+    QRect dRect;
+    QPixmap dirtpix;
     ulong64 imagePHash;
 
     int distance;
@@ -197,8 +204,8 @@ void frmWindow::update()
         if (distance < 15 && ignoreNext < 1)
         {
             counter++;
-            ignoreNext = 30;
-            setWindowTitle( QString::number(counter));
+            ignoreNext = 20;
+            setWindowTitle( "find card");
             curState = Ui::STATE::FINDCARD;
         }
 
@@ -215,10 +222,10 @@ void frmWindow::update()
         cv::Point2f output[4];
 \
         //in case of window size changed, use percentages
-        input[0] = cv::Point2f(0.0422 * cardWidth, cardHeight);
-        input[1] = cv::Point2f(0.0129 * cardWidth,0.0131 * cardHeight);
-        input[2] = cv::Point2f(0.88 * cardWidth,0.00526 * cardHeight);
-        input[3] = cv::Point2f(0.984 * cardWidth,0.982 * cardHeight);
+        input[0] = cv::Point2f(0.172f * cardWidth, 0.871f * cardHeight);
+        input[1] = cv::Point2f(0.1558f * cardWidth,0.171f * cardHeight);
+        input[2] = cv::Point2f(0.795f * cardWidth,0.1763f * cardHeight);
+        input[3] = cv::Point2f(0.8668f * cardWidth,0.8763f * cardHeight);
 
         //doesnt matter here, so long as output size fits here
         output[0] = cv::Point2f(0,380);
@@ -233,11 +240,18 @@ void frmWindow::update()
         cv::warpPerspective(mat, resultMat, lambda, cv::Size(297,380));
 
         imagePHash = PerceptualHash::phash(resultMat);
+
         PerceptualHash::ComparisonResult bestGuess = PerceptualHash::best(imagePHash, currentDeck.deckPHash);
 
-        setWindowTitle(QString::number(bestGuess.distance));
+        QString title = "find card";
+        title += QString::number(bestGuess.distance);
 
-        // TODO: Get a better Algorithm
+
+        if (ignoreNext > 0)
+            setWindowTitle("ignoring");
+        else
+            setWindowTitle(title);
+
         if (bestGuess.distance < 20 && ignoreNext < 1)
         {
             cardlist::Card best = currentDeck.cardsInDeck[bestGuess.index];
@@ -245,15 +259,11 @@ void frmWindow::update()
             setWindowTitle(QString::fromStdString(best.filename));
             curState = Ui::STATE::MYTURN;
         }
-
         break;
     }
-
-    ui->miniscreen->setPixmap(drawer);
-
 }
 
 void frmWindow::on_pushButton_clicked()
 {
-    cv::imwrite("return.png", mat);
+    cv::imwrite("return.png", resultMat);
 }
