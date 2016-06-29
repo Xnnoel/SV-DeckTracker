@@ -49,15 +49,15 @@ frmWindow::frmWindow(QWidget *parent) :
         top = rc.top+43;
         left = rc.left+65;
 
-        boxLeft = (int)floor(0.261 * width + left);
-        boxTop = (int)floor(0.341 * height + top);
-        boxWidth = (int)floor(0.4735 * width);
-        boxHeight = (int)floor(0.1965 * height);
+        boxLeft = (int)round(0.261 * width + left);
+        boxTop = (int)round(0.341 * height + top);
+        boxWidth = (int)round(0.4735 * width);
+        boxHeight = (int)round(0.1965 * height);
 
-        cardLeft = (int)floor(0.5699 * width + left);
-        cardTop = (int)floor(0.4157 * height + top);
-        cardWidth = (int)floor(0.210 * width);
-        cardHeight = (int)floor(0.4606 * height);
+        cardLeft = (int)round(0.5699 * width + left);
+        cardTop = (int)round(0.4157 * height + top);
+        cardWidth = (int)round(0.210 * width);
+        cardHeight = (int)round(0.4606 * height);
 
         //create bitmap and screen to save rect
         hdcScreen = GetDC(NULL);
@@ -210,15 +210,17 @@ void frmWindow::update()
         drawer = pixmap.copy(boxRect);
         mat = ASM::QPixmapToCvMat(drawer);
 
-
+        //Perspective shift on card for better readability (why are they tilted)
         cv::Point2f input[4];
         cv::Point2f output[4];
+\
+        //in case of window size changed, use percentages
+        input[0] = cv::Point2f(0.0422 * cardWidth, cardHeight);
+        input[1] = cv::Point2f(0.0129 * cardWidth,0.0131 * cardHeight);
+        input[2] = cv::Point2f(0.88 * cardWidth,0.00526 * cardHeight);
+        input[3] = cv::Point2f(0.984 * cardWidth,0.982 * cardHeight);
 
-        input[0] = cv::Point2f(13,381);
-        input[1] = cv::Point2f(4,5);
-        input[2] = cv::Point2f(271,2);
-        input[3] = cv::Point2f(303,373);
-
+        //doesnt matter here, so long as output size fits here
         output[0] = cv::Point2f(0,380);
         output[1] = cv::Point2f(0,0);
         output[2] = cv::Point2f(297,0);
@@ -235,10 +237,11 @@ void frmWindow::update()
 
         setWindowTitle(QString::number(bestGuess.distance));
 
-        if (bestGuess.distance < 15 )
+        // TODO: Get a better Algorithm
+        if (bestGuess.distance < 20 && ignoreNext < 1)
         {
             cardlist::Card best = currentDeck.cardsInDeck[bestGuess.index];
-
+            cv::imwrite("guessed.png", resultMat);
             setWindowTitle(QString::fromStdString(best.filename));
             curState = Ui::STATE::MYTURN;
         }
@@ -252,8 +255,5 @@ void frmWindow::update()
 
 void frmWindow::on_pushButton_clicked()
 {
-    if (curState == Ui::STATE::FINDCARD)
-        cv::imwrite("skew.png", resultMat);
-    else
-        cv::imwrite("return.png", mat);
+    cv::imwrite("return.png", mat);
 }
