@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "perceptualhash.h"
+#include "cardlist.h"
+#include <QDir>
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
@@ -10,7 +12,7 @@
 
 namespace Ui {
 class frmWindow;
-enum class STATE{TITLE, START, INGAME};
+enum class STATE{MYTURN, FINDCARD};
 }
 
 class frmWindow : public QMainWindow
@@ -41,17 +43,33 @@ private:
     int counter;
     int ignoreNext;
 
+    // bounding box for window
     int height;
     int width;
     int left;
     int top;
 
+    // bounding box for "MY TURN"
     int boxHeight;
     int boxWidth;
     int boxLeft;
     int boxTop;
 
+    // bounding box fopr FIND CARD
+    int cardHeight;
+    int cardWidth;
+    int cardLeft;
+    int cardTop;
+
+    QDir dir;
+
     Ui::STATE curState;
+
+    cardlist currentDeck;
+
+    //debug stuff
+    cv::Mat resultMat;
+
 };
 
 #endif // FRMWINDOW_H
