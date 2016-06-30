@@ -15,13 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
     perceptualhash.cpp \
         frmwindow.cpp \
-    cardlist.cpp
+    cardlist.cpp \
+    svdatabase.cpp
 
 
 HEADERS  += frmwindow.h \
     perceptualhash.h \
     asmopencv.h \
-    cardlist.h
+    cardlist.h \
+    svdatabase.h
 
 
 FORMS    += frmwindow.ui

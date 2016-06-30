@@ -79,6 +79,7 @@ private:
     std::vector<std::string> names;
     std::vector<int> count;
 
+    void savedata();
 };
 
 #endif // FRMWINDOW_H

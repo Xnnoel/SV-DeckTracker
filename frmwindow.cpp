@@ -7,6 +7,9 @@
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
 #include <QDirIterator>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 #include <qtimer.h>
 #include <Windows.h>
@@ -81,22 +84,60 @@ frmWindow::frmWindow(QWidget *parent) :
         setWindowTitle("HI");
 
         /// This generates a hash table from images in the folder x and saves it somewhere
-
-        QDirIterator it(NewPath, QStringList() << "*.png", QDir::Files, QDirIterator::Subdirectories);
+        QString filename = NewPath + "names.txt";
+        QFile file( filename );
 
         std::vector<QString> filenames;
         std::vector<ulong64> filephash;
+        std::vector<QString> fileid;
 
-        while (it.hasNext()) {
-            it.next();
-            filenames.push_back(it.fileName());
-            cv::Mat temp = cv::imread(it.filePath().toStdString());
-            ulong64 somelong = PerceptualHash::phash(temp);
-            filephash.push_back(somelong);
-            currentDeck.addCard("test",it.filePath().toStdString(),somelong);
-        };
 
-        setWindowTitle(QString::number(currentDeck.deckPHash.size()));
+        if ( file.open(QIODevice::ReadOnly) )
+        {
+            QTextStream in( &file );
+            QDirIterator it(NewPath, QStringList() << "*.png", QDir::Files, QDirIterator::Subdirectories);
+
+            while (it.hasNext()) {
+                it.next();
+                fileid.push_back(in.readLine());
+                filenames.push_back(it.fileName().left(9));
+                cv::Mat temp = cv::imread(it.filePath().toStdString());
+                ulong64 somelong = PerceptualHash::phash(temp);
+                filephash.push_back(somelong);
+            };
+        }
+        file.close();
+
+        //Serialize into JSON
+        QFile saveFile("save.json");
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+           qWarning("Couldn't open save file.");
+       }
+        QJsonObject gameObject;
+        //fill stuff in here
+        QJsonArray cardArray;
+
+        for (int i = 0; i < filenames.size(); i++)
+        {
+            QJsonObject card;
+
+            unsigned int low32bits = filephash[i] & 0x00000000ffffffff;
+            unsigned int high32bits = filephash[i] >> 32;
+            QString PHashJson = QString::number(high32bits) + QString::number(low32bits);
+            card["ID"] = filenames[i];
+            card["Cost"] = 1;
+            card["pHash"] = PHashJson;
+            card["Name"] = fileid[i];
+
+            cardArray.append(card);
+        }
+        gameObject["Cards"] = cardArray;
+
+        QJsonDocument saveDoc(gameObject);
+        saveFile.write(saveDoc.toJson());
+        saveFile.close();
+
+        setWindowTitle(QString::number(filephash.size()));
         /*
         QString filename="Listofnames.txt";
 
@@ -145,6 +186,10 @@ frmWindow::frmWindow(QWidget *parent) :
         file.close();
         */
 
+        savedata();
+
+        /*
+
         //Create a "you start" mat
         matTexture = cv::imread("pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
@@ -154,6 +199,8 @@ frmWindow::frmWindow(QWidget *parent) :
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
         timer->start(20);
+
+        */
     }
 }
 
@@ -321,4 +368,13 @@ void frmWindow::update()
 void frmWindow::on_pushButton_clicked()
 {
     turncounter = 0;
+}
+
+void frmWindow::savedata()
+{
+
+
+
+
+
 }
