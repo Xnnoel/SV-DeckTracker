@@ -41,6 +41,7 @@ frmWindow::frmWindow(QWidget *parent) :
     {
         // Start the update loop to check for cards in images
         counter = 0;
+        turncounter = 0;
 
         //Window rect
         RECT rc;
@@ -143,15 +144,10 @@ frmWindow::frmWindow(QWidget *parent) :
         }
         file.close();
         */
+
         //Create a "you start" mat
         matTexture = cv::imread("pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
-
-
-        if (!matTexture.data)
-        {
-            setWindowTitle("hi");
-        }
 
         ignoreNext = 0;
 
@@ -182,8 +178,6 @@ void frmWindow::update()
 
     QRect boxRect;
     QPixmap drawer;
-    QRect dRect;
-    QPixmap dirtpix;
     ulong64 imagePHash;
 
     int distance;
@@ -194,6 +188,8 @@ void frmWindow::update()
     {
     case Ui::STATE::MYTURN:
         //Print to memory hdc
+        if (toyou > 0)
+            toyou--;
         boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
         drawer = pixmap.copy(boxRect);
         mat = ASM::QPixmapToCvMat(drawer);
@@ -201,12 +197,23 @@ void frmWindow::update()
 
         distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
 
-        if (distance < 15 && ignoreNext < 1)
+        setWindowTitle("looking for myturn" + QString::number(distance));
+
+        if (distance < 20 && ignoreNext < 1)
         {
-            counter++;
-            ignoreNext = 20;
-            setWindowTitle( "find card");
-            curState = Ui::STATE::FINDCARD;
+            if (toyou == 0)
+            {
+                toyou = 2;
+            }
+            else
+            {
+                turncounter++;
+                ignoreNext = 20;
+                QString trn = QString::number(turncounter);
+                ui->pushButton->setText(trn);
+                curState = Ui::STATE::FINDCARD;
+                toyou = 0;
+            }
         }
 
         //DEBUG PURPOSES
@@ -241,29 +248,77 @@ void frmWindow::update()
 
         imagePHash = PerceptualHash::phash(resultMat);
 
-        PerceptualHash::ComparisonResult bestGuess = PerceptualHash::best(imagePHash, currentDeck.deckPHash);
+        std::vector<PerceptualHash::ComparisonResult> bestguesses = PerceptualHash::nbest(3,imagePHash, currentDeck.deckPHash);
 
-        QString title = "find card";
-        title += QString::number(bestGuess.distance);
+        bool pass = false;
 
+        for (int i = 0; i < 3; i++)
+        {
+            if (bestguesses[i].distance < 20 )
+            {
+                int val = 20 - bestguesses[i].distance;
+                pass = true;
+                for (int j = 0; j < names.size(); j++)
+                    if (names[j] == currentDeck.cardsInDeck[bestguesses[i].index].filename)
+                    {
+                        count[j] += val;
+                        continue;
+                    }
+                names.push_back( currentDeck.cardsInDeck[bestguesses[i].index].filename);
+                count.push_back(val);
+            }
+        }
 
         if (ignoreNext > 0)
             setWindowTitle("ignoring");
         else
-            setWindowTitle(title);
+            setWindowTitle(QString::number( bestguesses[0].distance));
 
-        if (bestGuess.distance < 20 && ignoreNext < 1)
+        if ((pass && ignoreNext < 1) || counter > 0)
         {
-            cardlist::Card best = currentDeck.cardsInDeck[bestGuess.index];
-            cv::imwrite("guessed.png", resultMat);
-            setWindowTitle(QString::fromStdString(best.filename));
-            curState = Ui::STATE::MYTURN;
+            if (counter < 4)
+            {
+            ui->tableWidget->setItem(counter * 3 + 0,0,new QTableWidgetItem(QString::number( bestguesses[0].distance)));
+            ui->tableWidget->setItem(counter * 3 + 1,0,new QTableWidgetItem(QString::number( bestguesses[1].distance)));
+            ui->tableWidget->setItem(counter * 3 + 2,0,new QTableWidgetItem(QString::number( bestguesses[2].distance)));
+            ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[0].index].filename.substr(89,9))));
+            ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[1].index].filename.substr(89,9))));
+            ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[2].index].filename.substr(89,9))));
+
+            std::string filetitledraw = std::to_string(counter) + "guessed.png";
+
+            cv::imwrite(filetitledraw, resultMat);
+            counter ++;
+            }
+            else
+            {
+                counter = 0;
+                curState = Ui::STATE::MYTURN;
+
+                int max = 0;
+                int index = 0;
+                for (int i = 0; i < count.size(); i++)
+                {
+                    if (count[i] > max)
+                    {
+                        max = count[i];
+                        index = i;
+                    }
+                }
+
+                QPixmap drawme;
+                drawme.load(QString::fromStdString( names[index]));
+                names.clear();
+                count.clear();
+                ui->Image->setPixmap(drawme);
+            }
         }
+
         break;
     }
 }
 
 void frmWindow::on_pushButton_clicked()
 {
-    cv::imwrite("return.png", resultMat);
+    turncounter = 0;
 }

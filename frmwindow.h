@@ -5,6 +5,7 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 #include <QDir>
+#include <vector>
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
@@ -71,7 +72,13 @@ private:
     //debug stuff
     cv::Mat resultMat;
     int counter;
+    int turncounter;
     int ignoreNext;
+    int toyou;
+
+    std::vector<std::string> names;
+    std::vector<int> count;
+
 };
 
 #endif // FRMWINDOW_H
