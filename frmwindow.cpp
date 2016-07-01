@@ -27,8 +27,7 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
-    dir("."),
-    currentDeck("testname")
+    dir(".")
 {
     ui->setupUi(this);
 
@@ -66,8 +65,6 @@ frmWindow::frmWindow(QWidget *parent) :
         cardHeight = (int)round(0.4606 * height);
 
 
-
-
         //create bitmap and screen to save rect
         hdcScreen = GetDC(NULL);
         hdc = CreateCompatibleDC(hdcScreen);
@@ -83,6 +80,8 @@ frmWindow::frmWindow(QWidget *parent) :
 
         setWindowTitle("HI");
 
+
+        /*
         /// This generates a hash table from images in the folder x and saves it somewhere
         QString filename = NewPath + "names.txt";
         QFile file( filename );
@@ -156,9 +155,8 @@ frmWindow::frmWindow(QWidget *parent) :
         }
         file.close();
         */
-
-        /// Load in a new deck
         /*
+        /// Load in Database
         QString filename="Listofnames.txt";
 
         QFile file( filename );
@@ -184,10 +182,10 @@ frmWindow::frmWindow(QWidget *parent) :
 
         }
         file.close();
-        */
+
 
         savedata();
-
+*/
         /*
 
         //Create a "you start" mat
@@ -305,13 +303,13 @@ void frmWindow::update()
             {
                 int val = 20 - bestguesses[i].distance;
                 pass = true;
-                for (int j = 0; j < names.size(); j++)
-                    if (names[j] == currentDeck.cardsInDeck[bestguesses[i].index].filename)
+                for (int j = 0; j < id.size(); j++)
+                    if (id[j] == currentDeck.cardsInDeck[bestguesses[i].index])// FIX
                     {
                         count[j] += val;
                         continue;
                     }
-                names.push_back( currentDeck.cardsInDeck[bestguesses[i].index].filename);
+                id.push_back( currentDeck.cardsInDeck[bestguesses[i].index].filename);
                 count.push_back(val);
             }
         }
@@ -354,8 +352,8 @@ void frmWindow::update()
                 }
 
                 QPixmap drawme;
-                drawme.load(QString::fromStdString( names[index]));
-                names.clear();
+                drawme.load(QString::fromStdString( id[index]));
+                id.clear();
                 count.clear();
                 ui->Image->setPixmap(drawme);
             }

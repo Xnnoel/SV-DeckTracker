@@ -23,7 +23,8 @@ HEADERS  += frmwindow.h \
     perceptualhash.h \
     asmopencv.h \
     cardlist.h \
-    svdatabase.h
+    svdatabase.h \
+    card.h
 
 
 FORMS    += frmwindow.ui

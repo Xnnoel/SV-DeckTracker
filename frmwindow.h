@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "perceptualhash.h"
 #include "cardlist.h"
+#include "svdatabase.h"
 #include <QDir>
 #include <vector>
 
@@ -67,7 +68,14 @@ private:
 
     Ui::STATE curState;
 
-    cardlist currentDeck;
+    // This keeps track of current deck in game; This has count. Different from the ones in files.
+    //cardlist currentDeck;
+
+    // This is to hold all the info about the deck in the game
+    //cardlist playingDeck;
+
+    // Database of all the cards in the game
+    //svDatabase cardDatabase;
 
     //debug stuff
     cv::Mat resultMat;
@@ -76,7 +84,7 @@ private:
     int ignoreNext;
     int toyou;
 
-    std::vector<std::string> names;
+    std::vector<int> id;
     std::vector<int> count;
 
     void savedata();
