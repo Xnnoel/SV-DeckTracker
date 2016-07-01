@@ -6,10 +6,21 @@
 
 svDatabase::svDatabase()
 {
+    load();
 }
 
 void svDatabase::addCard(int id, Card card){
     cardMap.insert(id,card);
+}
+
+Card svDatabase::getCard(int id)
+{
+    return cardMap.value(id);
+}
+
+int svDatabase::size()
+{
+    return cardMap.size();
 }
 
 void svDatabase::load(){
@@ -25,23 +36,21 @@ void svDatabase::load(){
     QByteArray data = loadFile.readAll();
     QJsonDocument loadDoc(QJsonDocument::fromJson(data));
     QJsonObject database = loadDoc.object();
-    QJsonArray cards = database["cards"].toArray();
-    for (int cardIndex = 0; cardIndex < cards.size(); ++cardIndex) {
+    QJsonArray cards = database["Cards"].toArray();
+    for (int cardIndex = 0; cardIndex < cards.size(); cardIndex++) {
             Card card;
             QJsonObject cardObject = cards[cardIndex].toObject();
-            card.ID = cardObject["ID"].toString();
+
+            card.ID = cardObject["ID"].toString().toInt();
             card.manaCost = cardObject["Cost"].toInt();
             card.name = cardObject["Name"].toString();
+
             QString pHashString = cardObject["pHash"].toString();
-            int upperHalf = pHashString.left(9);
-            ulong64 cardPHash= wordFileList[1].toInt();
-            cardPHash << 32;
-            cardPHash += wordFileList[2].toInt();
+            card.pHash = pHashString.toDouble();
 
-            level.read(levelObject);
-            mLevels.append(level);
+            addCard(card.ID, card);
+
         }
-
     loadFile.close();
 
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
+    <width>494</width>
     <height>354</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
        <enum>Qt::DashLine</enum>
       </property>
       <property name="rowCount">
-       <number>12</number>
+       <number>24</number>
       </property>
       <property name="columnCount">
        <number>2</number>
@@ -41,8 +41,27 @@
       <row/>
       <row/>
       <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
       <column/>
       <column/>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>PushButton</string>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
@@ -53,21 +72,8 @@
         <height>0</height>
        </size>
       </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
       <property name="text">
        <string/>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>PushButton</string>
       </property>
      </widget>
     </item>

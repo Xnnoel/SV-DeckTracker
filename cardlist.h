@@ -2,18 +2,21 @@
 #define CARDLIST_H
 
 #include "card.h"
-#include <vector>
 #include "perceptualhash.h"
+#include "svdatabase.h"
 
+#include <vector>
 class cardlist
 {
 public:
-    std::vector<Card> cardsInDeck;
-    std::vector<ulong64> deckPHash;
-    void addCard(std::string name, std::string filename, ulong64 pHash);
-    cardlist(std::string);
+    std::vector<int> cardsInDeck;   //has id of all cards in deck EASIER TO STORE
+    std::vector<int> countInDeck;   //has the counter per card
+    std::vector<ulong64> deckPHash; //updates as the same as the upper 2
+    void addCard(int id);
+    cardlist(std::string deckname, svDatabase* database);          //name of card
 private:
     std::string deckName;
+    svDatabase* databasePtr;
 
 };
 

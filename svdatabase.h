@@ -12,7 +12,9 @@ class svDatabase
 public:
     svDatabase();
     void addCard(int id, Card card);
+    Card getCard(int id);
     void load();
+    int size();
 private:
     QHash<int , Card> cardMap;
 };

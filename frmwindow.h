@@ -69,25 +69,22 @@ private:
     Ui::STATE curState;
 
     // This keeps track of current deck in game; This has count. Different from the ones in files.
-    //cardlist currentDeck;
+    cardlist currentDeck;
 
     // This is to hold all the info about the deck in the game
-    //cardlist playingDeck;
+    cardlist playingDeck;
 
     // Database of all the cards in the game
-    //svDatabase cardDatabase;
+    svDatabase cardDatabase;
 
     //debug stuff
     cv::Mat resultMat;
     int counter;
     int turncounter;
     int ignoreNext;
-    int toyou;
 
     std::vector<int> id;
     std::vector<int> count;
-
-    void savedata();
 };
 
 #endif // FRMWINDOW_H

@@ -27,7 +27,9 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
-    dir(".")
+    dir("."),
+    currentDeck("current", &cardDatabase),
+    playingDeck("Don't use me", &cardDatabase)
 {
     ui->setupUi(this);
 
@@ -37,6 +39,30 @@ frmWindow::frmWindow(QWidget *parent) :
 
     mat = 0;
     matTexture = 0;
+
+    ///DEBUG
+    /// ADD IN SOME SAMPLE CARDS FOR CURRENT DECK
+    ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO CURRENT
+    currentDeck.addCard(100211010);
+    currentDeck.addCard(101211120);
+    currentDeck.addCard(100211020);
+    currentDeck.addCard(100211030);
+    currentDeck.addCard(100211040);
+    currentDeck.addCard(100214010);
+    currentDeck.addCard(100221010);
+    currentDeck.addCard(100221020);
+    currentDeck.addCard(101211060);
+    currentDeck.addCard(101211070);
+    currentDeck.addCard(101211090);
+    currentDeck.addCard(101211110);
+    currentDeck.addCard(101221010);
+    currentDeck.addCard(101221070);
+    currentDeck.addCard(101221100);
+    currentDeck.addCard(101231040);
+    currentDeck.addCard(101234020);
+    currentDeck.addCard(101241020);
+    currentDeck.addCard(101241030);
+    currentDeck.addCard(101031020);
 
 
     if (handle != 0)
@@ -75,119 +101,6 @@ frmWindow::frmWindow(QWidget *parent) :
         //Guess the current state of the image
         curState = Ui::STATE::MYTURN;
 
-        //create CV map
-        QString NewPath = dir.absolutePath() + "/Images/";
-
-        setWindowTitle("HI");
-
-
-        /*
-        /// This generates a hash table from images in the folder x and saves it somewhere
-        QString filename = NewPath + "names.txt";
-        QFile file( filename );
-
-        std::vector<QString> filenames;
-        std::vector<ulong64> filephash;
-        std::vector<QString> fileid;
-
-
-        if ( file.open(QIODevice::ReadOnly) )
-        {
-            QTextStream in( &file );
-            QDirIterator it(NewPath, QStringList() << "*.png", QDir::Files, QDirIterator::Subdirectories);
-
-            while (it.hasNext()) {
-                it.next();
-                fileid.push_back(in.readLine());
-                filenames.push_back(it.fileName().left(9));
-                cv::Mat temp = cv::imread(it.filePath().toStdString());
-                ulong64 somelong = PerceptualHash::phash(temp);
-                filephash.push_back(somelong);
-            };
-        }
-        file.close();
-
-        //Serialize into JSON
-        QFile saveFile("save.json");
-        if (!saveFile.open(QIODevice::WriteOnly)) {
-           qWarning("Couldn't open save file.");
-       }
-        QJsonObject gameObject;
-        //fill stuff in here
-        QJsonArray cardArray;
-
-        for (int i = 0; i < filenames.size(); i++)
-        {
-            QJsonObject card;
-
-            unsigned int low32bits = filephash[i] & 0x00000000ffffffff;
-            unsigned int high32bits = filephash[i] >> 32;
-            QString PHashJson = QString::number(high32bits) + QString::number(low32bits);
-            card["ID"] = filenames[i];
-            card["Cost"] = 1;
-            card["pHash"] = PHashJson;
-            card["Name"] = fileid[i];
-
-            cardArray.append(card);
-        }
-        gameObject["Cards"] = cardArray;
-
-        QJsonDocument saveDoc(gameObject);
-        saveFile.write(saveDoc.toJson());
-        saveFile.close();
-
-        setWindowTitle(QString::number(filephash.size()));
-        /*
-        QString filename="Listofnames.txt";
-
-        QFile file( filename );
-        if ( file.open(QIODevice::ReadWrite) )
-        {
-            QTextStream stream( &file );
-            for(int i = 0; i < filenames.size(); i++)
-            {
-                stream << filenames[i] << "=";
-                unsigned int low32bits = filephash[i] & 0x00000000ffffffff;
-                unsigned int high32bits = filephash[i] >> 32;
-
-                stream << high32bits << "=" << low32bits << endl;
-            }
-        }
-        file.close();
-        */
-        /*
-        /// Load in Database
-        QString filename="Listofnames.txt";
-
-        QFile file( filename );
-
-        if ( file.open(QIODevice::ReadOnly) )
-        {
-            QTextStream in( &file );
-               while (!in.atEnd())
-               {
-                   QStringList wordFileList;
-                    QString line = in.readLine();
-                    if (!line.isEmpty())
-                    {
-                        wordFileList = line.split("=");
-                    }
-                    ulong64 cardPHash= wordFileList[1].toInt();
-                    cardPHash << 32;
-                    cardPHash += wordFileList[2].toInt();
-
-                    currentDeck.addCard("test", wordFileList[0].toStdString(), cardPHash);
-                    setWindowTitle(wordFileList[2]);
-               }
-
-        }
-        file.close();
-
-
-        savedata();
-*/
-        /*
-
         //Create a "you start" mat
         matTexture = cv::imread("pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
@@ -196,9 +109,8 @@ frmWindow::frmWindow(QWidget *parent) :
 
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(20);
-
-        */
+        timer->start(10);
+        //
     }
 }
 
@@ -227,14 +139,11 @@ void frmWindow::update()
 
     int distance;
 
-
-
     switch (curState)
     {
     case Ui::STATE::MYTURN:
         //Print to memory hdc
-        if (toyou > 0)
-            toyou--;
+
         boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
         drawer = pixmap.copy(boxRect);
         mat = ASM::QPixmapToCvMat(drawer);
@@ -242,26 +151,15 @@ void frmWindow::update()
 
         distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
 
-        setWindowTitle("looking for myturn" + QString::number(distance));
-
-        if (distance < 20 && ignoreNext < 1)
+        if (distance < 15 && ignoreNext < 1)
         {
-            if (toyou == 0)
-            {
-                toyou = 2;
-            }
-            else
-            {
-                turncounter++;
-                ignoreNext = 20;
-                QString trn = QString::number(turncounter);
-                ui->pushButton->setText(trn);
-                curState = Ui::STATE::FINDCARD;
-                toyou = 0;
-            }
+            cv::imwrite("new_round.png", mat);
+            turncounter++;
+            ignoreNext = 30;
+            QString trn = QString::number(turncounter);
+            ui->pushButton->setText(trn);
+            curState = Ui::STATE::FINDCARD;
         }
-
-        //DEBUG PURPOSES
 
         break;
     case Ui::STATE::FINDCARD:
@@ -276,8 +174,8 @@ void frmWindow::update()
         //in case of window size changed, use percentages
         input[0] = cv::Point2f(0.172f * cardWidth, 0.871f * cardHeight);
         input[1] = cv::Point2f(0.1558f * cardWidth,0.171f * cardHeight);
-        input[2] = cv::Point2f(0.795f * cardWidth,0.1763f * cardHeight);
-        input[3] = cv::Point2f(0.8668f * cardWidth,0.8763f * cardHeight);
+        input[2] = cv::Point2f(0.785f * cardWidth,0.1763f * cardHeight);
+        input[3] = cv::Point2f(0.8568f * cardWidth,0.8763f * cardHeight);
 
         //doesnt matter here, so long as output size fits here
         output[0] = cv::Point2f(0,380);
@@ -299,9 +197,9 @@ void frmWindow::update()
 
         for (int i = 0; i < 3; i++)
         {
-            if (bestguesses[i].distance < 20 )
+            if (bestguesses[i].distance <= 20 )
             {
-                int val = 20 - bestguesses[i].distance;
+                int val = 20 - bestguesses[i].distance + 1;
                 pass = true;
                 for (int j = 0; j < id.size(); j++)
                     if (id[j] == currentDeck.cardsInDeck[bestguesses[i].index])// FIX
@@ -309,7 +207,7 @@ void frmWindow::update()
                         count[j] += val;
                         continue;
                     }
-                id.push_back( currentDeck.cardsInDeck[bestguesses[i].index].filename);
+                id.push_back( currentDeck.cardsInDeck[bestguesses[i].index]);
                 count.push_back(val);
             }
         }
@@ -321,14 +219,14 @@ void frmWindow::update()
 
         if ((pass && ignoreNext < 1) || counter > 0)
         {
-            if (counter < 4)
+            if (counter < 8)
             {
             ui->tableWidget->setItem(counter * 3 + 0,0,new QTableWidgetItem(QString::number( bestguesses[0].distance)));
             ui->tableWidget->setItem(counter * 3 + 1,0,new QTableWidgetItem(QString::number( bestguesses[1].distance)));
             ui->tableWidget->setItem(counter * 3 + 2,0,new QTableWidgetItem(QString::number( bestguesses[2].distance)));
-            ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[0].index].filename.substr(89,9))));
-            ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[1].index].filename.substr(89,9))));
-            ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(QString::fromStdString(currentDeck.cardsInDeck[bestguesses[2].index].filename.substr(89,9))));
+            ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[0].index]).name));
+            ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[1].index]).name));
+            ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[2].index]).name));
 
             std::string filetitledraw = std::to_string(counter) + "guessed.png";
 
@@ -351,11 +249,19 @@ void frmWindow::update()
                     }
                 }
 
+
                 QPixmap drawme;
-                drawme.load(QString::fromStdString( id[index]));
+                std::string temp = "Images";
+                temp += id[index];
+                temp += ".png";
+                drawme.load(QString::fromStdString( temp));
+                ui->Image->setPixmap(drawme);
+
+                setWindowTitle(cardDatabase.getCard(id[index]).name);
+
                 id.clear();
                 count.clear();
-                ui->Image->setPixmap(drawme);
+
             }
         }
 
@@ -368,11 +274,3 @@ void frmWindow::on_pushButton_clicked()
     turncounter = 0;
 }
 
-void frmWindow::savedata()
-{
-
-
-
-
-
-}
