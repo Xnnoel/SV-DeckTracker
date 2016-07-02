@@ -4,6 +4,7 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 
+
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
 #include <QDirIterator>
@@ -14,7 +15,6 @@
 #include <qtimer.h>
 #include <Windows.h>
 #include <iostream>
-
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -64,6 +64,14 @@ frmWindow::frmWindow(QWidget *parent) :
     currentDeck.addCard(101241030);
     currentDeck.addCard(101031020);
 
+    QListView *list =  ui->listView;
+    QStandardItemModel *model = new QStandardItemModel();
+    CardDelegate * delegate = new CardDelegate(&cardDatabase);
+
+    list->setItemDelegate(delegate);
+    list->setModel(model);
+    loadDeck(model);
+    list->show();
 
     if (handle != 0)
     {
@@ -117,6 +125,21 @@ frmWindow::frmWindow(QWidget *parent) :
 frmWindow::~frmWindow()
 {
     delete ui;
+}
+
+void frmWindow::loadDeck(QStandardItemModel* model)
+{
+    for (int i = 0; i < currentDeck.cardsInDeck.size(); i++)
+    {
+        Card card = cardDatabase.getCard( currentDeck.cardsInDeck[i]);
+        QStandardItem *item = new QStandardItem();
+        item->setData(card.manaCost,CardDelegate::Cost);
+        item->setData(card.ID,CardDelegate::ID);
+        item->setData(card.name,CardDelegate::Name);
+        item->setData(currentDeck.countInDeck[i],CardDelegate::Amount);
+        item->setEditable(false);
+        model->appendRow(item);
+    }
 }
 
 void frmWindow::update()
@@ -255,7 +278,6 @@ void frmWindow::update()
                 temp += id[index];
                 temp += ".png";
                 drawme.load(QString::fromStdString( temp));
-                ui->Image->setPixmap(drawme);
 
                 setWindowTitle(cardDatabase.getCard(id[index]).name);
 

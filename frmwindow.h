@@ -8,6 +8,10 @@
 #include <QDir>
 #include <vector>
 
+#include <QListView>
+#include <QStandardItemModel>
+#include "carddelegate.h"
+
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
@@ -67,6 +71,7 @@ private:
     QDir dir;
 
     Ui::STATE curState;
+    void loadDeck(QStandardItemModel* model);
 
     // This keeps track of current deck in game; This has count. Different from the ones in files.
     cardlist currentDeck;

@@ -16,7 +16,8 @@ SOURCES += main.cpp\
     perceptualhash.cpp \
         frmwindow.cpp \
     cardlist.cpp \
-    svdatabase.cpp
+    svdatabase.cpp \
+    carddelegate.cpp
 
 
 HEADERS  += frmwindow.h \
@@ -24,7 +25,8 @@ HEADERS  += frmwindow.h \
     asmopencv.h \
     cardlist.h \
     svdatabase.h \
-    card.h
+    card.h \
+    carddelegate.h
 
 
 FORMS    += frmwindow.ui
