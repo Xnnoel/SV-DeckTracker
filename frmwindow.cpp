@@ -4,7 +4,6 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 
-
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
 #include <QDirIterator>
@@ -36,7 +35,6 @@ frmWindow::frmWindow(QWidget *parent) :
     // verify bluestacks is open and set up a window handle to the screen
     handle = 0;
     handle = ::FindWindow(NULL, L"BlueStacks App Player");
-
     mat = 0;
     matTexture = 0;
 
@@ -78,6 +76,7 @@ frmWindow::frmWindow(QWidget *parent) :
         // Start the update loop to check for cards in images
         counter = 0;
         turncounter = 0;
+        handleValid = true;
 
         //Window rect
         RECT rc;
@@ -92,6 +91,10 @@ frmWindow::frmWindow(QWidget *parent) :
         boxWidth = (int)round(0.4735 * width);
         boxHeight = (int)round(0.1965 * height);
 
+        theirLeft = (int)round(0.1636 * width + left);
+        theirTop = (int)round(0.3285 * height + top);
+        theirWidth = (int)round(0.6646 * width);
+        theirHeight = (int)round(0.2206 * height);
 
         cardLeft = (int)round(0.5699 * width + left);
         cardTop = (int)round(0.4157 * height + top);
@@ -112,6 +115,8 @@ frmWindow::frmWindow(QWidget *parent) :
         //Create a "you start" mat
         matTexture = cv::imread("pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
+        matTexture = cv::imread("pic2.png");
+        theirTexturePhash = PerceptualHash::phash(matTexture);
 
         ignoreNext = 0;
 
@@ -127,8 +132,36 @@ frmWindow::~frmWindow()
     delete ui;
 }
 
+void frmWindow::sortDeck()
+{
+    for (int i = 1; i < currentDeck.cardsInDeck.size(); i++)
+    {
+        int j = i;
+
+        while (j > 0 &&
+               cardDatabase.getCard(currentDeck.cardsInDeck[j-1]).manaCost >
+               cardDatabase.getCard(currentDeck.cardsInDeck[j]).manaCost)
+        {
+            int tempCard = currentDeck.cardsInDeck[j];
+            int tempCount = currentDeck.countInDeck[j];
+            ulong64 tempHash = currentDeck.deckPHash[j];
+            currentDeck.cardsInDeck[j] = currentDeck.cardsInDeck[j-1];
+            currentDeck.countInDeck[j] = currentDeck.countInDeck[j-1];
+            currentDeck.deckPHash[j] = currentDeck.deckPHash[j-1];
+            currentDeck.cardsInDeck[j-1] = tempCard;
+            currentDeck.countInDeck[j-1] = tempCount;
+            currentDeck.deckPHash[j-1] = tempHash;
+            j--;
+        }
+    }
+}
+
 void frmWindow::loadDeck(QStandardItemModel* model)
 {
+    //sort the current deck before loading it into model
+    sortDeck();
+
+    //Push all cards from current deck into model
     for (int i = 0; i < currentDeck.cardsInDeck.size(); i++)
     {
         Card card = cardDatabase.getCard( currentDeck.cardsInDeck[i]);
@@ -152,142 +185,160 @@ void frmWindow::update()
 
 
     //otherwise check for card
-    PrintWindow(handle, hdc, PW_CLIENTONLY);
-
-    QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
-
-    QRect boxRect;
-    QPixmap drawer;
-    ulong64 imagePHash;
-
-    int distance;
-
-    switch (curState)
+    if (handleValid && ::IsWindow(handle))
     {
-    case Ui::STATE::MYTURN:
-        //Print to memory hdc
+        PrintWindow(handle, hdc, PW_CLIENTONLY);
 
-        boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
-        drawer = pixmap.copy(boxRect);
-        mat = ASM::QPixmapToCvMat(drawer);
-        imagePHash = PerceptualHash::phash(mat);
+        QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
 
-        distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
+        QRect boxRect;
+        QPixmap drawer;
+        ulong64 imagePHash;
+        ulong64 theirPHash;
 
-        if (distance < 15 && ignoreNext < 1)
+
+        int distance;
+
+        switch (curState)
         {
-            cv::imwrite("new_round.png", mat);
-            turncounter++;
-            ignoreNext = 30;
-            QString trn = QString::number(turncounter);
-            ui->pushButton->setText(trn);
-            curState = Ui::STATE::FINDCARD;
-        }
+        case Ui::STATE::MYTURN:
+            //Print to memory hdc
 
-        break;
-    case Ui::STATE::FINDCARD:
-        boxRect.setRect(cardLeft,cardTop,cardWidth,cardHeight);
-        drawer = pixmap.copy(boxRect);
-        mat = ASM::QPixmapToCvMat(drawer);
+            boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
+            drawer = pixmap.copy(boxRect);
+            mat = ASM::QPixmapToCvMat(drawer);
+            imagePHash = PerceptualHash::phash(mat);
 
-        //Perspective shift on card for better readability (why are they tilted)
-        cv::Point2f input[4];
-        cv::Point2f output[4];
-\
-        //in case of window size changed, use percentages
-        input[0] = cv::Point2f(0.172f * cardWidth, 0.871f * cardHeight);
-        input[1] = cv::Point2f(0.1558f * cardWidth,0.171f * cardHeight);
-        input[2] = cv::Point2f(0.785f * cardWidth,0.1763f * cardHeight);
-        input[3] = cv::Point2f(0.8568f * cardWidth,0.8763f * cardHeight);
+            distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
 
-        //doesnt matter here, so long as output size fits here
-        output[0] = cv::Point2f(0,380);
-        output[1] = cv::Point2f(0,0);
-        output[2] = cv::Point2f(297,0);
-        output[3] = cv::Point2f(297,380);
-
-        cv::Mat lambda( 2, 4, CV_32FC1 );
-        lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
-
-        lambda = cv::getPerspectiveTransform(input,output);
-        cv::warpPerspective(mat, resultMat, lambda, cv::Size(297,380));
-
-        imagePHash = PerceptualHash::phash(resultMat);
-
-        std::vector<PerceptualHash::ComparisonResult> bestguesses = PerceptualHash::nbest(3,imagePHash, currentDeck.deckPHash);
-
-        bool pass = false;
-
-        for (int i = 0; i < 3; i++)
-        {
-            if (bestguesses[i].distance <= 20 )
+            if (distance < 15 && ignoreNext < 1)
             {
-                int val = 20 - bestguesses[i].distance + 1;
-                pass = true;
-                for (int j = 0; j < id.size(); j++)
-                    if (id[j] == currentDeck.cardsInDeck[bestguesses[i].index])// FIX
-                    {
-                        count[j] += val;
-                        continue;
-                    }
-                id.push_back( currentDeck.cardsInDeck[bestguesses[i].index]);
-                count.push_back(val);
+                cv::imwrite("new_round.png", mat);
+                turncounter++;
+                QString trn = QString::number(turncounter);
+                ui->pushButton->setText(trn);
+                curState = Ui::STATE::FINDCARD;
             }
-        }
 
-        if (ignoreNext > 0)
-            setWindowTitle("ignoring");
-        else
-            setWindowTitle(QString::number( bestguesses[0].distance));
+            break;
+        case Ui::STATE::FINDCARD:
+            boxRect.setRect(cardLeft,cardTop,cardWidth,cardHeight);
+            drawer = pixmap.copy(boxRect);
+            mat = ASM::QPixmapToCvMat(drawer);
 
-        if ((pass && ignoreNext < 1) || counter > 0)
-        {
-            if (counter < 8)
+            //Perspective shift on card for better readability (why are they tilted)
+            cv::Point2f input[4];
+            cv::Point2f output[4];
+
+            //in case of window size changed, use percentages
+            input[0] = cv::Point2f(0.172f * cardWidth, 0.871f * cardHeight);
+            input[1] = cv::Point2f(0.1558f * cardWidth,0.171f * cardHeight);
+            input[2] = cv::Point2f(0.785f * cardWidth,0.1763f * cardHeight);
+            input[3] = cv::Point2f(0.8568f * cardWidth,0.8763f * cardHeight);
+
+            //doesnt matter here, so long as output size fits here
+            output[0] = cv::Point2f(0,380);
+            output[1] = cv::Point2f(0,0);
+            output[2] = cv::Point2f(297,0);
+            output[3] = cv::Point2f(297,380);
+
+            cv::Mat lambda( 2, 4, CV_32FC1 );
+            lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
+
+            lambda = cv::getPerspectiveTransform(input,output);
+            cv::warpPerspective(mat, resultMat, lambda, cv::Size(297,380));
+
+            imagePHash = PerceptualHash::phash(resultMat);
+
+            boxRect.setRect(theirLeft,theirTop,theirWidth,theirHeight);
+            drawer = pixmap.copy(boxRect);
+            mat = ASM::QPixmapToCvMat(drawer);
+            theirPHash = PerceptualHash::phash(mat);
+
+            distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
+
+            if (distance < 15)
             {
-            ui->tableWidget->setItem(counter * 3 + 0,0,new QTableWidgetItem(QString::number( bestguesses[0].distance)));
-            ui->tableWidget->setItem(counter * 3 + 1,0,new QTableWidgetItem(QString::number( bestguesses[1].distance)));
-            ui->tableWidget->setItem(counter * 3 + 2,0,new QTableWidgetItem(QString::number( bestguesses[2].distance)));
-            ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[0].index]).name));
-            ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[1].index]).name));
-            ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[2].index]).name));
-
-            std::string filetitledraw = std::to_string(counter) + "guessed.png";
-
-            cv::imwrite(filetitledraw, resultMat);
-            counter ++;
-            }
-            else
-            {
-                counter = 0;
                 curState = Ui::STATE::MYTURN;
-
-                int max = 0;
-                int index = 0;
-                for (int i = 0; i < count.size(); i++)
-                {
-                    if (count[i] > max)
-                    {
-                        max = count[i];
-                        index = i;
-                    }
-                }
-
-
-                QPixmap drawme;
-                std::string temp = "Images";
-                temp += id[index];
-                temp += ".png";
-                drawme.load(QString::fromStdString( temp));
-
-                setWindowTitle(cardDatabase.getCard(id[index]).name);
-
+                break;
                 id.clear();
                 count.clear();
-
             }
-        }
 
-        break;
+            std::vector<PerceptualHash::ComparisonResult> bestguesses = PerceptualHash::nbest(3,imagePHash, currentDeck.deckPHash);
+
+            bool pass = false;
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (bestguesses[i].distance <= 20 )
+                {
+                    int val = 20 - bestguesses[i].distance + 1;
+                    pass = true;
+                    for (int j = 0; j < id.size(); j++)
+                        if (id[j] == currentDeck.cardsInDeck[bestguesses[i].index])// FIX
+                        {
+                            count[j] += val;
+                            continue;
+                        }
+                    id.push_back( currentDeck.cardsInDeck[bestguesses[i].index]);
+                    count.push_back(val);
+                }
+            }
+
+
+
+            if ((pass ) || counter > 0)
+            {
+                if (counter < 6)
+                {
+                ui->tableWidget->setItem(counter * 3 + 0,0,new QTableWidgetItem(QString::number( bestguesses[0].distance)));
+                ui->tableWidget->setItem(counter * 3 + 1,0,new QTableWidgetItem(QString::number( bestguesses[1].distance)));
+                ui->tableWidget->setItem(counter * 3 + 2,0,new QTableWidgetItem(QString::number( bestguesses[2].distance)));
+                ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[0].index]).name));
+                ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[1].index]).name));
+                ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[2].index]).name));
+
+                std::string filetitledraw = std::to_string(counter) + "guessed.png";
+
+                cv::imwrite(filetitledraw, resultMat);
+                counter ++;
+                }
+                else
+                {
+                    counter = 0;
+
+
+                    int max = 0;
+                    int index = 0;
+                    for (int i = 0; i < count.size(); i++)
+                    {
+                        if (count[i] > max)
+                        {
+                            max = count[i];
+                            index = i;
+                        }
+                    }
+
+
+                    if (max >=5)
+                    {
+                        setWindowTitle(cardDatabase.getCard(id[index]).name);
+                    }
+
+                    id.clear();
+                    count.clear();
+
+                }
+            }
+
+            break;
+        }
+    }
+    else
+    {
+        handleValid = false;
+        setWindowTitle("Window is closed");
     }
 }
 

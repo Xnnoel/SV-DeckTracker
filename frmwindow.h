@@ -40,7 +40,7 @@ private:
 
     cv::Mat matTexture;
     ulong64 matTexturePhash;
-
+    ulong64 theirTexturePhash;
 
     cv::Mat mat;
 
@@ -62,6 +62,12 @@ private:
     int boxLeft;
     int boxTop;
 
+    // bounding box for "MY TURN"
+    int theirHeight;
+    int theirWidth;
+    int theirLeft;
+    int theirTop;
+
     // bounding box fopr FIND CARD
     int cardHeight;
     int cardWidth;
@@ -69,9 +75,11 @@ private:
     int cardTop;
 
     QDir dir;
+    bool handleValid;
 
     Ui::STATE curState;
     void loadDeck(QStandardItemModel* model);
+    void sortDeck();
 
     // This keeps track of current deck in game; This has count. Different from the ones in files.
     cardlist currentDeck;

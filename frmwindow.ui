@@ -89,17 +89,11 @@
        <enum>Qt::DashLine</enum>
       </property>
       <property name="rowCount">
-       <number>24</number>
+       <number>18</number>
       </property>
       <property name="columnCount">
        <number>2</number>
       </property>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
       <row/>
       <row/>
       <row/>
