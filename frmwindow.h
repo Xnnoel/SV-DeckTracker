@@ -48,7 +48,10 @@ private:
     HDC hdc;
     HBITMAP hbmp;
     HWND handle;
+    bool cardFound;
+    bool passed;
 
+    QStandardItemModel * model;
 
     // bounding box for window
     int height;
@@ -68,11 +71,11 @@ private:
     int theirLeft;
     int theirTop;
 
-    // bounding box fopr FIND CARD
-    int cardHeight;
-    int cardWidth;
-    int cardLeft;
-    int cardTop;
+    // bounding box for "cost"
+    int costHeight;
+    int costWidth;
+    int costLeft;
+    int costTop;
 
     QDir dir;
     bool handleValid;
@@ -89,12 +92,15 @@ private:
 
     // Database of all the cards in the game
     svDatabase cardDatabase;
+    std::vector<ulong64> numberPHash;
 
     //debug stuff
     cv::Mat resultMat;
     int counter;
     int turncounter;
     int ignoreNext;
+
+    int turnDraw;
 
     std::vector<int> id;
     std::vector<int> count;

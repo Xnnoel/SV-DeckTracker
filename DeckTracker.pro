@@ -17,7 +17,8 @@ SOURCES += main.cpp\
         frmwindow.cpp \
     cardlist.cpp \
     svdatabase.cpp \
-    carddelegate.cpp
+    carddelegate.cpp \
+    svlistmodel.cpp
 
 
 HEADERS  += frmwindow.h \
@@ -26,7 +27,8 @@ HEADERS  += frmwindow.h \
     cardlist.h \
     svdatabase.h \
     card.h \
-    carddelegate.h
+    carddelegate.h \
+    svlistmodel.h
 
 
 FORMS    += frmwindow.ui

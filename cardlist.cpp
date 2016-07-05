@@ -24,3 +24,30 @@ void cardlist::addCard(int id)
     countInDeck.push_back(1);
     deckPHash.push_back(card.pHash);
 }
+
+void cardlist::removeCard(int id)
+{
+    int index;
+    for (int i = 0; i < cardsInDeck.size(); i++)
+    {
+        if (cardsInDeck[i] == id)
+        {
+            index = i;
+            break;
+        }
+    }
+    countInDeck[index]--;
+}
+
+int cardlist::getPosition(int id){
+    int index;
+    for (int i = 0; i < cardsInDeck.size(); i++)
+    {
+        if (cardsInDeck[i] == id)
+        {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}

@@ -13,6 +13,8 @@ public:
     std::vector<int> countInDeck;   //has the counter per card
     std::vector<ulong64> deckPHash; //updates as the same as the upper 2
     void addCard(int id);
+    void removeCard(int id);
+    int getPosition(int id);
     cardlist(std::string deckname, svDatabase* database);          //name of card
 private:
     std::string deckName;

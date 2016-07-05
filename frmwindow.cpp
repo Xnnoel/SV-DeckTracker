@@ -23,6 +23,8 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Gdi32.lib")
 
+std::wstring s2ws(const std::string& s);
+
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
@@ -34,42 +36,131 @@ frmWindow::frmWindow(QWidget *parent) :
 
     // verify bluestacks is open and set up a window handle to the screen
     handle = 0;
-    handle = ::FindWindow(NULL, L"BlueStacks App Player");
     mat = 0;
     matTexture = 0;
+    cardFound = false;
 
     ///DEBUG
     /// ADD IN SOME SAMPLE CARDS FOR CURRENT DECK
     ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO CURRENT
-    currentDeck.addCard(100211010);
-    currentDeck.addCard(101211120);
-    currentDeck.addCard(100211020);
-    currentDeck.addCard(100211030);
-    currentDeck.addCard(100211040);
-    currentDeck.addCard(100214010);
-    currentDeck.addCard(100221010);
-    currentDeck.addCard(100221020);
-    currentDeck.addCard(101211060);
-    currentDeck.addCard(101211070);
-    currentDeck.addCard(101211090);
-    currentDeck.addCard(101211110);
-    currentDeck.addCard(101221010);
-    currentDeck.addCard(101221070);
-    currentDeck.addCard(101221100);
-    currentDeck.addCard(101231040);
-    currentDeck.addCard(101234020);
-    currentDeck.addCard(101241020);
-    currentDeck.addCard(101241030);
-    currentDeck.addCard(101031020);
+    playingDeck.addCard(100211010);
+    playingDeck.addCard(100211010);
+    playingDeck.addCard(100211010);
+    playingDeck.addCard(101232020);
+    playingDeck.addCard(101211020);
+    playingDeck.addCard(101211020);
+    playingDeck.addCard(101211020);
+    playingDeck.addCard(101211110);
+    playingDeck.addCard(101211110);
+    playingDeck.addCard(101221010);
+    playingDeck.addCard(101221010);
+    playingDeck.addCard(101221010);
+    playingDeck.addCard(100214010);
+    playingDeck.addCard(100211030);
+    playingDeck.addCard(100211030);
+    playingDeck.addCard(100211030);
+    playingDeck.addCard(101211060);
+    playingDeck.addCard(101211060);
+    playingDeck.addCard(101211090);
+    playingDeck.addCard(101211090);
+    playingDeck.addCard(101211090);
+    playingDeck.addCard(101221070);
+    playingDeck.addCard(100211040);
+    playingDeck.addCard(100211040);
+    playingDeck.addCard(100221010);
+    playingDeck.addCard(100221010);
+    playingDeck.addCard(100221010);
+    playingDeck.addCard(101211070);
+    playingDeck.addCard(101211070);
+    playingDeck.addCard(101221100);
+    playingDeck.addCard(101031020);
+    playingDeck.addCard(101031020);
+    playingDeck.addCard(101024030);
+    playingDeck.addCard(101241020);
+    playingDeck.addCard(101241020);
+    playingDeck.addCard(100221020);
+    playingDeck.addCard(100221020);
+    playingDeck.addCard(101241030);
+    playingDeck.addCard(101234020);
+    playingDeck.addCard(101231040);
 
     QListView *list =  ui->listView;
-    QStandardItemModel *model = new QStandardItemModel();
+    model = new QStandardItemModel();
     CardDelegate * delegate = new CardDelegate(&cardDatabase);
 
     list->setItemDelegate(delegate);
     list->setModel(model);
+    currentDeck = playingDeck;
     loadDeck(model);
     list->show();
+
+    QFile file(dir.absolutePath() + "/settings.ini");
+    if (!file.open(QIODevice::ReadOnly))
+        qWarning("Couldn't find settings.ini");
+
+    QTextStream in(&file);
+
+    QMap<QString, QString> settingsMap;
+
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList splitLines = line.split("=");
+        settingsMap.insert(splitLines[0],splitLines[1]);
+    }
+    file.close();
+
+    std::string appName = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp = s2ws(appName);
+    LPCWSTR result = stemp.c_str();
+
+    handle = ::FindWindow(NULL, result);
+
+    //load values here
+    int topborder = settingsMap.value("Topborder").toInt();
+    int botborder = settingsMap.value("Botborder").toInt();
+    int leftborder = settingsMap.value("Leftborder").toInt();
+    int rightborder = settingsMap.value("Rightborder").toInt();
+
+    //Window rect
+    RECT rc;
+    GetClientRect(handle, &rc);
+    width = (rc.right - rc.left) - rightborder - leftborder;
+    height = (rc.bottom - rc.top) - topborder - botborder;
+    top = rc.top+topborder;
+    left = rc.left+leftborder;
+
+    boxLeft = (int)round(0.261 * width) + left;
+    boxTop = (int)round(0.341 * height) + top;
+    boxWidth = (int)round(0.4735 * width);
+    boxHeight = (int)round(0.1965 * height);
+
+    theirLeft = (int)round(0.1636 * width) + left;
+    theirTop = (int)round(0.3285 * height) + top;
+    theirWidth = (int)round(0.6646 * width);
+    theirHeight = (int)round(0.2206 * height);
+
+    costLeft = (int)round(0.5795 * width) + left;
+    costTop = (int)round(0.4461 * height) + top;
+    costWidth = (int)round(0.02789 * width);
+    costHeight = (int)round(0.04956 * height);
+
+
+
+    //load all costs here into a vector of phashes
+    for (int i = 1; i < 11; i++)
+    {
+        QString filename = dir.absolutePath() + "/CostGame/" + QString::number(i)+ ".png";
+        cv::Mat numbermap;
+        numbermap = cv::imread(filename.toStdString());
+        ulong64 myhash = PerceptualHash::phash(numbermap);
+        numberPHash.push_back(myhash);
+    }
+    QString filename = dir.absolutePath() + "/CostGame/18.png";
+    cv::Mat numbermap;
+    numbermap = cv::imread(filename.toStdString());
+    ulong64 myhash = PerceptualHash::phash(numbermap);
+    numberPHash.push_back(myhash);
+
 
     if (handle != 0)
     {
@@ -78,35 +169,11 @@ frmWindow::frmWindow(QWidget *parent) :
         turncounter = 0;
         handleValid = true;
 
-        //Window rect
-        RECT rc;
-        GetClientRect(handle, &rc);
-        width = (rc.right - rc.left)-65;
-        height = (rc.bottom - rc.top)-43;
-        top = rc.top+43;
-        left = rc.left+65;
-
-        boxLeft = (int)round(0.261 * width + left);
-        boxTop = (int)round(0.341 * height + top);
-        boxWidth = (int)round(0.4735 * width);
-        boxHeight = (int)round(0.1965 * height);
-
-        theirLeft = (int)round(0.1636 * width + left);
-        theirTop = (int)round(0.3285 * height + top);
-        theirWidth = (int)round(0.6646 * width);
-        theirHeight = (int)round(0.2206 * height);
-
-        cardLeft = (int)round(0.5699 * width + left);
-        cardTop = (int)round(0.4157 * height + top);
-        cardWidth = (int)round(0.210 * width);
-        cardHeight = (int)round(0.4606 * height);
-
-
         //create bitmap and screen to save rect
         hdcScreen = GetDC(NULL);
         hdc = CreateCompatibleDC(hdcScreen);
         hbmp = CreateCompatibleBitmap(hdcScreen,
-            width , height);
+            width + leftborder, height + topborder);
         SelectObject(hdc, hbmp);
 
         //Guess the current state of the image
@@ -119,11 +186,13 @@ frmWindow::frmWindow(QWidget *parent) :
         theirTexturePhash = PerceptualHash::phash(matTexture);
 
         ignoreNext = 0;
+        passed = false;
+        turnDraw =0;
 
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(10);
-        //
+        timer->start(100);
+
     }
 }
 
@@ -158,6 +227,9 @@ void frmWindow::sortDeck()
 
 void frmWindow::loadDeck(QStandardItemModel* model)
 {
+    //clear model first
+    model->clear();
+
     //sort the current deck before loading it into model
     sortDeck();
 
@@ -211,125 +283,69 @@ void frmWindow::update()
 
             distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
 
-            if (distance < 15 && ignoreNext < 1)
+
+            if (distance < 20 && ignoreNext < 1)
             {
-                cv::imwrite("new_round.png", mat);
+                setWindowTitle("Now it's my turn!");
+                ignoreNext = 50;
                 turncounter++;
                 QString trn = QString::number(turncounter);
                 ui->pushButton->setText(trn);
                 curState = Ui::STATE::FINDCARD;
+                cardFound = false;
             }
 
             break;
         case Ui::STATE::FINDCARD:
-            boxRect.setRect(cardLeft,cardTop,cardWidth,cardHeight);
+
+            //Get the card cost (hopefully)
+            //Try and find what the cost is?
+            boxRect.setRect(costLeft,costTop,costWidth,costHeight);
             drawer = pixmap.copy(boxRect);
             mat = ASM::QPixmapToCvMat(drawer);
+            imagePHash = PerceptualHash::phash(mat);
+
+            PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, numberPHash);
+
+            int cost = result.index+1;
+            int costDistance = result.distance;
 
             //Perspective shift on card for better readability (why are they tilted)
+            mat = ASM::QPixmapToCvMat(pixmap);
             cv::Point2f input[4];
             cv::Point2f output[4];
 
-            //in case of window size changed, use percentages
-            input[0] = cv::Point2f(0.172f * cardWidth, 0.871f * cardHeight);
-            input[1] = cv::Point2f(0.1558f * cardWidth,0.171f * cardHeight);
-            input[2] = cv::Point2f(0.785f * cardWidth,0.1763f * cardHeight);
-            input[3] = cv::Point2f(0.8568f * cardWidth,0.8763f * cardHeight);
+            //in case of window size changed, use percentages // ADD SHIFT
+            input[0] = cv::Point2f(0.6047f * width + left,0.8208f * height + top);
+            input[1] = cv::Point2f(0.5968f * width + left,0.4958f * height + top);
+            input[2] = cv::Point2f(0.7359f * width + left,0.4958f * height + top);
+            input[3] = cv::Point2f(0.7492f * width + left,0.8194f * height + top);
 
             //doesnt matter here, so long as output size fits here
-            output[0] = cv::Point2f(0,380);
+            output[0] = cv::Point2f(0,200);
             output[1] = cv::Point2f(0,0);
-            output[2] = cv::Point2f(297,0);
-            output[3] = cv::Point2f(297,380);
+            output[2] = cv::Point2f(133,0);
+            output[3] = cv::Point2f(133,200);
 
             cv::Mat lambda( 2, 4, CV_32FC1 );
             lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
 
             lambda = cv::getPerspectiveTransform(input,output);
-            cv::warpPerspective(mat, resultMat, lambda, cv::Size(297,380));
+            cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
 
             imagePHash = PerceptualHash::phash(resultMat);
 
-            boxRect.setRect(theirLeft,theirTop,theirWidth,theirHeight);
-            drawer = pixmap.copy(boxRect);
-            mat = ASM::QPixmapToCvMat(drawer);
-            theirPHash = PerceptualHash::phash(mat);
+            PerceptualHash::ComparisonResult bestguess = PerceptualHash::best(imagePHash, currentDeck.deckPHash);
 
-            distance = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
-
-            if (distance < 15)
+            if (bestguess.distance < 15 || costDistance < 15)
             {
-                curState = Ui::STATE::MYTURN;
-                break;
-                id.clear();
-                count.clear();
-            }
+                ui->tableWidget->clearContents();
 
-            std::vector<PerceptualHash::ComparisonResult> bestguesses = PerceptualHash::nbest(3,imagePHash, currentDeck.deckPHash);
-
-            bool pass = false;
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (bestguesses[i].distance <= 20 )
-                {
-                    int val = 20 - bestguesses[i].distance + 1;
-                    pass = true;
-                    for (int j = 0; j < id.size(); j++)
-                        if (id[j] == currentDeck.cardsInDeck[bestguesses[i].index])// FIX
-                        {
-                            count[j] += val;
-                            continue;
-                        }
-                    id.push_back( currentDeck.cardsInDeck[bestguesses[i].index]);
-                    count.push_back(val);
-                }
-            }
-
-
-
-            if ((pass ) || counter > 0)
-            {
-                if (counter < 6)
-                {
-                ui->tableWidget->setItem(counter * 3 + 0,0,new QTableWidgetItem(QString::number( bestguesses[0].distance)));
-                ui->tableWidget->setItem(counter * 3 + 1,0,new QTableWidgetItem(QString::number( bestguesses[1].distance)));
-                ui->tableWidget->setItem(counter * 3 + 2,0,new QTableWidgetItem(QString::number( bestguesses[2].distance)));
-                ui->tableWidget->setItem(counter * 3 + 0,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[0].index]).name));
-                ui->tableWidget->setItem(counter * 3 + 1,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[1].index]).name));
-                ui->tableWidget->setItem(counter * 3 + 2,1,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguesses[2].index]).name));
-
-                std::string filetitledraw = std::to_string(counter) + "guessed.png";
-
-                cv::imwrite(filetitledraw, resultMat);
-                counter ++;
-                }
-                else
-                {
-                    counter = 0;
-
-
-                    int max = 0;
-                    int index = 0;
-                    for (int i = 0; i < count.size(); i++)
-                    {
-                        if (count[i] > max)
-                        {
-                            max = count[i];
-                            index = i;
-                        }
-                    }
-
-
-                    if (max >=5)
-                    {
-                        setWindowTitle(cardDatabase.getCard(id[index]).name);
-                    }
-
-                    id.clear();
-                    count.clear();
-
-                }
+                ui->tableWidget->setItem(0,0,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguess.index]).name));
+                ui->tableWidget->setItem(0,1,new QTableWidgetItem(QString::number(bestguess.distance)));
+                QString heh = "Cost is " + QString::number(cost);
+                ui->tableWidget->setItem(1,0,new QTableWidgetItem(heh));
+                ui->tableWidget->setItem(1,1,new QTableWidgetItem(QString::number(costDistance)));
             }
 
             break;
@@ -344,6 +360,17 @@ void frmWindow::update()
 
 void frmWindow::on_pushButton_clicked()
 {
-    turncounter = 0;
+    cv::imwrite("filetitledraw.png", resultMat);
 }
 
+std::wstring s2ws(const std::string& s)
+{
+    int len;
+    int slength = (int)s.length() + 1;
+    len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+    wchar_t* buf = new wchar_t[len];
+    MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+    std::wstring r(buf);
+    delete[] buf;
+    return r;
+}
