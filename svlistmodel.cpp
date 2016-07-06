@@ -83,6 +83,18 @@ void SVListModel::subCard(int id)
     QModelIndex cardIndex =  this->index(row,2);
 
     emit dataChanged(cardIndex, cardIndex);
+    emit countChanged(getDeckSize());
+}
+
+int SVListModel::getDeckSize()
+{
+    int decksize = 0;
+    for (int i = 0; i < cardsInDeck.size(); i++)
+    {
+        decksize += cardsInDeck[i].second;
+    }
+
+    return decksize;
 }
 
 bool SVListModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -103,6 +115,7 @@ bool SVListModel::setData(const QModelIndex &index, const QVariant &value, int r
             return false;
         }
         emit dataChanged(index, index);
+        emit countChanged(getDeckSize());
         return true;
     }
     return false;
@@ -123,7 +136,7 @@ void SVListModel::setCount(int id, int count)
     QModelIndex cardIndex =  index(row,0);
 
     emit dataChanged(cardIndex, cardIndex);
-
+    emit countChanged(getDeckSize());
 }
 
 void SVListModel::clearData()
@@ -138,6 +151,7 @@ void SVListModel::slotUp(int row)
         cardsInDeck[row].second++;
         QModelIndex cardIndex = index(row,0);
         emit dataChanged(cardIndex, cardIndex);
+        emit countChanged(getDeckSize());
     }
 }
 
@@ -148,5 +162,6 @@ void SVListModel::slotDown(int row)
         cardsInDeck[row].second--;
         QModelIndex cardIndex = index(row,0);
         emit dataChanged(cardIndex, cardIndex);
+        emit countChanged(getDeckSize());
     }
 }

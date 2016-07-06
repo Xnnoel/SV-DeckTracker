@@ -12,6 +12,7 @@
 #include <QJsonDocument>
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <qtimer.h>
 #include <Windows.h>
@@ -50,7 +51,7 @@ frmWindow::frmWindow(QWidget *parent) :
     ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO MODEL
     playingDeck.setName("Midrange Royal?");
     playingDeck.setDesc("This is a description of the deck. Hopefully you can write tips and ideas here on what to evolve or something. I dunno.");
-    /*playingDeck.addCard(100211010);
+    //playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(101232020);
@@ -89,7 +90,7 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck.addCard(100221020);
     playingDeck.addCard(101241030);
     playingDeck.addCard(101234020);
-    playingDeck.addCard(101231040);*/
+    playingDeck.addCard(101231040);
 
 
     // Set up model view
@@ -101,6 +102,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
     connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
+    connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
     list->setModel(model);
     list->setItemDelegate(delegate);
@@ -241,6 +243,31 @@ void frmWindow::loadDeck(SVListModel* model)
     int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
     ui->listView->setFixedHeight(std::max(listsize,400));
     this->setFixedHeight(ui->listView->height() + 50);
+
+    //Set text description
+    ui->textDeckName->document()->setPlainText(QString::fromStdString(playingDeck.getName()));
+    ui->textDeckDesc->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
+
+    int decksize = 0;
+    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
+    {
+        decksize += playingDeck.countInDeck[i];
+    }
+
+    updateCount(decksize);
+
+}
+
+void frmWindow::updateCount(int cardsize)
+{
+    int decksize = 0;
+    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
+    {
+        decksize += playingDeck.countInDeck[i];
+    }
+
+    QString cardCountLabel = QString::number(cardsize) + "/" + QString::number(decksize) + " Cards";
+    ui->DeckCount->setText(cardCountLabel);
 }
 
 void frmWindow::update()
@@ -483,21 +510,73 @@ void frmWindow::slotBishop()
 }
 void frmWindow::slotLoad()
 {
-    //do nothing for now
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
+    QFile loadfile(fileName);
+    if (!loadfile.open(QIODevice::ReadOnly))
+        qWarning("Couldn't open");
+
+    QTextStream textStream(&loadfile);
+    QString line = textStream.readLine();
+    std::string deckname = line.toStdString();
+    playingDeck.clear();
+    line = textStream.readLine();
+    std::string deckdesc;
+    while (line != "--deck--")
+    {
+        deckdesc += line.toStdString();
+        deckdesc += '\n';
+        line = textStream.readLine();
+    }
+    line = textStream.readLine();
+
+    while (line != "")
+    {
+        int ID = line.toInt();
+        playingDeck.addCard(ID);
+        line = textStream.readLine();
+    }
+
+    playingDeck.setName(deckname);
+    playingDeck.setDesc(deckdesc);
+    loadfile.close();
+    loadDeck(model);
 }
 void frmWindow::slotSave()
 {
+    int decksize = 0;
+    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
+    {
+        decksize += playingDeck.countInDeck[i];
+    }
+    if(decksize < 40)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Save"), tr("You have less than 40 cards. Do you still want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::No) {
+             return;
+        }
+    }
+
     QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
+        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Decks (*.dck)"));
     QFile savefile(fileName);
     if (!savefile.open(QIODevice::WriteOnly)) {
            qWarning("Couldn't open save");
     }
 
+    QString textname = ui->textDeckName->document()->toPlainText();
+    playingDeck.setName(textname.toStdString());
+    QString textdesc = ui->textDeckDesc->document()->toPlainText();
+    playingDeck.setDesc(textdesc.toStdString());
+
     std::string final = playingDeck.getName() + '\n';
     savefile.write(final.c_str());
     std::string desc = playingDeck.getDescription() + '\n';
     savefile.write(desc.c_str());
+    savefile.write("--deck--\n");
     for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
     {
         for (int j = 0; j < playingDeck.countInDeck[i]; j++)

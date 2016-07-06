@@ -29,6 +29,9 @@ private:
     std::vector<QPair<int,int>> cardsInDeck;   // ID of cards, vector pos = row pos
     cardlist* playingDeck;
     svDatabase * database;
+    int getDeckSize();
+signals:
+    void countChanged(int);
 
 };
 

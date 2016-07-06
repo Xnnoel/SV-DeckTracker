@@ -30,6 +30,7 @@ class frmWindow : public QMainWindow
 
 public slots:
     void update();
+    void updateCount(int);
 
 public:
     explicit frmWindow(QWidget *parent = 0);
