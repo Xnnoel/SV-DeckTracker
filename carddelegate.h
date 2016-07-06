@@ -2,6 +2,7 @@
 #define CARDDELEGATE_H
 
 #include "svdatabase.h"
+#include "cardlist.h"
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QFont>
@@ -9,16 +10,27 @@
 #include <QPoint>
 
 class CardDelegate : public QStyledItemDelegate
-{
+{   
+    Q_OBJECT
 public:
-    CardDelegate(svDatabase *db):database(db){};
+    CardDelegate(QObject *parent = 0);
+    void setPointers(svDatabase *db, cardlist * cd);
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
+                        const QModelIndex &index) const Q_DECL_OVERRIDE;
     QSize sizeHint(const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
-    enum datarole {Cost = Qt::UserRole + 100,ID = Qt::UserRole+101,Amount = Qt::UserRole+102,Name = Qt::UserRole+103};
+                        const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index);
+
+
+    enum datarole {COST = Qt::UserRole + 100,ID = Qt::UserRole+101,COUNT = Qt::UserRole+102,NAME = Qt::UserRole+103};
 private:
     svDatabase *database;
+    cardlist* playingDeck;
+    QPixmap up;
+    QPixmap down;
+signals:
+    void upClicked(int row);
+    void downClicked(int row);
 };
 
 #endif // CARDDELEGATE_H

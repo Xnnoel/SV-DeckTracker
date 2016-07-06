@@ -1,13 +1,32 @@
 #include "carddelegate.h"
 #include "card.h"
+#include <QMouseEvent>
+
+
+
+CardDelegate::CardDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
+{
+}
+
+void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
+
+{
+    database = db;
+    playingDeck = cd;
+    up = QPixmap("up.png");
+    down = QPixmap("down.png");
+}
 
 void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index) const
 {
     QStyledItemDelegate::paint(painter,option,index);
+
+    if (!index.isValid())
+        return;
     // Save painter info if needed
     painter->save();
-
     QFont font = QApplication::font();
 
     font.setBold(true);
@@ -17,39 +36,99 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     QRect subheaderRect = option.rect;
     QRect iconRect = option.rect;
 
+    QRect upRect;
+    upRect.setTop(option.rect.top() + 3);
+    upRect.setLeft(option.rect.right() - 15);
+    upRect.setRight(option.rect.right() - 2);
+    upRect.setBottom(option.rect.top() + 16);
+
+    QRect downRect;
+    downRect.setTop(option.rect.top() + 19);
+    downRect.setLeft(option.rect.right() - 15);
+    downRect.setRight(option.rect.right() - 2);
+    downRect.setBottom(option.rect.top() + 32);
+
     iconRect.setRight(iconRect.left() + 40);
     headerRect.setLeft(iconRect.right());
-    headerRect.setTop(iconRect.top());
 
-    subheaderRect.setLeft(subheaderRect.right() - 20);
+    subheaderRect.setLeft(subheaderRect.right() - 30);
 
     headerRect.setRight(subheaderRect.left());
+    QStringList stringData = qvariant_cast<QStringList>(index.data());
+    int myid = stringData[0].toInt();
+    int mycount = stringData[1].toInt();
 
-    int myid = qvariant_cast<int>(index.data(ID));
-    int mycost = qvariant_cast<int>(index.data(Cost));
+    Card card = database->getCard(myid);
+    int mycost = card.manaCost;
+    QString myname = card.name;
 
     /////// PAINTER HERE DRAW FUNCS ONLY
-    QColor color = QColor(255,255,255);
+    //Draw background image of database
     QPixmap image = *(database->getPortrait(myid));
     painter->drawPixmap(QPoint(iconRect.left(), iconRect.top()) , image );
     QPixmap costimage = *(database->getCost(mycost));
     costimage = costimage.scaled(20,20);
     painter->drawPixmap(QPoint(iconRect.left() + iconRect.width()/2 - costimage.width()/2, iconRect.top() + iconRect.height()/2-costimage.height()/2) , costimage);
+
+    //set color and draw font
+    QColor color = QColor(255,255,255);
+    if (mycount < playingDeck->countInDeck[index.row()])
+        color = QColor(200,200,0);
+    if (mycount == 0)
+        color = QColor(220,0,0);
     painter->setPen(color);
-    painter->drawRect(option.rect);
     painter->setFont(font);
-    painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,qvariant_cast<QString>(index.data(Name)));
-    painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2,qvariant_cast<QString>(index.data(Amount)));
+    painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
+    painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
+
+    //draw buttons for up and down maybe?
+    painter->drawPixmap(QPoint(upRect.left(), upRect.top()) , up );
+    painter->drawPixmap(QPoint(downRect.left(), downRect.top()) , down );
+
     // Restore painter info
     painter->restore();
+
 }
 
 //alocate each item size in listview.
 QSize CardDelegate::sizeHint(const QStyleOptionViewItem &  option ,
                               const QModelIndex & index) const
 {
-    QString myid = qvariant_cast<QString>(index.data(ID));
-    QPixmap hi= *(database->getPortrait(myid.toInt()));
+    QStringList stringData = qvariant_cast<QStringList>(index.data());
+    int myid = stringData[0].toInt();
+
+    QPixmap hi= *(database->getPortrait(myid));
     return(QSize(option.rect.width(),hi.height()));
 
 }
+
+bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+
+        // Emit a signal when the icon is clicked
+        if(event->type() == QEvent::MouseButtonRelease)
+        {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+            QRect upRect;
+            upRect.setTop(option.rect.top() + 3);
+            upRect.setLeft(option.rect.right() - 15);
+            upRect.setRight(option.rect.right() - 2);
+            upRect.setBottom(option.rect.top() + 16);
+
+            QRect downRect;
+            downRect.setTop(option.rect.top() + 19);
+            downRect.setLeft(option.rect.right() - 15);
+            downRect.setRight(option.rect.right() - 2);
+            downRect.setBottom(option.rect.top() + 32);
+
+            if(upRect.contains(mouseEvent->pos()))
+            {
+                emit upClicked(index.row());
+            } else if (downRect.contains(mouseEvent->pos())) {
+                emit downClicked(index.row());
+            }
+        }
+        return false;
+}
+

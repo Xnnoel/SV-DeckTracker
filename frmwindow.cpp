@@ -29,7 +29,6 @@ frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
     dir("."),
-    currentDeck("current", &cardDatabase),
     playingDeck("Don't use me", &cardDatabase)
 {
     ui->setupUi(this);
@@ -85,12 +84,17 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck.addCard(101231040);
 
     QListView *list =  ui->listView;
-    model = new QStandardItemModel();
-    CardDelegate * delegate = new CardDelegate(&cardDatabase);
+    model = new SVListModel;
+    model->setPointer(&cardDatabase, &playingDeck);
+    CardDelegate * delegate = new CardDelegate;
+    delegate->setPointers(&cardDatabase, &playingDeck);
 
-    list->setItemDelegate(delegate);
+    connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
+    connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
+
     list->setModel(model);
-    currentDeck = playingDeck;
+    list->setItemDelegate(delegate);
+
     loadDeck(model);
     list->show();
 
@@ -144,29 +148,12 @@ frmWindow::frmWindow(QWidget *parent) :
     costWidth = (int)round(0.02789 * width);
     costHeight = (int)round(0.04956 * height);
 
-
-
-    //load all costs here into a vector of phashes
-    for (int i = 1; i < 11; i++)
-    {
-        QString filename = dir.absolutePath() + "/CostGame/" + QString::number(i)+ ".png";
-        cv::Mat numbermap;
-        numbermap = cv::imread(filename.toStdString());
-        ulong64 myhash = PerceptualHash::phash(numbermap);
-        numberPHash.push_back(myhash);
-    }
-    QString filename = dir.absolutePath() + "/CostGame/18.png";
-    cv::Mat numbermap;
-    numbermap = cv::imread(filename.toStdString());
-    ulong64 myhash = PerceptualHash::phash(numbermap);
-    numberPHash.push_back(myhash);
-
-
     if (handle != 0)
     {
         // Start the update loop to check for cards in images
         counter = 0;
         turncounter = 0;
+        refreshRate = 100;
         handleValid = true;
 
         //create bitmap and screen to save rect
@@ -191,7 +178,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(100);
+        timer->start(refreshRate);
 
     }
 }
@@ -203,48 +190,47 @@ frmWindow::~frmWindow()
 
 void frmWindow::sortDeck()
 {
-    for (int i = 1; i < currentDeck.cardsInDeck.size(); i++)
+    for (int i = 1; i < playingDeck.cardsInDeck.size(); i++)
     {
         int j = i;
 
         while (j > 0 &&
-               cardDatabase.getCard(currentDeck.cardsInDeck[j-1]).manaCost >
-               cardDatabase.getCard(currentDeck.cardsInDeck[j]).manaCost)
+               cardDatabase.getCard(playingDeck.cardsInDeck[j-1]).manaCost >
+               cardDatabase.getCard(playingDeck.cardsInDeck[j]).manaCost)
         {
-            int tempCard = currentDeck.cardsInDeck[j];
-            int tempCount = currentDeck.countInDeck[j];
-            ulong64 tempHash = currentDeck.deckPHash[j];
-            currentDeck.cardsInDeck[j] = currentDeck.cardsInDeck[j-1];
-            currentDeck.countInDeck[j] = currentDeck.countInDeck[j-1];
-            currentDeck.deckPHash[j] = currentDeck.deckPHash[j-1];
-            currentDeck.cardsInDeck[j-1] = tempCard;
-            currentDeck.countInDeck[j-1] = tempCount;
-            currentDeck.deckPHash[j-1] = tempHash;
+            int tempCard = playingDeck.cardsInDeck[j];
+            int tempCount = playingDeck.countInDeck[j];
+            ulong64 tempHash = playingDeck.deckPHash[j];
+            playingDeck.cardsInDeck[j] = playingDeck.cardsInDeck[j-1];
+            playingDeck.countInDeck[j] = playingDeck.countInDeck[j-1];
+            playingDeck.deckPHash[j] = playingDeck.deckPHash[j-1];
+            playingDeck.cardsInDeck[j-1] = tempCard;
+            playingDeck.countInDeck[j-1] = tempCount;
+            playingDeck.deckPHash[j-1] = tempHash;
             j--;
         }
     }
 }
 
-void frmWindow::loadDeck(QStandardItemModel* model)
+void frmWindow::loadDeck(SVListModel* model)
 {
     //clear model first
-    model->clear();
+    model->clearData();
 
     //sort the current deck before loading it into model
     sortDeck();
 
     //Push all cards from current deck into model
-    for (int i = 0; i < currentDeck.cardsInDeck.size(); i++)
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++)
     {
-        Card card = cardDatabase.getCard( currentDeck.cardsInDeck[i]);
-        QStandardItem *item = new QStandardItem();
-        item->setData(card.manaCost,CardDelegate::Cost);
-        item->setData(card.ID,CardDelegate::ID);
-        item->setData(card.name,CardDelegate::Name);
-        item->setData(currentDeck.countInDeck[i],CardDelegate::Amount);
-        item->setEditable(false);
-        model->appendRow(item);
+        int id = playingDeck.cardsInDeck[i];
+        int count = playingDeck.countInDeck[i];
+
+        model->addCard(id);
+        model->setCount(id, count);
     }
+
+    ui->listView->setMaximumHeight(playingDeck.cardsInDeck.size() * 35 + 5);
 }
 
 void frmWindow::update()
@@ -266,8 +252,9 @@ void frmWindow::update()
         QRect boxRect;
         QPixmap drawer;
         ulong64 imagePHash;
-        ulong64 theirPHash;
 
+        if (ignoreNext > 0)
+            ignoreNext--;
 
         int distance;
 
@@ -287,10 +274,6 @@ void frmWindow::update()
             if (distance < 20 && ignoreNext < 1)
             {
                 setWindowTitle("Now it's my turn!");
-                ignoreNext = 50;
-                turncounter++;
-                QString trn = QString::number(turncounter);
-                ui->pushButton->setText(trn);
                 curState = Ui::STATE::FINDCARD;
                 cardFound = false;
             }
@@ -305,9 +288,11 @@ void frmWindow::update()
             mat = ASM::QPixmapToCvMat(drawer);
             imagePHash = PerceptualHash::phash(mat);
 
+            std::vector<ulong64> numberPHash = cardDatabase.getCostPHash();
+
             PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, numberPHash);
 
-            int cost = result.index+1;
+            int cost = cardDatabase.getCostfromPHash(numberPHash[result.index]);
             int costDistance = result.distance;
 
             //Perspective shift on card for better readability (why are they tilted)
@@ -335,17 +320,23 @@ void frmWindow::update()
 
             imagePHash = PerceptualHash::phash(resultMat);
 
-            PerceptualHash::ComparisonResult bestguess = PerceptualHash::best(imagePHash, currentDeck.deckPHash);
+            std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(3, imagePHash, playingDeck.deckPHash);
 
-            if (bestguess.distance < 15 || costDistance < 15)
+            if (ignoreNext > 0)
+                setWindowTitle("Ignoring");
+            else
+                setWindowTitle("Looking for card");
+
+            if (ignoreNext < 1 && (bestguess[0].distance < 15 || costDistance < 15))
             {
-                ui->tableWidget->clearContents();
-
-                ui->tableWidget->setItem(0,0,new QTableWidgetItem(cardDatabase.getCard(currentDeck.cardsInDeck[bestguess.index]).name));
-                ui->tableWidget->setItem(0,1,new QTableWidgetItem(QString::number(bestguess.distance)));
-                QString heh = "Cost is " + QString::number(cost);
-                ui->tableWidget->setItem(1,0,new QTableWidgetItem(heh));
-                ui->tableWidget->setItem(1,1,new QTableWidgetItem(QString::number(costDistance)));
+                //Matches best 3 to cost, hopefully one matches
+                for (int i = 0; i < 3; i++)
+                if (cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).manaCost == cost)
+                {
+                    model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
+                    ignoreNext = (int)round(1000/refreshRate);
+                    break;
+                }
             }
 
             break;
@@ -360,7 +351,7 @@ void frmWindow::update()
 
 void frmWindow::on_pushButton_clicked()
 {
-    cv::imwrite("filetitledraw.png", resultMat);
+    loadDeck(model);
 }
 
 std::wstring s2ws(const std::string& s)

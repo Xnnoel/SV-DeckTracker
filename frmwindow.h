@@ -5,6 +5,8 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 #include "svdatabase.h"
+#include "svlistmodel.h"
+
 #include <QDir>
 #include <vector>
 
@@ -51,7 +53,7 @@ private:
     bool cardFound;
     bool passed;
 
-    QStandardItemModel * model;
+    SVListModel* model;
 
     // bounding box for window
     int height;
@@ -81,23 +83,20 @@ private:
     bool handleValid;
 
     Ui::STATE curState;
-    void loadDeck(QStandardItemModel* model);
+    void loadDeck(SVListModel* model);
     void sortDeck();
-
-    // This keeps track of current deck in game; This has count. Different from the ones in files.
-    cardlist currentDeck;
 
     // This is to hold all the info about the deck in the game
     cardlist playingDeck;
 
     // Database of all the cards in the game
     svDatabase cardDatabase;
-    std::vector<ulong64> numberPHash;
 
     //debug stuff
     cv::Mat resultMat;
     int counter;
     int turncounter;
+    int refreshRate;
     int ignoreNext;
 
     int turnDraw;
