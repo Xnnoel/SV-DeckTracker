@@ -1,7 +1,6 @@
 #include "cardlist.h"
 
-cardlist::cardlist(std::string filename, svDatabase* database):
-    deckName(filename),
+cardlist::cardlist(svDatabase* database):
     databasePtr(database)
 {
 }

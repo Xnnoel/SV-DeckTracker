@@ -10,6 +10,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QMenuBar>
+#include <QFileDialog>
 
 #include <qtimer.h>
 #include <Windows.h>
@@ -29,20 +31,26 @@ frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
     dir("."),
-    playingDeck("Don't use me", &cardDatabase)
+    playingDeck(&cardDatabase)
 {
     ui->setupUi(this);
 
-    // verify bluestacks is open and set up a window handle to the screen
+    // Set up some inits
     handle = 0;
     mat = 0;
     matTexture = 0;
     cardFound = false;
 
+    //add menubar?
+    createActions();
+    createMenus();
+
     ///DEBUG
     /// ADD IN SOME SAMPLE CARDS FOR CURRENT DECK
-    ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO CURRENT
-    playingDeck.addCard(100211010);
+    ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO MODEL
+    playingDeck.setName("Midrange Royal?");
+    playingDeck.setDesc("This is a description of the deck. Hopefully you can write tips and ideas here on what to evolve or something. I dunno.");
+    /*playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(101232020);
@@ -81,8 +89,10 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck.addCard(100221020);
     playingDeck.addCard(101241030);
     playingDeck.addCard(101234020);
-    playingDeck.addCard(101231040);
+    playingDeck.addCard(101231040);*/
 
+
+    // Set up model view
     QListView *list =  ui->listView;
     model = new SVListModel;
     model->setPointer(&cardDatabase, &playingDeck);
@@ -94,10 +104,10 @@ frmWindow::frmWindow(QWidget *parent) :
 
     list->setModel(model);
     list->setItemDelegate(delegate);
-
-    loadDeck(model);
+    loadDeck(model);        //load data into model
     list->show();
 
+    // Load in application settings
     QFile file(dir.absolutePath() + "/settings.ini");
     if (!file.open(QIODevice::ReadOnly))
         qWarning("Couldn't find settings.ini");
@@ -119,7 +129,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
     handle = ::FindWindow(NULL, result);
 
-    //load values here
+    //load values we pulled from the file
     int topborder = settingsMap.value("Topborder").toInt();
     int botborder = settingsMap.value("Botborder").toInt();
     int leftborder = settingsMap.value("Leftborder").toInt();
@@ -148,11 +158,10 @@ frmWindow::frmWindow(QWidget *parent) :
     costWidth = (int)round(0.02789 * width);
     costHeight = (int)round(0.04956 * height);
 
+    // If we found the application, load this
     if (handle != 0)
     {
         // Start the update loop to check for cards in images
-        counter = 0;
-        turncounter = 0;
         refreshRate = 100;
         handleValid = true;
 
@@ -229,8 +238,9 @@ void frmWindow::loadDeck(SVListModel* model)
         model->addCard(id);
         model->setCount(id, count);
     }
-
-    ui->listView->setMaximumHeight(playingDeck.cardsInDeck.size() * 35 + 5);
+    int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
+    ui->listView->setFixedHeight(std::max(listsize,400));
+    this->setFixedHeight(ui->listView->height() + 50);
 }
 
 void frmWindow::update()
@@ -349,11 +359,6 @@ void frmWindow::update()
     }
 }
 
-void frmWindow::on_pushButton_clicked()
-{
-    loadDeck(model);
-}
-
 std::wstring s2ws(const std::string& s)
 {
     int len;
@@ -364,4 +369,155 @@ std::wstring s2ws(const std::string& s)
     std::wstring r(buf);
     delete[] buf;
     return r;
+}
+
+void frmWindow::createActions()
+{
+    NewElf = new QAction(tr("&Elf"), this);
+    NewElf->setToolTip(tr("Create an elf deck"));
+    connect(NewElf, &QAction::triggered, this, &frmWindow::slotElf);
+
+    NewRoyal = new QAction(tr("&Royal"), this);
+    NewRoyal->setToolTip(tr("Create an royal deck"));
+    connect(NewRoyal, &QAction::triggered, this, &frmWindow::slotRoyal);
+
+    NewWitch = new QAction(tr("&Witch"), this);
+    NewWitch->setToolTip(tr("Create an Witch deck"));
+    connect(NewWitch, &QAction::triggered, this, &frmWindow::slotWitch);
+
+    NewDragon = new QAction(tr("&Dragon"), this);
+    NewDragon->setToolTip(tr("Create an Dragon deck"));
+    connect(NewDragon, &QAction::triggered, this, &frmWindow::slotDragon);
+
+    NewNecro = new QAction(tr("&Necro"), this);
+    NewNecro->setToolTip(tr("Create an Necro deck"));
+    connect(NewNecro, &QAction::triggered, this, &frmWindow::slotNecro);
+
+    NewVampire = new QAction(tr("&Vampire"), this);
+    NewVampire->setToolTip(tr("Create an Vampire deck"));
+    connect(NewVampire, &QAction::triggered, this, &frmWindow::slotVampire);
+
+    NewBishop = new QAction(tr("&Bishop"), this);
+    NewBishop->setToolTip(tr("Create an Bishop deck"));
+    connect(NewBishop, &QAction::triggered, this, &frmWindow::slotBishop);
+
+    LoadAction = new QAction(tr("&Load"), this);
+    LoadAction->setToolTip(tr("Load a deck"));
+    connect(LoadAction, &QAction::triggered, this, &frmWindow::slotLoad);
+
+    SaveAction = new QAction(tr("&Save as..."), this);
+    SaveAction->setToolTip(tr("Save current deck"));
+    connect(SaveAction, &QAction::triggered, this, &frmWindow::slotSave);
+
+    HelpAction = new QAction(tr("&Help"), this);
+    HelpAction->setToolTip(tr("Open the help text"));
+    connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
+
+    About = new QAction(tr("&About"), this);
+    connect(About, &QAction::triggered, this, &frmWindow::slotAbout);
+
+    Contact = new QAction(tr("&Contact"), this);
+    connect(Contact, &QAction::triggered, this, &frmWindow::slotContact);
+
+}
+
+
+void frmWindow::createMenus()
+{
+    NewMenu = new Menu();
+    NewMenu->setTitle(tr("&New"));
+    menuBar()->addMenu(NewMenu);
+    NewMenu->addAction(NewElf);
+    NewMenu->addAction(NewRoyal);
+    NewMenu->addAction(NewWitch);
+    NewMenu->addAction(NewDragon);
+    NewMenu->addAction(NewNecro);
+    NewMenu->addAction(NewVampire);
+    NewMenu->addAction(NewBishop);
+    NewMenu->addSeparator();
+
+
+    DeckMenu = new Menu();
+    DeckMenu->setTitle(tr("&Load"));
+    menuBar()->addMenu(DeckMenu);
+    DeckMenu->addAction(LoadAction);
+    DeckMenu->addAction(SaveAction);
+
+    HelpMenu = new Menu();
+    HelpMenu->setTitle(tr("&Help"));
+    menuBar()->addMenu(HelpMenu);
+    HelpMenu->addAction(HelpAction);
+    HelpMenu->addSeparator();
+    HelpMenu->addAction(About);
+    HelpMenu->addAction(Contact);
+}
+
+void frmWindow::slotElf()
+{
+    //do nothing for now
+}
+
+void frmWindow::slotRoyal()
+{
+    //do nothing for now
+}
+void frmWindow::slotWitch()
+{
+    //do nothing for now
+}
+void frmWindow::slotDragon()
+{
+    //do nothing for now
+}
+void frmWindow::slotNecro()
+{
+    //do nothing for now
+}
+void frmWindow::slotVampire()
+{
+    //do nothing for now
+}
+void frmWindow::slotBishop()
+{
+    //do nothing for now
+}
+void frmWindow::slotLoad()
+{
+    //do nothing for now
+}
+void frmWindow::slotSave()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
+    QFile savefile(fileName);
+    if (!savefile.open(QIODevice::WriteOnly)) {
+           qWarning("Couldn't open save");
+    }
+
+    std::string final = playingDeck.getName() + '\n';
+    savefile.write(final.c_str());
+    std::string desc = playingDeck.getDescription() + '\n';
+    savefile.write(desc.c_str());
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
+    {
+        for (int j = 0; j < playingDeck.countInDeck[i]; j++)
+        {
+            std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
+            savefile.write(writeID.c_str());
+        }
+    }
+    savefile.close();
+
+}
+void frmWindow::slotAbout()
+{
+    //do nothing for now
+}
+void frmWindow::slotContact()
+{
+    //do nothing for now
+}
+void frmWindow::slotHelp()
+{
+    //do nothing for now
 }

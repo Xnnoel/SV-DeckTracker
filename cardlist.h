@@ -15,9 +15,14 @@ public:
     void addCard(int id);
     void removeCard(int id);
     int getPosition(int id);
-    cardlist(std::string deckname, svDatabase* database);          //name of card
+    std::string getName(){return deckName;}
+    std::string getDescription(){return description;}
+    void setName(std::string name){deckName = name;}
+    void setDesc(std::string desc){description = desc;}
+    cardlist(svDatabase* database);          //name of card
 private:
     std::string deckName;
+    std::string description;
     svDatabase* databasePtr;
 
 };

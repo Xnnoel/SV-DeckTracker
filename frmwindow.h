@@ -6,6 +6,7 @@
 #include "cardlist.h"
 #include "svdatabase.h"
 #include "svlistmodel.h"
+#include "menu.h"
 
 #include <QDir>
 #include <vector>
@@ -35,7 +36,22 @@ public:
     ~frmWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void slotElf();
+    void slotRoyal();
+    void slotWitch();
+    void slotDragon();
+    void slotNecro();
+    void slotVampire();
+    void slotBishop();
+
+    void slotLoad();
+
+    void slotSave();
+
+    void slotHelp();
+    void slotAbout();
+    void slotContact();
+
 
 private:
     Ui::frmWindow *ui;
@@ -79,6 +95,29 @@ private:
     int costLeft;
     int costTop;
 
+    // Menu stuff
+    void createActions();
+    void createMenus();
+    Menu *NewMenu;
+    Menu *DeckMenu;
+    Menu *HelpMenu;
+
+    // Class Create New
+    QAction* NewElf;
+    QAction* NewRoyal;
+    QAction* NewWitch;
+    QAction* NewDragon;
+    QAction* NewNecro;
+    QAction* NewVampire;
+    QAction* NewBishop;
+    //Load/Save Decks
+    QAction* LoadAction;
+    QAction* SaveAction;
+    //Help
+    QAction* HelpAction;
+    QAction* About;
+    QAction* Contact;
+
     QDir dir;
     bool handleValid;
 
@@ -92,17 +131,14 @@ private:
     // Database of all the cards in the game
     svDatabase cardDatabase;
 
+
+
     //debug stuff
     cv::Mat resultMat;
-    int counter;
-    int turncounter;
     int refreshRate;
     int ignoreNext;
 
     int turnDraw;
-
-    std::vector<int> id;
-    std::vector<int> count;
 };
 
 #endif // FRMWINDOW_H

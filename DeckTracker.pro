@@ -28,7 +28,8 @@ HEADERS  += frmwindow.h \
     svdatabase.h \
     card.h \
     carddelegate.h \
-    svlistmodel.h
+    svlistmodel.h \
+    menu.h
 
 
 FORMS    += frmwindow.ui

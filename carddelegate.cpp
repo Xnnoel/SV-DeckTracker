@@ -23,8 +23,9 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 {
     QStyledItemDelegate::paint(painter,option,index);
 
-    if (!index.isValid())
+    if (!index.isValid()){
         return;
+    }
     // Save painter info if needed
     painter->save();
     QFont font = QApplication::font();
