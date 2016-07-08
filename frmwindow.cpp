@@ -14,6 +14,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QGridLayout>
+#include <QLabel>
+#include <QPlainTextEdit>
+
 #include <qtimer.h>
 #include <Windows.h>
 #include <iostream>
@@ -41,8 +45,10 @@ frmWindow::frmWindow(QWidget *parent) :
     mat = 0;
     matTexture = 0;
     cardFound = false;
+    setWindowTitle("Shadowverse Deck Tracker");
 
     //add menubar?
+    this->setMyLayout();
     createActions();
     createMenus();
 
@@ -51,7 +57,7 @@ frmWindow::frmWindow(QWidget *parent) :
     ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO MODEL
     playingDeck.setName("Midrange Royal?");
     playingDeck.setDesc("This is a description of the deck. Hopefully you can write tips and ideas here on what to evolve or something. I dunno.");
-    //playingDeck.addCard(100211010);
+    playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(100211010);
     playingDeck.addCard(101232020);
@@ -94,7 +100,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
 
     // Set up model view
-    QListView *list =  ui->listView;
+    //QListView *list =  ui->listView;
     model = new SVListModel;
     model->setPointer(&cardDatabase, &playingDeck);
     CardDelegate * delegate = new CardDelegate;
@@ -104,10 +110,11 @@ frmWindow::frmWindow(QWidget *parent) :
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
-    list->setModel(model);
-    list->setItemDelegate(delegate);
+
+    PlayingDeckList->setModel(model);
+    PlayingDeckList->setItemDelegate(delegate);
     loadDeck(model);        //load data into model
-    list->show();
+    PlayingDeckList->show();
 
     // Load in application settings
     QFile file(dir.absolutePath() + "/settings.ini");
@@ -159,6 +166,12 @@ frmWindow::frmWindow(QWidget *parent) :
     costTop = (int)round(0.4461 * height) + top;
     costWidth = (int)round(0.02789 * width);
     costHeight = (int)round(0.04956 * height);
+
+
+    //// DEBUG ADD WINDOW TO SIDE
+
+
+
 
     // If we found the application, load this
     if (handle != 0)
@@ -240,13 +253,17 @@ void frmWindow::loadDeck(SVListModel* model)
         model->addCard(id);
         model->setCount(id, count);
     }
+    setMinimumWidth(450);
+    setMaximumWidth(700);
+    resize(550,100);
     int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
-    ui->listView->setFixedHeight(std::max(listsize,400));
-    this->setFixedHeight(ui->listView->height() + 50);
+    PlayingDeckList->setFixedHeight(std::max(listsize,400));
+    this->setFixedHeight(PlayingDeckList->height() + 70);
+
 
     //Set text description
-    ui->textDeckName->document()->setPlainText(QString::fromStdString(playingDeck.getName()));
-    ui->textDeckDesc->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
+    DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
+    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
 
     int decksize = 0;
     for (int i = 0; i < playingDeck.countInDeck.size(); i++)
@@ -267,7 +284,7 @@ void frmWindow::updateCount(int cardsize)
     }
 
     QString cardCountLabel = QString::number(cardsize) + "/" + QString::number(decksize) + " Cards";
-    ui->DeckCount->setText(cardCountLabel);
+    //ui->DeckCount->setText(cardCountLabel);
 }
 
 void frmWindow::update()
@@ -310,7 +327,7 @@ void frmWindow::update()
 
             if (distance < 20 && ignoreNext < 1)
             {
-                setWindowTitle("Now it's my turn!");
+
                 curState = Ui::STATE::FINDCARD;
                 cardFound = false;
             }
@@ -359,11 +376,6 @@ void frmWindow::update()
 
             std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(3, imagePHash, playingDeck.deckPHash);
 
-            if (ignoreNext > 0)
-                setWindowTitle("Ignoring");
-            else
-                setWindowTitle("Looking for card");
-
             if (ignoreNext < 1 && (bestguess[0].distance < 15 || costDistance < 15))
             {
                 //Matches best 3 to cost, hopefully one matches
@@ -382,7 +394,7 @@ void frmWindow::update()
     else
     {
         handleValid = false;
-        setWindowTitle("Window is closed");
+        setWindowTitle("Can't Find Window...");
     }
 }
 
@@ -463,9 +475,8 @@ void frmWindow::createMenus()
     NewMenu->addAction(NewBishop);
     NewMenu->addSeparator();
 
-
     DeckMenu = new Menu();
-    DeckMenu->setTitle(tr("&Load"));
+    DeckMenu->setTitle(tr("&Deck"));
     menuBar()->addMenu(DeckMenu);
     DeckMenu->addAction(LoadAction);
     DeckMenu->addAction(SaveAction);
@@ -515,8 +526,10 @@ void frmWindow::slotLoad()
         tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
     QFile loadfile(fileName);
     if (!loadfile.open(QIODevice::ReadOnly))
+    {
         qWarning("Couldn't open");
-
+        return;
+    }
     QTextStream textStream(&loadfile);
     QString line = textStream.readLine();
     std::string deckname = line.toStdString();
@@ -553,7 +566,7 @@ void frmWindow::slotSave()
     if(decksize < 40)
     {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, tr("Save"), tr("You have less than 40 cards. Do you still want to save?"),
+        reply = QMessageBox::question(this, tr("Save"), tr("There are less than 40 cards in the deck. Do you still want to save?"),
                                         QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::No) {
              return;
@@ -565,11 +578,12 @@ void frmWindow::slotSave()
     QFile savefile(fileName);
     if (!savefile.open(QIODevice::WriteOnly)) {
            qWarning("Couldn't open save");
+           return;
     }
 
-    QString textname = ui->textDeckName->document()->toPlainText();
+    QString textname = DeckNameEdit->text();
     playingDeck.setName(textname.toStdString());
-    QString textdesc = ui->textDeckDesc->document()->toPlainText();
+    QString textdesc = DeckDescEdit->document()->toPlainText();
     playingDeck.setDesc(textdesc.toStdString());
 
     std::string final = playingDeck.getName() + '\n';
@@ -599,4 +613,52 @@ void frmWindow::slotContact()
 void frmWindow::slotHelp()
 {
     //do nothing for now
+}
+
+void frmWindow::setMyLayout()
+{
+
+
+    //layout of all those things yay
+    mainLayout = new QGridLayout();
+    label1 = new QLabel("Deck Name");
+    label1->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    label1->setMaximumHeight(20);
+
+    label2 = new QLabel("Deck Description");
+    label2->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    label2->setMaximumHeight(20);
+
+    label3 = new QLabel("");
+    label3->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    label3->setMinimumHeight(200);
+
+    label4 = new QLabel("Four");
+    label4->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    label4->setMaximumHeight(20);
+
+    DeckNameEdit = new QLineEdit();
+    DeckNameEdit->setMaximumHeight(25);
+    DeckNameEdit->setMaxLength(35);
+    DeckNameEdit->setPlaceholderText(tr(" Deck name here"));
+
+    DeckDescEdit = new QPlainTextEdit();
+    DeckDescEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+    DeckDescEdit->setMinimumHeight(250);
+    DeckDescEdit->setPlaceholderText(tr(" Default Description"));
+
+    PlayingDeckList = new QListView();
+    PlayingDeckList->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+    PlayingDeckList->setFixedWidth(270);
+
+    mainLayout->addWidget(label1, 0, 0);
+    mainLayout->addWidget(DeckNameEdit, 1, 0);
+    mainLayout->addWidget(label2, 2, 0);
+    mainLayout->addWidget(DeckDescEdit, 3, 0);
+    mainLayout->addWidget(label3, 4, 0);
+    mainLayout->addWidget(label4, 0, 1);
+    mainLayout->addWidget(PlayingDeckList, 1, 1,4,1);
+
+    ui->centralWidget->setLayout(mainLayout);
+
 }

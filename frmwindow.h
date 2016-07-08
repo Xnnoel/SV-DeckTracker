@@ -12,6 +12,10 @@
 #include <vector>
 
 #include <QListView>
+#include <QGridLayout>
+#include <QLabel>
+#include <QPlainTextEdit>
+#include <QLineEdit>
 #include <QStandardItemModel>
 #include "carddelegate.h"
 
@@ -125,6 +129,7 @@ private:
     Ui::STATE curState;
     void loadDeck(SVListModel* model);
     void sortDeck();
+    void setMyLayout();
 
     // This is to hold all the info about the deck in the game
     cardlist playingDeck;
@@ -132,7 +137,15 @@ private:
     // Database of all the cards in the game
     svDatabase cardDatabase;
 
-
+    // Stuff pertaining to grid layout
+    QGridLayout* mainLayout;
+    QLabel* label1;
+    QLabel* label2;
+    QLabel* label3;
+    QLabel* label4;
+    QLineEdit* DeckNameEdit;
+    QPlainTextEdit* DeckDescEdit;
+    QListView* PlayingDeckList;
 
     //debug stuff
     cv::Mat resultMat;

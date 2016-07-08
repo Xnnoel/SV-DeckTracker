@@ -105,31 +105,29 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem &  option ,
 
 bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    // Emit a signal when the icon is clicked
+    if(event->type() == QEvent::MouseButtonRelease)
+    {
+        QRect upRect;
+        upRect.setTop(option.rect.top() + 3);
+        upRect.setLeft(option.rect.right() - 15);
+        upRect.setRight(option.rect.right() - 2);
+        upRect.setBottom(option.rect.top() + 16);
 
-        // Emit a signal when the icon is clicked
-        if(event->type() == QEvent::MouseButtonRelease)
+        QRect downRect;
+        downRect.setTop(option.rect.top() + 19);
+        downRect.setLeft(option.rect.right() - 15);
+        downRect.setRight(option.rect.right() - 2);
+        downRect.setBottom(option.rect.top() + 32);
+
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        if(upRect.contains(mouseEvent->pos()))
         {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-
-            QRect upRect;
-            upRect.setTop(option.rect.top() + 3);
-            upRect.setLeft(option.rect.right() - 15);
-            upRect.setRight(option.rect.right() - 2);
-            upRect.setBottom(option.rect.top() + 16);
-
-            QRect downRect;
-            downRect.setTop(option.rect.top() + 19);
-            downRect.setLeft(option.rect.right() - 15);
-            downRect.setRight(option.rect.right() - 2);
-            downRect.setBottom(option.rect.top() + 32);
-
-            if(upRect.contains(mouseEvent->pos()))
-            {
-                emit upClicked(index.row());
-            } else if (downRect.contains(mouseEvent->pos())) {
-                emit downClicked(index.row());
-            }
+            emit upClicked(index.row());
+        } else if (downRect.contains(mouseEvent->pos())) {
+            emit downClicked(index.row());
         }
-        return false;
+    }
+    return false;
 }
 
