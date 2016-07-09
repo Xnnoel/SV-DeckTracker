@@ -4,6 +4,7 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 
+
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
 #include <QDirIterator>
@@ -29,6 +30,10 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Gdi32.lib")
+
+#define WINWIDTH 550
+#define EDITWINWIDTH 850
+#define MAXWINHEIGHT 810
 
 std::wstring s2ws(const std::string& s);
 
@@ -97,13 +102,14 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck.addCard(101241030);
     playingDeck.addCard(101234020);
     playingDeck.addCard(101231040);
+    delegate->editMode = false;
+    playingDeck.setClass(1);
 
 
     // Set up model view
-    //QListView *list =  ui->listView;
     model = new SVListModel;
     model->setPointer(&cardDatabase, &playingDeck);
-    CardDelegate * delegate = new CardDelegate;
+    delegate = new CardDelegate;
     delegate->setPointers(&cardDatabase, &playingDeck);
 
     connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
@@ -115,6 +121,19 @@ frmWindow::frmWindow(QWidget *parent) :
     PlayingDeckList->setItemDelegate(delegate);
     loadDeck(model);        //load data into model
     PlayingDeckList->show();
+
+    //set up edit model view and stuff
+    editmodel = new SVEditModel;
+    editmodel->setPointer(&cardDatabase, &playingDeck, model);
+    editdelegate = new editDelegate;
+    editdelegate->setPointers(&cardDatabase, &playingDeck);
+
+    connect(editdelegate, SIGNAL(plusClicked(int)), editmodel, SLOT(slotPlusRow(int)));
+    connect(editdelegate, SIGNAL(minusClicked(int)), editmodel, SLOT(slotMinusRow(int)));
+    connect(editmodel, SIGNAL(deckChanged(int)), this, SLOT(refreshList(int)));
+    EditDeckList->setModel(editmodel);
+    EditDeckList->setItemDelegate(editdelegate);
+    EditDeckList->setHidden(true);
 
     // Load in application settings
     QFile file(dir.absolutePath() + "/settings.ini");
@@ -253,23 +272,15 @@ void frmWindow::loadDeck(SVListModel* model)
         model->addCard(id);
         model->setCount(id, count);
     }
-    setMinimumWidth(450);
-    setMaximumWidth(700);
-    resize(550,100);
+    setFixedWidth(WINWIDTH);
     int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
-    PlayingDeckList->setFixedHeight(std::max(listsize,400));
-    this->setFixedHeight(PlayingDeckList->height() + 70);
-
-
+    PlayingDeckList->setFixedHeight(std::min(MAXWINHEIGHT-71, std::max(listsize,400)));
+    setFixedHeight(std::max(MAXWINHEIGHT, PlayingDeckList->height() + 70));
     //Set text description
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
     DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
 
-    int decksize = 0;
-    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
-    {
-        decksize += playingDeck.countInDeck[i];
-    }
+    int decksize = playingDeck.getDeckSize();
 
     updateCount(decksize);
 
@@ -277,14 +288,10 @@ void frmWindow::loadDeck(SVListModel* model)
 
 void frmWindow::updateCount(int cardsize)
 {
-    int decksize = 0;
-    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
-    {
-        decksize += playingDeck.countInDeck[i];
-    }
+    int decksize = playingDeck.getDeckSize();
 
     QString cardCountLabel = QString::number(cardsize) + "/" + QString::number(decksize) + " Cards";
-    //ui->DeckCount->setText(cardCountLabel);
+    label4->setText(cardCountLabel);
 }
 
 void frmWindow::update()
@@ -493,31 +500,60 @@ void frmWindow::createMenus()
 void frmWindow::slotElf()
 {
     //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(0);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor(); //spawns an editor on the right side
 }
 
 void frmWindow::slotRoyal()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(1);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotWitch()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(2);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotDragon()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(3);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotNecro()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(4);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotVampire()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(5);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotBishop()
 {
-    //do nothing for now
+    playingDeck.clear();
+    playingDeck.setClass(6);
+    loadDeck(model);
+    loadEdit(playingDeck.getClass());
+    createEditor();
 }
 void frmWindow::slotLoad()
 {
@@ -534,6 +570,8 @@ void frmWindow::slotLoad()
     QString line = textStream.readLine();
     std::string deckname = line.toStdString();
     playingDeck.clear();
+    line = textStream.readLine();
+    int classnum = std::stoi(line.toStdString());
     line = textStream.readLine();
     std::string deckdesc;
     while (line != "--deck--")
@@ -553,16 +591,19 @@ void frmWindow::slotLoad()
 
     playingDeck.setName(deckname);
     playingDeck.setDesc(deckdesc);
+    playingDeck.setClass(classnum);
     loadfile.close();
     loadDeck(model);
+    delegate->editMode = false;
+    mainLayout->removeWidget(EditDeckList);
+    mainLayout->removeWidget(okButton);
+    EditDeckList->setGeometry(0,0,0,0);
+    okButton->setGeometry(0,0,0,0);
+    setFixedWidth(WINWIDTH);
 }
 void frmWindow::slotSave()
 {
-    int decksize = 0;
-    for (int i = 0; i < playingDeck.countInDeck.size(); i++)
-    {
-        decksize += playingDeck.countInDeck[i];
-    }
+    int decksize = playingDeck.getDeckSize();
     if(decksize < 40)
     {
         QMessageBox::StandardButton reply;
@@ -588,6 +629,8 @@ void frmWindow::slotSave()
 
     std::string final = playingDeck.getName() + '\n';
     savefile.write(final.c_str());
+    std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
+    savefile.write(classnum.c_str());
     std::string desc = playingDeck.getDescription() + '\n';
     savefile.write(desc.c_str());
     savefile.write("--deck--\n");
@@ -633,9 +676,10 @@ void frmWindow::setMyLayout()
     label3->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
     label3->setMinimumHeight(200);
 
-    label4 = new QLabel("Four");
+    label4 = new QLabel("Cards");
     label4->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
     label4->setMaximumHeight(20);
+    label4->setAutoFillBackground(true);
 
     DeckNameEdit = new QLineEdit();
     DeckNameEdit->setMaximumHeight(25);
@@ -643,7 +687,7 @@ void frmWindow::setMyLayout()
     DeckNameEdit->setPlaceholderText(tr(" Deck name here"));
 
     DeckDescEdit = new QPlainTextEdit();
-    DeckDescEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+    DeckDescEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     DeckDescEdit->setMinimumHeight(250);
     DeckDescEdit->setPlaceholderText(tr(" Default Description"));
 
@@ -657,8 +701,119 @@ void frmWindow::setMyLayout()
     mainLayout->addWidget(DeckDescEdit, 3, 0);
     mainLayout->addWidget(label3, 4, 0);
     mainLayout->addWidget(label4, 0, 1);
-    mainLayout->addWidget(PlayingDeckList, 1, 1,4,1);
+    mainLayout->addWidget(PlayingDeckList, 1, 1,4,1, Qt::AlignTop);
 
     ui->centralWidget->setLayout(mainLayout);
 
+    //set up extra layout here
+    EditDeckList = new QListView();
+    EditDeckList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    okButton = new QPushButton("Done");
+    connect(okButton, SIGNAL (released()),this, SLOT (slotButtonPushed()));
+
+}
+
+void frmWindow::createEditor()
+{
+    // This Spawns an editor to the right side that you can use to click on the deck with
+    // Need a new list delegate and model for the editor damnit
+    // shrink window size
+    // Maybe we cheat and have it loaded beforehand so we only need to expand win width?
+    mainLayout->addWidget(okButton, 0, 2);
+    mainLayout->addWidget(EditDeckList, 1, 2,4,1);
+
+    setFixedWidth(EDITWINWIDTH);
+
+    delegate->editMode = true;
+    PlayingDeckList->setFixedHeight(742);
+}
+
+void frmWindow::slotButtonPushed()
+{
+    mainLayout->removeWidget(EditDeckList);
+    mainLayout->removeWidget(okButton);
+    EditDeckList->setGeometry(0,0,0,0);
+    okButton->setGeometry(0,0,0,0);
+    setFixedWidth(WINWIDTH);
+    delegate->editMode = false;
+    this->loadDeck(model);
+}
+
+void frmWindow::loadEdit(int subClass)
+{
+    //Load nuetrals into edit
+    for (int i = 0; i < 8; i ++)
+        editmodel->addCard(cardDatabase.cardID[i]);
+
+    for (int i = 85; i < 109; i++)
+        editmodel->addCard(cardDatabase.cardID[i]);
+
+    switch(subClass)
+    {
+    case 0: //elf
+        for (int i = 8; i < 19; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 109; i < 151; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 1: //royal
+        for (int i = 19; i < 30; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 151; i < 193; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 2: //witch
+        for (int i = 30; i < 41; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 193; i < 235; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 3: //dragon
+        for (int i = 41; i < 52; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 235; i < 277; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 4: //necro
+        for (int i = 52; i < 63; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 277; i < 319; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 5: //blood
+        for (int i = 63; i < 74; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 319; i < 361; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    case 6: //bishop
+        for (int i = 74; i < 85; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+        for (int i = 361; i < 403; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+    break;
+    }
+    //sort editmodel?
+    //add checkboxes for neutral only/class only
+    EditDeckList->setHidden(false);
+}
+
+void frmWindow::refreshList(int meh)
+{
+    //clear model first
+    model->clearData();
+
+    //sort the current deck before loading it into model
+    sortDeck();
+
+    //Push all cards from current deck into model
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++)
+    {
+        int id = playingDeck.cardsInDeck[i];
+        int count = playingDeck.countInDeck[i];
+
+        model->addCard(id);
+        model->setCount(id, count);
+    }
+    updateCount(meh);
 }

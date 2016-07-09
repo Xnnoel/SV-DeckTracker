@@ -5,6 +5,7 @@
 #include "card.h"
 #include <QString>
 #include <QPixmap>
+#include <QVector>
 
 typedef unsigned long long int ulong64;
 
@@ -20,6 +21,7 @@ public:
     int getCostfromPHash(ulong64);
     void load();
     int size();
+    QVector<int> cardID;
 private:
     QHash<int , Card> cardMap;
     QHash<int , QPixmap> portraitMap;

@@ -20,6 +20,7 @@ void svDatabase::addCard(int id, Card card){
     QDir dir(".");
     QPixmap image( dir.absolutePath() + "/Portraits/" + QString::number(id) + ".jpg");
     portraitMap.insert(id, image);
+    cardID.push_back(id);
 }
 
 Card svDatabase::getCard(int id)

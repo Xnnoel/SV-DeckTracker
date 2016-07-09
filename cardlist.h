@@ -21,11 +21,17 @@ public:
     void setName(std::string name){deckName = name;}
     void setDesc(std::string desc){description = desc;}
     cardlist(svDatabase* database);          //name of card
+    bool getMode(){return editMode;}
+    void setMode(bool mode){editMode = mode;}
+    int getClass(){return myClass;}
+    void setClass(int classnum){myClass = classnum;}
+    int getDeckSize();
 private:
     std::string deckName;
     std::string description;
     svDatabase* databasePtr;
-
+    int myClass;
+    bool editMode;
 };
 
 #endif // CARDLIST_H

@@ -13,7 +13,8 @@ void cardlist::addCard(int id)
     {
         if (cardsInDeck[i] == id)
         {
-            countInDeck[i]++;
+            if (countInDeck[i] < 3)
+                countInDeck[i]++;
             return;
         }
     }
@@ -26,16 +27,21 @@ void cardlist::addCard(int id)
 
 void cardlist::removeCard(int id)
 {
-    int index;
     for (int i = 0; i < cardsInDeck.size(); i++)
     {
         if (cardsInDeck[i] == id)
         {
-            index = i;
-            break;
+
+            if (countInDeck[i] > 0)
+                countInDeck[i]--;
+            if (countInDeck[i] == 0){
+                countInDeck.erase(countInDeck.begin() + i);
+                cardsInDeck.erase(cardsInDeck.begin() + i);
+            }
+            return;
         }
     }
-    countInDeck[index]--;
+
 }
 
 int cardlist::getPosition(int id){
@@ -49,4 +55,14 @@ int cardlist::getPosition(int id){
         }
     }
     return index;
+}
+
+int cardlist::getDeckSize()
+{
+    int decksize = 0;
+    for (int i = 0; i < countInDeck.size(); i++)
+    {
+        decksize += countInDeck[i];
+    }
+    return decksize;
 }

@@ -83,12 +83,13 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
 
     //draw buttons for up and down maybe?
-    painter->drawPixmap(QPoint(upRect.left(), upRect.top()) , up );
-    painter->drawPixmap(QPoint(downRect.left(), downRect.top()) , down );
-
+    if (!editMode)
+    {
+        painter->drawPixmap(QPoint(upRect.left(), upRect.top()) , up );
+        painter->drawPixmap(QPoint(downRect.left(), downRect.top()) , down );
+    }
     // Restore painter info
     painter->restore();
-
 }
 
 //alocate each item size in listview.
@@ -106,26 +107,29 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem &  option ,
 bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     // Emit a signal when the icon is clicked
-    if(event->type() == QEvent::MouseButtonRelease)
+    if (!editMode)
     {
-        QRect upRect;
-        upRect.setTop(option.rect.top() + 3);
-        upRect.setLeft(option.rect.right() - 15);
-        upRect.setRight(option.rect.right() - 2);
-        upRect.setBottom(option.rect.top() + 16);
-
-        QRect downRect;
-        downRect.setTop(option.rect.top() + 19);
-        downRect.setLeft(option.rect.right() - 15);
-        downRect.setRight(option.rect.right() - 2);
-        downRect.setBottom(option.rect.top() + 32);
-
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-        if(upRect.contains(mouseEvent->pos()))
+        if(event->type() == QEvent::MouseButtonRelease)
         {
-            emit upClicked(index.row());
-        } else if (downRect.contains(mouseEvent->pos())) {
-            emit downClicked(index.row());
+            QRect upRect;
+            upRect.setTop(option.rect.top() + 3);
+            upRect.setLeft(option.rect.right() - 15);
+            upRect.setRight(option.rect.right() - 2);
+            upRect.setBottom(option.rect.top() + 16);
+
+            QRect downRect;
+            downRect.setTop(option.rect.top() + 19);
+            downRect.setLeft(option.rect.right() - 15);
+            downRect.setRight(option.rect.right() - 2);
+            downRect.setBottom(option.rect.top() + 32);
+
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            if(upRect.contains(mouseEvent->pos()))
+            {
+                emit upClicked(index.row());
+            } else if (downRect.contains(mouseEvent->pos())) {
+                emit downClicked(index.row());
+            }
         }
     }
     return false;

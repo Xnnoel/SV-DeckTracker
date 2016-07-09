@@ -25,6 +25,7 @@ public:
     void subCard(int id);
     void setCount(int id, int count);
     void clearData();
+    int getCount(int id);
 private:
     std::vector<QPair<int,int>> cardsInDeck;   // ID of cards, vector pos = row pos
     cardlist* playingDeck;
@@ -32,7 +33,6 @@ private:
     int getDeckSize();
 signals:
     void countChanged(int);
-
 };
 
 #endif // SVLISTMODEL_H

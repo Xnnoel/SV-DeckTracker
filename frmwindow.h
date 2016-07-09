@@ -1,23 +1,26 @@
 #ifndef FRMWINDOW_H
 #define FRMWINDOW_H
 
-#include <QMainWindow>
 #include "perceptualhash.h"
 #include "cardlist.h"
 #include "svdatabase.h"
 #include "svlistmodel.h"
 #include "menu.h"
+#include "carddelegate.h"
+#include "sveditmodel.h"
+#include "editdelegate.h"
 
-#include <QDir>
 #include <vector>
 
+#include <QMainWindow>
+#include <QDir>
 #include <QListView>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QLineEdit>
 #include <QStandardItemModel>
-#include "carddelegate.h"
+#include <QPushButton>
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
@@ -35,6 +38,7 @@ class frmWindow : public QMainWindow
 public slots:
     void update();
     void updateCount(int);
+    void refreshList(int);
 
 public:
     explicit frmWindow(QWidget *parent = 0);
@@ -57,7 +61,7 @@ private slots:
     void slotAbout();
     void slotContact();
 
-
+    void slotButtonPushed();
 private:
     Ui::frmWindow *ui;
 
@@ -74,7 +78,7 @@ private:
     bool cardFound;
     bool passed;
 
-    SVListModel* model;
+
 
     // bounding box for window
     int height;
@@ -130,6 +134,7 @@ private:
     void loadDeck(SVListModel* model);
     void sortDeck();
     void setMyLayout();
+    void createEditor();
 
     // This is to hold all the info about the deck in the game
     cardlist playingDeck;
@@ -146,6 +151,15 @@ private:
     QLineEdit* DeckNameEdit;
     QPlainTextEdit* DeckDescEdit;
     QListView* PlayingDeckList;
+    CardDelegate * delegate;
+    SVListModel* model;
+
+    QListView* EditDeckList;
+    QPushButton* okButton;
+    SVEditModel* editmodel;
+    editDelegate* editdelegate;
+    void loadEdit(int subclass);
+
 
     //debug stuff
     cv::Mat resultMat;

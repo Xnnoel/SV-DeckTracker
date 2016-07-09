@@ -25,7 +25,6 @@ QVariant SVListModel::data(const QModelIndex &index, int role) const
         item.push_back(QString::number(cardsInDeck[index.row()].first));
         item.push_back(QString::number(cardsInDeck[index.row()].second));
 
-
         return QVariant(item);
 
     }
@@ -164,4 +163,20 @@ void SVListModel::slotDown(int row)
         emit dataChanged(cardIndex, cardIndex);
         emit countChanged(getDeckSize());
     }
+}
+
+
+int SVListModel::getCount(int id)
+{
+    int count = 0;
+
+    for (int i = 0; i < cardsInDeck.size(); i++)
+    {
+        if (cardsInDeck[i].first == id)
+        {
+            count = cardsInDeck[i].second;
+            break;
+        }
+    }
+    return count;
 }
