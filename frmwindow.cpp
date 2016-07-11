@@ -37,6 +37,8 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 std::wstring s2ws(const std::string& s);
 
+QPushButton* editButton;
+
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmWindow),
@@ -702,13 +704,18 @@ void frmWindow::setMyLayout()
     PlayingDeckList->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
     PlayingDeckList->setFixedWidth(270);
 
+    startButton = new QPushButton("Start");
+    editButton = new QPushButton("Edit");
+
     mainLayout->addWidget(label1, 0, 0);
     mainLayout->addWidget(DeckNameEdit, 1, 0);
     mainLayout->addWidget(label2, 2, 0);
     mainLayout->addWidget(DeckDescEdit, 3, 0);
-    mainLayout->addWidget(label3, 4, 0);
+    mainLayout->addWidget(startButton,4,0);
+    mainLayout->addWidget(label3, 5, 0);
     mainLayout->addWidget(label4, 0, 1);
-    mainLayout->addWidget(PlayingDeckList, 1, 1,4,1, Qt::AlignTop);
+    mainLayout->addWidget(editButton, 0, 2);
+    mainLayout->addWidget(PlayingDeckList, 1, 1,5,2, Qt::AlignTop);
 
     ui->centralWidget->setLayout(mainLayout);
 
@@ -731,10 +738,10 @@ void frmWindow::createEditor()
     // Need a new list delegate and model for the editor damnit
     // shrink window size
     // Maybe we cheat and have it loaded beforehand so we only need to expand win width?
-    mainLayout->addWidget(okButton, 0, 2);
-    mainLayout->addWidget(neutralBox, 0, 3);
-    mainLayout->addWidget(classBox, 0, 4);
-    mainLayout->addWidget(EditDeckList, 1, 2,4,3);
+    mainLayout->addWidget(okButton, 0, 3);
+    mainLayout->addWidget(neutralBox, 0, 4);
+    mainLayout->addWidget(classBox, 0, 5);
+    mainLayout->addWidget(EditDeckList, 1, 3,5,3);
     neutralBox->setChecked(true);
     classBox->setChecked(true);
 

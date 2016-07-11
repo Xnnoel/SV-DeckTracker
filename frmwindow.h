@@ -156,6 +156,9 @@ private:
     QListView* PlayingDeckList;
     CardDelegate * delegate;
     SVListModel* model;
+    QPushButton* startButton;
+    //QPushButton* editButton;
+
 
     QListView* EditDeckList;
     QPushButton* okButton;
