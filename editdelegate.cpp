@@ -44,15 +44,9 @@ void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
     QRect plusRect;
     plusRect.setTop(option.rect.top() + 10);
-    plusRect.setLeft(option.rect.left() + 200);
-    plusRect.setRight(option.rect.left() +215);
+    plusRect.setLeft(option.rect.left() + 225);
+    plusRect.setRight(option.rect.left() + 240);
     plusRect.setBottom(option.rect.bottom() - 10);
-
-    QRect minusRect;
-    minusRect.setTop(option.rect.top() + 10);
-    minusRect.setLeft(option.rect.left() + 225);
-    minusRect.setRight(option.rect.left() + 240);
-    minusRect.setBottom(option.rect.bottom() - 10);
 
 
     int myid = qvariant_cast<int>(index.data());
@@ -76,7 +70,7 @@ void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
 
     painter->drawPixmap(QPoint(plusRect.left(), plusRect.top()) , plus );
-    painter->drawPixmap(QPoint(minusRect.left(), minusRect.top()) , minus );
+    //painter->drawPixmap(QPoint(minusRect.left(), minusRect.top()) , minus );
 
     painter->restore();
 }
@@ -96,24 +90,17 @@ bool editDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
     // Emit a signal when the icon is clicked
     if(event->type() == QEvent::MouseButtonRelease)
     {
+
         QRect plusRect;
         plusRect.setTop(option.rect.top() + 10);
-        plusRect.setLeft(option.rect.left() + 200);
-        plusRect.setRight(option.rect.left() +215);
+        plusRect.setLeft(option.rect.left() + 225);
+        plusRect.setRight(option.rect.left() + 240);
         plusRect.setBottom(option.rect.bottom() - 10);
-
-        QRect minusRect;
-        minusRect.setTop(option.rect.top() + 10);
-        minusRect.setLeft(option.rect.left() + 225);
-        minusRect.setRight(option.rect.left() + 240);
-        minusRect.setBottom(option.rect.bottom() - 10);
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         if(plusRect.contains(mouseEvent->pos()))
         {
             emit plusClicked(index.row());
-        } else if (minusRect.contains(mouseEvent->pos())) {
-            emit minusClicked(index.row());
         }
     }
 

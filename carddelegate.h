@@ -29,9 +29,11 @@ private:
     cardlist* playingDeck;
     QPixmap up;
     QPixmap down;
+    QPixmap minus;
 signals:
     void upClicked(int row);
     void downClicked(int row);
+    void minusClicked(int row);
 };
 
 #endif // CARDDELEGATE_H

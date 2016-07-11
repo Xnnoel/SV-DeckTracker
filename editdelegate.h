@@ -23,7 +23,6 @@ private:
     QPixmap minus;
 signals:
     void plusClicked(int row);
-    void minusClicked(int row);
 };
 
 #endif // EDITDELEGATE_H

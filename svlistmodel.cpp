@@ -180,3 +180,23 @@ int SVListModel::getCount(int id)
     }
     return count;
 }
+
+
+void SVListModel::slotMinusRow(int row)
+{
+    int ID = cardsInDeck[row].first;
+    playingDeck->removeCard(ID);
+    if (cardsInDeck[row].second > 1)
+    {
+        cardsInDeck[row].second--;
+        QModelIndex cardIndex = index(row,0);
+
+        emit dataChanged(cardIndex, cardIndex);
+    }
+    else
+    {
+        removeCard(ID);
+    }
+    emit countChanged(getDeckSize());
+}
+

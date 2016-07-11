@@ -41,13 +41,3 @@ void SVEditModel::slotPlusRow(int row){
         emit deckChanged(playingDeck->getDeckSize());
     }
 }
-
-void SVEditModel::slotMinusRow(int row)
-{
-    if (playingDeck->getDeckSize() > 0)
-    {
-        int ID = cardsInDeck[row];
-        playingDeck->removeCard(ID);
-        emit deckChanged(playingDeck->getDeckSize());
-    }
-}

@@ -12,7 +12,6 @@ class SVEditModel : public QAbstractListModel
     Q_OBJECT
 public slots:
     void slotPlusRow(int);
-    void slotMinusRow(int);
 public:
     SVEditModel(QObject *parent = 0);
     void setPointer(svDatabase * db, cardlist* cd, SVListModel* lm){database = db; playingDeck = cd;listmodel = lm;}

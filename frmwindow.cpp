@@ -114,6 +114,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
     connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
+
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
 
@@ -129,8 +130,10 @@ frmWindow::frmWindow(QWidget *parent) :
     editdelegate->setPointers(&cardDatabase, &playingDeck);
 
     connect(editdelegate, SIGNAL(plusClicked(int)), editmodel, SLOT(slotPlusRow(int)));
-    connect(editdelegate, SIGNAL(minusClicked(int)), editmodel, SLOT(slotMinusRow(int)));
+    connect(delegate, SIGNAL(minusClicked(int)), model, SLOT(slotMinusRow(int)));
+    connect(model, SIGNAL(deckChanged(int)), this, SLOT(refreshList(int)));
     connect(editmodel, SIGNAL(deckChanged(int)), this, SLOT(refreshList(int)));
+
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
@@ -800,6 +803,7 @@ void frmWindow::loadEdit(int subClass)
 
 void frmWindow::refreshList(int meh)
 {
+    qWarning("refreshed list");
     //clear model first
     model->clearData();
 
@@ -816,4 +820,5 @@ void frmWindow::refreshList(int meh)
         model->setCount(id, count);
     }
     updateCount(meh);
+    qWarning("updatehtecount");
 }

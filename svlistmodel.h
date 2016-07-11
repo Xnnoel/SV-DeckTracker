@@ -12,6 +12,7 @@ class SVListModel : public QAbstractListModel
 public slots:
     void slotUp(int row);
     void slotDown(int row);
+    void slotMinusRow(int row);
 public:
     SVListModel(QObject *parent = 0);
     void setPointer(svDatabase * db, cardlist* cd){database = db; playingDeck = cd;}
@@ -33,6 +34,7 @@ private:
     int getDeckSize();
 signals:
     void countChanged(int);
+    void deckChanged(int);
 };
 
 #endif // SVLISTMODEL_H

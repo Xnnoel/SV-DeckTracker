@@ -16,6 +16,7 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
     playingDeck = cd;
     up = QPixmap("up.png");
     down = QPixmap("down.png");
+    minus = QPixmap("minus.png");
 }
 
 void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -49,10 +50,16 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     downRect.setRight(option.rect.right() - 2);
     downRect.setBottom(option.rect.top() + 32);
 
+    QRect minusRect;
+    minusRect.setTop(option.rect.top() + 10);
+    minusRect.setLeft(option.rect.left() + 240);
+    minusRect.setRight(option.rect.left() + 255);
+    minusRect.setBottom(option.rect.bottom() - 10);
+
     iconRect.setRight(iconRect.left() + 40);
     headerRect.setLeft(iconRect.right());
 
-    subheaderRect.setLeft(subheaderRect.right() - 30);
+    subheaderRect.setLeft(subheaderRect.right() - 40);
 
     headerRect.setRight(subheaderRect.left());
     QStringList stringData = qvariant_cast<QStringList>(index.data());
@@ -87,6 +94,10 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     {
         painter->drawPixmap(QPoint(upRect.left(), upRect.top()) , up );
         painter->drawPixmap(QPoint(downRect.left(), downRect.top()) , down );
+    }
+    else
+    {
+        painter->drawPixmap(QPoint(minusRect.left(), minusRect.top()), minus);
     }
     // Restore painter info
     painter->restore();
@@ -130,6 +141,24 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
             } else if (downRect.contains(mouseEvent->pos())) {
                 emit downClicked(index.row());
             }
+        }
+    }
+    else
+    {
+        if(event->type() == QEvent::MouseButtonRelease)
+        {
+            QRect minusRect;
+            minusRect.setTop(option.rect.top() + 10);
+            minusRect.setLeft(option.rect.left() + 240);
+            minusRect.setRight(option.rect.left() + 255);
+            minusRect.setBottom(option.rect.bottom() - 10);
+
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            if(minusRect.contains(mouseEvent->pos()))
+            {
+                emit minusClicked(index.row());
+            }
+
         }
     }
     return false;
