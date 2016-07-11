@@ -604,10 +604,13 @@ void frmWindow::slotLoad()
     mainLayout->removeWidget(okButton);
     mainLayout->removeWidget(neutralBox);
     mainLayout->removeWidget(classBox);
+    mainLayout->addWidget(editButton,0,2);
+    editButton->setGeometry(0,0,0,0);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
     classBox->setGeometry(0,0,0,0);
+
     setFixedWidth(WINWIDTH);
 }
 void frmWindow::slotSave()
@@ -669,8 +672,6 @@ void frmWindow::slotHelp()
 
 void frmWindow::setMyLayout()
 {
-
-
     //layout of all those things yay
     mainLayout = new QGridLayout();
     label1 = new QLabel("Deck Name");
@@ -683,7 +684,7 @@ void frmWindow::setMyLayout()
 
     label3 = new QLabel("");
     label3->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label3->setMinimumHeight(200);
+    //label3->setMinimumHeight(200);
 
     label4 = new QLabel("Cards");
     label4->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
@@ -742,6 +743,8 @@ void frmWindow::createEditor()
     mainLayout->addWidget(neutralBox, 0, 4);
     mainLayout->addWidget(classBox, 0, 5);
     mainLayout->addWidget(EditDeckList, 1, 3,5,3);
+    mainLayout->removeWidget(editButton);
+    editButton->setGeometry(0,0,0,0);
     neutralBox->setChecked(true);
     classBox->setChecked(true);
 
@@ -758,6 +761,7 @@ void frmWindow::slotButtonPushed()
     mainLayout->removeWidget(okButton);
     mainLayout->removeWidget(neutralBox);
     mainLayout->removeWidget(classBox);
+    mainLayout->addWidget(editButton,0,2);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
