@@ -63,8 +63,11 @@ private slots:
     void slotContact();
 
     void slotButtonPushed();
-
+    void slotEditMode();
     void slotLoadEdit(int);
+
+    void slotStart();
+    void slotStop();
 private:
     Ui::frmWindow *ui;
 
@@ -81,7 +84,7 @@ private:
     bool cardFound;
     bool passed;
 
-
+    QMap<QString, QString> settingsMap;
 
     // bounding box for window
     int height;
@@ -157,7 +160,7 @@ private:
     CardDelegate * delegate;
     SVListModel* model;
     QPushButton* startButton;
-    //QPushButton* editButton;
+    QTimer* timer;
 
 
     QListView* EditDeckList;

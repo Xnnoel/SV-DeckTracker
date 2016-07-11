@@ -38,6 +38,8 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 std::wstring s2ws(const std::string& s);
 
 QPushButton* editButton;
+QPushButton* stopButton;
+
 
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -48,64 +50,16 @@ frmWindow::frmWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Set up some inits
-    handle = 0;
     mat = 0;
     matTexture = 0;
     cardFound = false;
+    delegate->editMode = false;
     setWindowTitle("Shadowverse Deck Tracker");
 
     //add menubar?
     this->setMyLayout();
     createActions();
     createMenus();
-
-    ///DEBUG
-    /// ADD IN SOME SAMPLE CARDS FOR CURRENT DECK
-    ///IDEALLY WE LOAD IN PLAYINGDECK, THEN COPY INTO MODEL
-    playingDeck.setName("Midrange Royal?");
-    playingDeck.setDesc("This is a description of the deck. Hopefully you can write tips and ideas here on what to evolve or something. I dunno.");
-    playingDeck.addCard(100211010);
-    playingDeck.addCard(100211010);
-    playingDeck.addCard(100211010);
-    playingDeck.addCard(101232020);
-    playingDeck.addCard(101211020);
-    playingDeck.addCard(101211020);
-    playingDeck.addCard(101211020);
-    playingDeck.addCard(101211110);
-    playingDeck.addCard(101211110);
-    playingDeck.addCard(101221010);
-    playingDeck.addCard(101221010);
-    playingDeck.addCard(101221010);
-    playingDeck.addCard(100214010);
-    playingDeck.addCard(100211030);
-    playingDeck.addCard(100211030);
-    playingDeck.addCard(100211030);
-    playingDeck.addCard(101211060);
-    playingDeck.addCard(101211060);
-    playingDeck.addCard(101211090);
-    playingDeck.addCard(101211090);
-    playingDeck.addCard(101211090);
-    playingDeck.addCard(101221070);
-    playingDeck.addCard(100211040);
-    playingDeck.addCard(100211040);
-    playingDeck.addCard(100221010);
-    playingDeck.addCard(100221010);
-    playingDeck.addCard(100221010);
-    playingDeck.addCard(101211070);
-    playingDeck.addCard(101211070);
-    playingDeck.addCard(101221100);
-    playingDeck.addCard(101031020);
-    playingDeck.addCard(101031020);
-    playingDeck.addCard(101024030);
-    playingDeck.addCard(101241020);
-    playingDeck.addCard(101241020);
-    playingDeck.addCard(100221020);
-    playingDeck.addCard(100221020);
-    playingDeck.addCard(101241030);
-    playingDeck.addCard(101234020);
-    playingDeck.addCard(101231040);
-    delegate->editMode = false;
-    playingDeck.setClass(1);
 
 
     // Set up model view
@@ -147,7 +101,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
     QTextStream in(&file);
 
-    QMap<QString, QString> settingsMap;
+    settingsMap;
 
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -156,79 +110,6 @@ frmWindow::frmWindow(QWidget *parent) :
     }
     file.close();
 
-    std::string appName = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-
-    handle = ::FindWindow(NULL, result);
-
-    //load values we pulled from the file
-    int topborder = settingsMap.value("Topborder").toInt();
-    int botborder = settingsMap.value("Botborder").toInt();
-    int leftborder = settingsMap.value("Leftborder").toInt();
-    int rightborder = settingsMap.value("Rightborder").toInt();
-
-    //Window rect
-    RECT rc;
-    GetClientRect(handle, &rc);
-    width = (rc.right - rc.left) - rightborder - leftborder;
-    height = (rc.bottom - rc.top) - topborder - botborder;
-    top = rc.top+topborder;
-    left = rc.left+leftborder;
-
-    boxLeft = (int)round(0.261 * width) + left;
-    boxTop = (int)round(0.341 * height) + top;
-    boxWidth = (int)round(0.4735 * width);
-    boxHeight = (int)round(0.1965 * height);
-
-    theirLeft = (int)round(0.1636 * width) + left;
-    theirTop = (int)round(0.3285 * height) + top;
-    theirWidth = (int)round(0.6646 * width);
-    theirHeight = (int)round(0.2206 * height);
-
-    costLeft = (int)round(0.5795 * width) + left;
-    costTop = (int)round(0.4461 * height) + top;
-    costWidth = (int)round(0.02789 * width);
-    costHeight = (int)round(0.04956 * height);
-
-
-    //// DEBUG ADD WINDOW TO SIDE
-
-
-
-
-    // If we found the application, load this
-    if (handle != 0)
-    {
-        // Start the update loop to check for cards in images
-        refreshRate = 100;
-        handleValid = true;
-
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width + leftborder, height + topborder);
-        SelectObject(hdc, hbmp);
-
-        //Guess the current state of the image
-        curState = Ui::STATE::MYTURN;
-
-        //Create a "you start" mat
-        matTexture = cv::imread("pic.png");
-        matTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread("pic2.png");
-        theirTexturePhash = PerceptualHash::phash(matTexture);
-
-        ignoreNext = 0;
-        passed = false;
-        turnDraw =0;
-
-        QTimer *timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(refreshRate);
-
-    }
 }
 
 frmWindow::~frmWindow()
@@ -707,6 +588,10 @@ void frmWindow::setMyLayout()
 
     startButton = new QPushButton("Start");
     editButton = new QPushButton("Edit");
+    stopButton = new QPushButton("Stop");
+    connect(editButton, SIGNAL(released()), this, SLOT(slotEditMode()));
+    connect(startButton,SIGNAL(released()), this, SLOT(slotStart()));
+    connect(stopButton, SIGNAL(released()), this, SLOT(slotStop()));
 
     mainLayout->addWidget(label1, 0, 0);
     mainLayout->addWidget(DeckNameEdit, 1, 0);
@@ -860,4 +745,104 @@ void frmWindow::refreshList(int meh)
     }
     updateCount(meh);
     qWarning("updatehtecount");
+}
+
+void frmWindow::slotEditMode()
+{
+    loadDeck(model);
+    createEditor();
+    slotLoadEdit(0);
+}
+
+void frmWindow::slotStart()
+{
+    //Begin the app loop
+    std::string appName = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp = s2ws(appName);
+    LPCWSTR result = stemp.c_str();
+
+    handle = 0;
+
+    handle = ::FindWindow(NULL, result);
+
+    //load values we pulled from the file
+    int topborder = settingsMap.value("Topborder").toInt();
+    int botborder = settingsMap.value("Botborder").toInt();
+    int leftborder = settingsMap.value("Leftborder").toInt();
+    int rightborder = settingsMap.value("Rightborder").toInt();
+
+    //Window rect
+    RECT rc;
+    GetClientRect(handle, &rc);
+    width = (rc.right - rc.left) - rightborder - leftborder;
+    height = (rc.bottom - rc.top) - topborder - botborder;
+    top = rc.top+topborder;
+    left = rc.left+leftborder;
+
+    boxLeft = (int)round(0.261 * width) + left;
+    boxTop = (int)round(0.341 * height) + top;
+    boxWidth = (int)round(0.4735 * width);
+    boxHeight = (int)round(0.1965 * height);
+
+    theirLeft = (int)round(0.1636 * width) + left;
+    theirTop = (int)round(0.3285 * height) + top;
+    theirWidth = (int)round(0.6646 * width);
+    theirHeight = (int)round(0.2206 * height);
+
+    costLeft = (int)round(0.5795 * width) + left;
+    costTop = (int)round(0.4461 * height) + top;
+    costWidth = (int)round(0.02789 * width);
+    costHeight = (int)round(0.04956 * height);
+
+    // If we found the application, load this
+    if (handle != 0)
+    {
+        // Start the update loop to check for cards in images
+        refreshRate = 100;
+        handleValid = true;
+
+        //create bitmap and screen to save rect
+        hdcScreen = GetDC(NULL);
+        hdc = CreateCompatibleDC(hdcScreen);
+        hbmp = CreateCompatibleBitmap(hdcScreen,
+            width + leftborder, height + topborder);
+        SelectObject(hdc, hbmp);
+
+        //Guess the current state of the image
+        curState = Ui::STATE::MYTURN;
+
+        //Create a "you start" mat
+        matTexture = cv::imread("pic.png");
+        matTexturePhash = PerceptualHash::phash(matTexture);
+        matTexture = cv::imread("pic2.png");
+        theirTexturePhash = PerceptualHash::phash(matTexture);
+
+        ignoreNext = 0;
+        passed = false;
+        turnDraw =0;
+
+        timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+        timer->start(refreshRate);
+
+        //Remove edit button
+        mainLayout->removeWidget(editButton);
+        editButton->setGeometry(0,0,0,0);
+
+        //remove start button
+        mainLayout->removeWidget(startButton);
+        startButton->setGeometry(0,0,0,0);
+
+        //add stop button
+        mainLayout->addWidget(stopButton,4,0);
+    }
+}
+
+void frmWindow::slotStop()
+{
+    timer->stop();
+    mainLayout->removeWidget(stopButton);
+    stopButton->setGeometry(0,0,0,0);
+    mainLayout->addWidget(startButton,4,0);
+    mainLayout->addWidget(editButton,0,2);
 }
