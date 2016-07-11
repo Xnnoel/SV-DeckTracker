@@ -600,8 +600,12 @@ void frmWindow::slotLoad()
     delegate->editMode = false;
     mainLayout->removeWidget(EditDeckList);
     mainLayout->removeWidget(okButton);
+    mainLayout->removeWidget(neutralBox);
+    mainLayout->removeWidget(classBox);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
+    neutralBox->setGeometry(0,0,0,0);
+    classBox->setGeometry(0,0,0,0);
     setFixedWidth(WINWIDTH);
 }
 void frmWindow::slotSave()
@@ -711,8 +715,11 @@ void frmWindow::setMyLayout()
     //set up extra layout here
     EditDeckList = new QListView();
     EditDeckList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    EditDeckList->setFixedWidth(280);
     okButton = new QPushButton("Done");
     connect(okButton, SIGNAL (released()),this, SLOT (slotButtonPushed()));
+    neutralBox = new QCheckBox("Neutral");
+    classBox = new QCheckBox("Class");
 
 }
 
@@ -723,7 +730,11 @@ void frmWindow::createEditor()
     // shrink window size
     // Maybe we cheat and have it loaded beforehand so we only need to expand win width?
     mainLayout->addWidget(okButton, 0, 2);
-    mainLayout->addWidget(EditDeckList, 1, 2,4,1);
+    mainLayout->addWidget(neutralBox, 0, 3);
+    mainLayout->addWidget(classBox, 0, 4);
+    mainLayout->addWidget(EditDeckList, 1, 2,4,3);
+    neutralBox->setChecked(true);
+    classBox->setChecked(true);
 
     setFixedWidth(EDITWINWIDTH);
 
@@ -735,8 +746,12 @@ void frmWindow::slotButtonPushed()
 {
     mainLayout->removeWidget(EditDeckList);
     mainLayout->removeWidget(okButton);
+    mainLayout->removeWidget(neutralBox);
+    mainLayout->removeWidget(classBox);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
+    neutralBox->setGeometry(0,0,0,0);
+    classBox->setGeometry(0,0,0,0);
     setFixedWidth(WINWIDTH);
     delegate->editMode = false;
     this->loadDeck(model);

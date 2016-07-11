@@ -21,6 +21,7 @@
 #include <QLineEdit>
 #include <QStandardItemModel>
 #include <QPushButton>
+#include <QCheckBox>
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
@@ -158,6 +159,8 @@ private:
     QPushButton* okButton;
     SVEditModel* editmodel;
     editDelegate* editdelegate;
+    QCheckBox* neutralBox;
+    QCheckBox* classBox;
     void loadEdit(int subclass);
 
 
