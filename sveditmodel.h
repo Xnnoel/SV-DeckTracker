@@ -20,6 +20,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     void addCard(int ID);
     void clearCards(){cardsInDeck.clear();}
+    void sortList();
 private:
     std::vector<int> cardsInDeck;   // ID of cards, click to add so no need for count
     svDatabase* database;

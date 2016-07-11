@@ -506,8 +506,8 @@ void frmWindow::slotElf()
     playingDeck.clear();
     playingDeck.setClass(0);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor(); //spawns an editor on the right side
+    slotLoadEdit(0);
 }
 
 void frmWindow::slotRoyal()
@@ -515,48 +515,48 @@ void frmWindow::slotRoyal()
     playingDeck.clear();
     playingDeck.setClass(1);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotWitch()
 {
     playingDeck.clear();
     playingDeck.setClass(2);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotDragon()
 {
     playingDeck.clear();
     playingDeck.setClass(3);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotNecro()
 {
     playingDeck.clear();
     playingDeck.setClass(4);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotVampire()
 {
     playingDeck.clear();
     playingDeck.setClass(5);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotBishop()
 {
     playingDeck.clear();
     playingDeck.setClass(6);
     loadDeck(model);
-    loadEdit(playingDeck.getClass());
     createEditor();
+    slotLoadEdit(0);
 }
 void frmWindow::slotLoad()
 {
@@ -720,6 +720,8 @@ void frmWindow::setMyLayout()
     connect(okButton, SIGNAL (released()),this, SLOT (slotButtonPushed()));
     neutralBox = new QCheckBox("Neutral");
     classBox = new QCheckBox("Class");
+    connect(neutralBox, SIGNAL(stateChanged(int)),this ,SLOT(slotLoadEdit(int)));
+    connect(classBox, SIGNAL(stateChanged(int)),this ,SLOT(slotLoadEdit(int)));
 
 }
 
@@ -757,62 +759,72 @@ void frmWindow::slotButtonPushed()
     this->loadDeck(model);
 }
 
-void frmWindow::loadEdit(int subClass)
+void frmWindow::slotLoadEdit(int a)
 {
-    //Load nuetrals into edit
-    for (int i = 0; i < 8; i ++)
-        editmodel->addCard(cardDatabase.cardID[i]);
+    editmodel->clearCards();
 
-    for (int i = 85; i < 109; i++)
-        editmodel->addCard(cardDatabase.cardID[i]);
+    int subClass = playingDeck.getClass();
 
-    switch(subClass)
+    if (neutralBox->isChecked())
     {
-    case 0: //elf
-        for (int i = 8; i < 19; i++)
+        //Load nuetrals into edit
+        for (int i = 0; i < 8; i ++)
             editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 109; i < 151; i++)
+
+        for (int i = 85; i < 109; i++)
             editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 1: //royal
-        for (int i = 19; i < 30; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 151; i < 193; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 2: //witch
-        for (int i = 30; i < 41; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 193; i < 235; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 3: //dragon
-        for (int i = 41; i < 52; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 235; i < 277; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 4: //necro
-        for (int i = 52; i < 63; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 277; i < 319; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 5: //blood
-        for (int i = 63; i < 74; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 319; i < 361; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
-    case 6: //bishop
-        for (int i = 74; i < 85; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-        for (int i = 361; i < 403; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    break;
+    }
+
+    if (classBox->isChecked())
+    {
+        switch(subClass)
+        {
+        case 0: //elf
+            for (int i = 8; i < 19; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 109; i < 151; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 1: //royal
+            for (int i = 19; i < 30; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 151; i < 193; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 2: //witch
+            for (int i = 30; i < 41; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 193; i < 235; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 3: //dragon
+            for (int i = 41; i < 52; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 235; i < 277; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 4: //necro
+            for (int i = 52; i < 63; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 277; i < 319; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 5: //blood
+            for (int i = 63; i < 74; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 319; i < 361; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        case 6: //bishop
+            for (int i = 74; i < 85; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 361; i < 403; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+        break;
+        }
     }
     //sort editmodel?
-    //add checkboxes for neutral only/class only
+    editmodel->sortList();
     EditDeckList->setHidden(false);
 }
 

@@ -41,3 +41,21 @@ void SVEditModel::slotPlusRow(int row){
         emit deckChanged(playingDeck->getDeckSize());
     }
 }
+
+void SVEditModel::sortList()
+{
+    for (int i = 1; i < cardsInDeck.size(); i++)
+    {
+        int j = i;
+
+        while (j > 0 &&
+               database->getCard(cardsInDeck[j-1]).manaCost >
+               database->getCard(cardsInDeck[j]).manaCost)
+        {
+            int tempCard = cardsInDeck[j];
+            cardsInDeck[j] = cardsInDeck[j-1];
+            cardsInDeck[j-1] = tempCard;
+            j--;
+        }
+    }
+}

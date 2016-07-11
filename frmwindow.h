@@ -63,6 +63,8 @@ private slots:
     void slotContact();
 
     void slotButtonPushed();
+
+    void slotLoadEdit(int);
 private:
     Ui::frmWindow *ui;
 
@@ -161,7 +163,7 @@ private:
     editDelegate* editdelegate;
     QCheckBox* neutralBox;
     QCheckBox* classBox;
-    void loadEdit(int subclass);
+
 
 
     //debug stuff
