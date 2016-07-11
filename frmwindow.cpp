@@ -278,7 +278,7 @@ void frmWindow::loadDeck(SVListModel* model)
     setFixedWidth(WINWIDTH);
     int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
     PlayingDeckList->setFixedHeight(std::min(MAXWINHEIGHT-71, std::max(listsize,400)));
-    setFixedHeight(std::max(MAXWINHEIGHT, PlayingDeckList->height() + 70));
+    setFixedHeight(std::min(MAXWINHEIGHT, PlayingDeckList->height() + 70));
     //Set text description
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
     DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
@@ -741,7 +741,8 @@ void frmWindow::createEditor()
     setFixedWidth(EDITWINWIDTH);
 
     delegate->editMode = true;
-    PlayingDeckList->setFixedHeight(742);
+    PlayingDeckList->setFixedHeight(MAXWINHEIGHT-68);
+    setFixedHeight(MAXWINHEIGHT);
 }
 
 void frmWindow::slotButtonPushed()
@@ -756,7 +757,7 @@ void frmWindow::slotButtonPushed()
     classBox->setGeometry(0,0,0,0);
     setFixedWidth(WINWIDTH);
     delegate->editMode = false;
-    this->loadDeck(model);
+    loadDeck(model);
 }
 
 void frmWindow::slotLoadEdit(int a)
