@@ -20,7 +20,6 @@ private:
     svDatabase* database;
     cardlist* playingDeck;
     QPixmap plus;
-    QPixmap minus;
 signals:
     void plusClicked(int row);
 };

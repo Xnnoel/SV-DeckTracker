@@ -3,6 +3,7 @@
 #include <QFont>
 #include <Qapplication>
 #include <QMouseEvent>
+#include <QDir>
 
 editDelegate::editDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
@@ -14,8 +15,9 @@ editDelegate::editDelegate(QObject *parent)
 void editDelegate::setPointers(svDatabase *db, cardlist * cd){
     database = db;
     playingDeck = cd;
-    plus = QPixmap("plus.png");
-    minus = QPixmap("minus.png");
+
+    QDir dir(".");
+    plus = QPixmap(dir.absolutePath() +"/images/plus.png");
 }
 
 void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -70,7 +72,6 @@ void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
 
     painter->drawPixmap(QPoint(plusRect.left(), plusRect.top()) , plus );
-    //painter->drawPixmap(QPoint(minusRect.left(), minusRect.top()) , minus );
 
     painter->restore();
 }

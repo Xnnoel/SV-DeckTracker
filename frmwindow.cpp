@@ -37,9 +37,6 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 std::wstring s2ws(const std::string& s);
 
-// Why does it error when I put these in the header? memory?
-
-
 std::vector<int> bestID;
 
 frmWindow::frmWindow(QWidget *parent) :
@@ -595,12 +592,20 @@ void frmWindow::slotAbout()
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
-                                     tr("ShadowVerse Deck Tracker\nVersion 0.7\n\nQuestions? Comments?\nSend an email to xnnoelx@gmail.com"));
+                                     tr("ShadowVerse Deck Tracker\n"
+                                        "Version 0.7\n"
+                                        "All Rights Reserved\n"
+                                        "\n"
+                                        "For any comments or questions,\n"
+                                        "Send an email to xnnoelx@gmail.com"));
 }
 
 void frmWindow::slotHelp()
 {
     //do nothing for now
+    QProcess *proc = new QProcess(this);
+    QString path = dir.absolutePath() + "/Readme.txt";
+    proc->start("notepad.exe "+path);
 }
 
 void frmWindow::setMyLayout()
@@ -881,13 +886,14 @@ void frmWindow::slotStart()
         curState = Ui::STATE::MYTURN;
 
         //Create a "you start" mat
-        matTexture = cv::imread("pic.png");
+
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread("pic2.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/pic2.png");
         theirTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread("results.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/results.png");
         resultWinPhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread("results2.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/results2.png");
         resultLosePhash = PerceptualHash::phash(matTexture);
 
         ignoreNext = 0;

@@ -1,7 +1,7 @@
 #include "carddelegate.h"
 #include "card.h"
 #include <QMouseEvent>
-
+#include <QDir>
 
 
 CardDelegate::CardDelegate(QObject *parent)
@@ -14,9 +14,10 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
 {
     database = db;
     playingDeck = cd;
-    up = QPixmap("up.png");
-    down = QPixmap("down.png");
-    minus = QPixmap("minus.png");
+    QDir dir(".");
+    up = QPixmap(dir.absolutePath() +"/images/up.png");
+    down = QPixmap(dir.absolutePath() +"/images/down.png");
+    minus = QPixmap(dir.absolutePath() +"/images/minus.png");
 }
 
 void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
