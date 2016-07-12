@@ -47,8 +47,15 @@ int selectTop;
 int selectWidth;
 int selectHeight;
 
+int resultsLeft;
+int resultsTop;
+int resultsWidth;
+int resultsHeight;
+
+ulong64 resultWinPhash;
+ulong64 resultLosePhash;
+
 std::vector<int> bestID;
-std::vector<int> bestDistance;
 
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -193,8 +200,6 @@ void frmWindow::update()
     /// and guess what state the program is in. Mainly want to
     /// see if a game had started or not.
     //decrement all if exist
-    if (ignoreNext > 0)ignoreNext--;
-
 
     //otherwise check for card
     if (handleValid && ::IsWindow(handle))
@@ -207,17 +212,11 @@ void frmWindow::update()
         QPixmap drawer;
         ulong64 imagePHash;
 
-        if (ignoreNext > 0)
-            ignoreNext--;
-
-
-
         switch (curState)
         {
             case Ui::STATE::MYTURN:
             {
                 // Get the best match for 3 cards on screen
-
                 for (int i = 0; i < 3; i++)
                 {
                     boxRect.setRect(selectLeft[i],selectTop,selectWidth,selectHeight);
@@ -225,11 +224,12 @@ void frmWindow::update()
                     resultMat = ASM::QPixmapToCvMat(drawer);
                     imagePHash = PerceptualHash::phash(resultMat);
                     PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
-                    if (result.distance < 20)
+                    if (result.distance < 18)
                     {
                         bestID[i] = playingDeck.cardsInDeck[result.index];
                     }
                 }
+
 
                 // Try and the 1st turn/ Card selection ended
                 boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
@@ -245,11 +245,11 @@ void frmWindow::update()
                 imagePHash = PerceptualHash::phash(mat);
 
                 int distance2 = PerceptualHash::hammingDistance(theirTexturePhash, imagePHash);
-
-                if (distance1 < 20 || distance2 < 20)
+                int distanceSens = settingsMap.value("TurnSens").toInt();
+                if (distance1 < distanceSens || distance2 < distanceSens)
                 {
                     //Remove guessed cards from active list
-                    turnLog->append("Started with...\n");
+                    turnLog->append("Started with...");
                     for (int i = 0; i < 3; i++)
                         if (bestID[i] > 0)
                         {
@@ -257,8 +257,7 @@ void frmWindow::update()
                             QString cardname = cardDatabase.getCard(bestID[i]).name;
                             turnLog->append(cardname + ',');
                         }
-                    turnLog->append("\n");
-
+                    turnLog->append("-------------");
                     curState = Ui::STATE::FINDCARD;
                 }
 
@@ -266,6 +265,25 @@ void frmWindow::update()
             }
             case Ui::STATE::FINDCARD:
             {
+                if (ignoreNext > 0)
+                    ignoreNext--;
+                //First check for matching win/lose screen
+                boxRect.setRect(resultsLeft,resultsTop,resultsWidth,resultsHeight);
+                drawer = pixmap.copy(boxRect);
+                mat = ASM::QPixmapToCvMat(drawer);
+                imagePHash = PerceptualHash::phash(mat);
+                int victoryDistance = PerceptualHash::hammingDistance(resultWinPhash, imagePHash);
+                int loseDistance = PerceptualHash::hammingDistance(resultLosePhash, imagePHash);
+
+                int gameEndDist = settingsMap.value("GameEndSens").toInt();
+                if (victoryDistance < gameEndDist || loseDistance < gameEndDist)
+                {
+                    turnLog->append("Game ended\n----Resetting deck---");
+                    loadDeck(model);
+                    curState = Ui::STATE::MYTURN;
+                    break;
+                }
+
                 //Get the card cost (hopefully)
                 //Try and find what the cost is?
                 boxRect.setRect(costLeft,costTop,costWidth,costHeight);
@@ -307,14 +325,17 @@ void frmWindow::update()
 
                 std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(3, imagePHash, playingDeck.deckPHash);
 
-                if (ignoreNext < 1 && (bestguess[0].distance < 15 || costDistance < 20))
+                if (ignoreNext < 1 && (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt() || costDistance < settingsMap.value("CostGuessSens").toInt()))
                 {
+                    // if card art is way off, cost could randomly spike below
+                    if (bestguess[0].distance > settingsMap.value("WorstGuessSens").toInt())
+                        break;
                     // if card art matches well, assume that the card is true
-                    if (bestguess[0].distance < 15)
+                    if (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt())
                     {
-                        model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
+                        model->subCard(playingDeck.cardsInDeck[bestguess[0].index]);
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[0].index]).name;
-                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---\n" );
+                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[0].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---" );
 
                         ignoreNext = (int)round(1000/refreshRate);
                         break;
@@ -326,7 +347,7 @@ void frmWindow::update()
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).name;
-                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---\n" );
+                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---" );
 
                         ignoreNext = (int)round(1000/refreshRate);
                         break;
@@ -340,6 +361,7 @@ void frmWindow::update()
     {
         handleValid = false;
         setWindowTitle("Can't Find Window...");
+        slotStop();
     }
 }
 
@@ -834,33 +856,40 @@ void frmWindow::slotStart()
     top = rc.top+topborder;
     left = rc.left+leftborder;
 
-    boxLeft = (int)round(0.261 * width) + left;
-    boxTop = (int)round(0.341 * height) + top;
-    boxWidth = (int)round(0.4735 * width);
-    boxHeight = (int)round(0.1965 * height);
+    boxLeft = (int)round(0.2617 * width) + left;
+    boxTop = (int)round(0.3528 * height) + top;
+    boxWidth = (int)round(0.468 * width);
+    boxHeight = (int)round(0.1777 * height);
 
-    theirLeft = (int)round(0.1636 * width) + left;
-    theirTop = (int)round(0.3285 * height) + top;
-    theirWidth = (int)round(0.6646 * width);
-    theirHeight = (int)round(0.2206 * height);
+    theirLeft = (int)round(0.1742 * width) + left;
+    theirTop = (int)round(0.3514 * height) + top;
+    theirWidth = (int)round(0.6508 * width);
+    theirHeight = (int)round(0.1736 * height);
 
     costLeft = (int)round(0.5795 * width) + left;
     costTop = (int)round(0.4461 * height) + top;
     costWidth = (int)round(0.02789 * width);
     costHeight = (int)round(0.04956 * height);
 
+    resultsLeft = (int)round(0.3773 * width) + left;
+    resultsTop = (int)round(0.06805 * height) + top;
+    resultsWidth = (int)round(0.2453 * width);
+    resultsHeight = (int)round(0.08472 * height);
+
     selectLeft[0] = (int) round(0.22169 * width) + left;
     selectLeft[1] = (int) round(0.44337 * width) + left;
-    selectLeft[2] = (int) round(0.66438 * width) + left;
+    selectLeft[2] = (int) round(0.66484 * width) + left;
     selectTop = (int) round(0.64591 * height) + top;
-    selectWidth = (int) round(0.1139 * width);
+    selectWidth = (int) round(0.1133 * width);
     selectHeight = (int) round(0.2515 * height);
 
     // If we found the application, load this
     if (handle != 0)
     {
+        setWindowTitle("Shadowverse Deck Tracker");
+
         // Start the update loop to check for cards in images
-        refreshRate = 100;
+        refreshRate = settingsMap.value("RefreshRate").toInt();
         handleValid = true;
 
         //create bitmap and screen to save rect
@@ -878,6 +907,10 @@ void frmWindow::slotStart()
         matTexturePhash = PerceptualHash::phash(matTexture);
         matTexture = cv::imread("pic2.png");
         theirTexturePhash = PerceptualHash::phash(matTexture);
+        matTexture = cv::imread("results.png");
+        resultWinPhash = PerceptualHash::phash(matTexture);
+        matTexture = cv::imread("results2.png");
+        resultLosePhash = PerceptualHash::phash(matTexture);
 
         ignoreNext = 0;
         passed = false;
