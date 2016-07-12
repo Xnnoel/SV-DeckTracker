@@ -717,7 +717,7 @@ void frmWindow::slotButtonPushed()
     loadDeck(model);
 }
 
-void frmWindow::slotLoadEdit(int a)
+void frmWindow::slotLoadEdit(int)
 {
     editmodel->clearCards();
 
@@ -925,6 +925,8 @@ void frmWindow::slotStart()
         //result init group
         bestID = std::vector<int>(3,0);
         menuBar()->setEnabled(false);
+
+        loadDeck(model);
     }
 }
 
