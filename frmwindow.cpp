@@ -38,22 +38,7 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 std::wstring s2ws(const std::string& s);
 
 // Why does it error when I put these in the header? memory?
-QPushButton* editButton;
-QPushButton* stopButton;
-QTextEdit* turnLog;
 
-int selectLeft[3];
-int selectTop;
-int selectWidth;
-int selectHeight;
-
-int resultsLeft;
-int resultsTop;
-int resultsWidth;
-int resultsHeight;
-
-ulong64 resultWinPhash;
-ulong64 resultLosePhash;
 
 std::vector<int> bestID;
 
@@ -68,8 +53,7 @@ frmWindow::frmWindow(QWidget *parent) :
     // Set up some inits
     mat = 0;
     matTexture = 0;
-    delegate->editMode = false;
-    setWindowTitle("Shadowverse Deck Tracker");
+    setWindowTitle("ShadowVerse Deck Tracker");
 
     //add menubar?
     this->setMyLayout();
@@ -82,6 +66,7 @@ frmWindow::frmWindow(QWidget *parent) :
     model->setPointer(&cardDatabase, &playingDeck);
     delegate = new CardDelegate;
     delegate->setPointers(&cardDatabase, &playingDeck);
+    delegate->editMode = false;
 
     connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
@@ -422,9 +407,6 @@ void frmWindow::createActions()
     About = new QAction(tr("&About"), this);
     connect(About, &QAction::triggered, this, &frmWindow::slotAbout);
 
-    Contact = new QAction(tr("&Contact"), this);
-    connect(Contact, &QAction::triggered, this, &frmWindow::slotContact);
-
 }
 
 
@@ -454,12 +436,10 @@ void frmWindow::createMenus()
     HelpMenu->addAction(HelpAction);
     HelpMenu->addSeparator();
     HelpMenu->addAction(About);
-    HelpMenu->addAction(Contact);
 }
 
 void frmWindow::slotElf()
 {
-    //do nothing for now
     playingDeck.clear();
     playingDeck.setClass(0);
     loadDeck(model);
@@ -610,16 +590,14 @@ void frmWindow::slotSave()
         }
     }
     savefile.close();
-
 }
 void frmWindow::slotAbout()
 {
-    //do nothing for now
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
+                                     tr("ShadowVerse Deck Tracker\nVersion 0.7\n\nQuestions? Comments?\nSend an email to xnnoelx@gmail.com"));
 }
-void frmWindow::slotContact()
-{
-    //do nothing for now
-}
+
 void frmWindow::slotHelp()
 {
     //do nothing for now

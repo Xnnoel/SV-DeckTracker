@@ -60,7 +60,6 @@ private slots:
 
     void slotHelp();
     void slotAbout();
-    void slotContact();
 
     void slotButtonPushed();
     void slotEditMode();
@@ -130,7 +129,6 @@ private:
     //Help
     QAction* HelpAction;
     QAction* About;
-    QAction* Contact;
 
     QDir dir;
     bool handleValid;
@@ -170,7 +168,22 @@ private:
     QCheckBox* neutralBox;
     QCheckBox* classBox;
 
+    QPushButton* editButton;
+    QPushButton* stopButton;
+    QTextEdit* turnLog;
 
+    int selectLeft[3];
+    int selectTop;
+    int selectWidth;
+    int selectHeight;
+
+    int resultsLeft;
+    int resultsTop;
+    int resultsWidth;
+    int resultsHeight;
+
+    ulong64 resultWinPhash;
+    ulong64 resultLosePhash;
 
     //debug stuff
     cv::Mat resultMat;
