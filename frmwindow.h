@@ -81,7 +81,6 @@ private:
     HDC hdc;
     HBITMAP hbmp;
     HWND handle;
-    bool cardFound;
     bool passed;
 
     QMap<QString, QString> settingsMap;
