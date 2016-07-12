@@ -153,6 +153,7 @@ private:
     QLabel* label2;
     QLabel* label3;
     QLabel* label4;
+
     QLineEdit* DeckNameEdit;
     QPlainTextEdit* DeckDescEdit;
     QListView* PlayingDeckList;

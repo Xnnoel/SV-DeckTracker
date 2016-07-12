@@ -37,8 +37,10 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 std::wstring s2ws(const std::string& s);
 
+// Why does it error when I put these in the header? memory?
 QPushButton* editButton;
 QPushButton* stopButton;
+QTextEdit* turnLog;
 
 int selectLeft[3];
 int selectTop;
@@ -246,13 +248,16 @@ void frmWindow::update()
 
                 if (distance1 < 20 || distance2 < 20)
                 {
-                    QString title = cardDatabase.getCard(bestID[0]).name + "," + cardDatabase.getCard(bestID[1]).name + "," + cardDatabase.getCard(bestID[2]).name;
-                    setWindowTitle(title);
-
                     //Remove guessed cards from active list
+                    turnLog->append("Started with...\n");
                     for (int i = 0; i < 3; i++)
                         if (bestID[i] > 0)
+                        {
                             model->subCard(bestID[i]);
+                            QString cardname = cardDatabase.getCard(bestID[i]).name;
+                            turnLog->append(cardname + ',');
+                        }
+                    turnLog->append("\n");
 
                     curState = Ui::STATE::FINDCARD;
                 }
@@ -304,16 +309,29 @@ void frmWindow::update()
 
                 if (ignoreNext < 1 && (bestguess[0].distance < 15 || costDistance < 20))
                 {
+                    // if card art matches well, assume that the card is true
+                    if (bestguess[0].distance < 15)
+                    {
+                        model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
+                        QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[0].index]).name;
+                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---\n" );
+
+                        ignoreNext = (int)round(1000/refreshRate);
+                        break;
+                    }
+                    else
                     //Matches best 3 to cost, hopefully one matches
                     for (int i = 0; i < 3; i++)
                     if (cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).manaCost == cost)
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
+                        QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).name;
+                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---\n" );
+
                         ignoreNext = (int)round(1000/refreshRate);
                         break;
                     }
                 }
-
                 break;
             }
         }
@@ -591,19 +609,18 @@ void frmWindow::setMyLayout()
     mainLayout = new QGridLayout();
     label1 = new QLabel("Deck Name");
     label1->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label1->setMaximumHeight(20);
+    label1->setMaximumHeight(25);
 
     label2 = new QLabel("Deck Description");
     label2->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label2->setMaximumHeight(20);
+    label2->setMaximumHeight(25);
 
     label3 = new QLabel("");
     label3->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    //label3->setMinimumHeight(200);
 
     label4 = new QLabel("Cards");
     label4->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label4->setMaximumHeight(20);
+    label4->setMaximumHeight(25);
     label4->setAutoFillBackground(true);
 
     DeckNameEdit = new QLineEdit();
@@ -645,10 +662,15 @@ void frmWindow::setMyLayout()
     EditDeckList->setFixedWidth(280);
     okButton = new QPushButton("Done");
     connect(okButton, SIGNAL (released()),this, SLOT (slotButtonPushed()));
+
     neutralBox = new QCheckBox("Neutral");
     classBox = new QCheckBox("Class");
     connect(neutralBox, SIGNAL(stateChanged(int)),this ,SLOT(slotLoadEdit(int)));
     connect(classBox, SIGNAL(stateChanged(int)),this ,SLOT(slotLoadEdit(int)));
+
+    turnLog = new QTextEdit();
+    turnLog->setReadOnly(true);;
+    //turnLog->setTextInteractionFlags(turnLog->textInteractionFlags()|Qt::TextSelectableByKeyboard);
 
 }
 
@@ -876,20 +898,31 @@ void frmWindow::slotStart()
         //add stop button
         mainLayout->addWidget(stopButton,4,0);
 
+        //replace blank space with turn log
+        mainLayout->addWidget(turnLog,5,0);
+        mainLayout->removeWidget(label3);
+        label3->setGeometry(0,0,0,0);
+        turnLog->clear();
+        turnLog->append("Turn Log\n******************\n");
+
         //result init group
         bestID = std::vector<int>(3,0);
-
-        loadDeck(model);
+        menuBar()->setEnabled(false);
     }
 }
 
 void frmWindow::slotStop()
 {
-
     timer->stop();
     mainLayout->removeWidget(stopButton);
     stopButton->setGeometry(0,0,0,0);
     mainLayout->addWidget(startButton,4,0);
     mainLayout->addWidget(editButton,0,2);
 
+    mainLayout->removeWidget(turnLog);
+    turnLog->setGeometry(0,0,0,0);
+    mainLayout->addWidget(label3,5,0);
+
+    menuBar()->setEnabled(true);
+    loadDeck(model);
 }
