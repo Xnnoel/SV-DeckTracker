@@ -1,3 +1,4 @@
+
 #include "editdelegate.h"
 #include <Qpainter>
 #include <QFont>
@@ -17,7 +18,7 @@ void editDelegate::setPointers(svDatabase *db, cardlist * cd){
     playingDeck = cd;
 
     QDir dir(".");
-    plus = QPixmap(dir.absolutePath() +"/images/plus.png");
+    plus = QPixmap(dir.absolutePath() +"/data/Markers/plus.png");
 }
 
 void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,

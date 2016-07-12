@@ -1,7 +1,7 @@
 #include "cardlist.h"
 
 cardlist::cardlist(svDatabase* database):
-    databasePtr(database)
+    databasePtr(database), myClass(0)
 {
 }
 

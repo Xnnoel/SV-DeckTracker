@@ -91,7 +91,7 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setHidden(true);
 
     // Load in application settings
-    QFile file(dir.absolutePath() + "/settings.ini");
+    QFile file(dir.absolutePath() + "/data/settings.ini");
     if (!file.open(QIODevice::ReadOnly))
         qWarning("Couldn't find settings.ini");
 
@@ -604,7 +604,7 @@ void frmWindow::slotHelp()
 {
     //do nothing for now
     QProcess *proc = new QProcess(this);
-    QString path = dir.absolutePath() + "/Readme.txt";
+    QString path = dir.absolutePath() + "/data/help.txt";
     proc->start("notepad.exe "+path);
 }
 
@@ -887,13 +887,13 @@ void frmWindow::slotStart()
 
         //Create a "you start" mat
 
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/pic.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/pic2.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic2.png");
         theirTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/results.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/results.png");
         resultWinPhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/images/results2.png");
+        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/results2.png");
         resultLosePhash = PerceptualHash::phash(matTexture);
 
         ignoreNext = 0;

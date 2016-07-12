@@ -18,7 +18,7 @@ void svDatabase::addCard(int id, Card card){
     cardMap.insert(id,card);
 
     QDir dir(".");
-    QPixmap image( dir.absolutePath() + "/Portraits/" + QString::number(id) + ".jpg");
+    QPixmap image( dir.absolutePath() + "/data/Portraits/" + QString::number(id) + ".jpg");
     portraitMap.insert(id, image);
     cardID.push_back(id);
 }
@@ -62,7 +62,8 @@ int svDatabase::getCostfromPHash(ulong64 val)
 
 void svDatabase::load(){
     // load in files
-    QString filename="database.json";
+    QDir dir(".");
+    QString filename= dir.absolutePath() + "/data/database.json";
 
     QFile loadFile(filename);
 
@@ -90,10 +91,9 @@ void svDatabase::load(){
 
 
     // Save all cost icon
-    QDir dir(".");
     for (int i = 1; i < 21; i++)
     {
-        QPixmap image( dir.absolutePath() + "/Cost/cost_" + QString::number(i) + ".png");
+        QPixmap image( dir.absolutePath() + "/data/Cost/cost_" + QString::number(i) + ".png");
         costMap.insert(i, image);
     }
 

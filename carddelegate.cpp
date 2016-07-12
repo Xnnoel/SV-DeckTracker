@@ -15,9 +15,9 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
     database = db;
     playingDeck = cd;
     QDir dir(".");
-    up = QPixmap(dir.absolutePath() +"/images/up.png");
-    down = QPixmap(dir.absolutePath() +"/images/down.png");
-    minus = QPixmap(dir.absolutePath() +"/images/minus.png");
+    up = QPixmap(dir.absolutePath() +"/data/Markers/up.png");
+    down = QPixmap(dir.absolutePath() +"/data/Markers/down.png");
+    minus = QPixmap(dir.absolutePath() +"/data/Markers/minus.png");
 }
 
 void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
