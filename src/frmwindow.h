@@ -56,6 +56,7 @@ private slots:
 
     void slotLoad();
 
+    void slotSaveAs();
     void slotSave();
 
     void slotHelp();
@@ -125,6 +126,7 @@ private:
     QAction* NewBishop;
     //Load/Save Decks
     QAction* LoadAction;
+    QAction* SaveAsAction;
     QAction* SaveAction;
     //Help
     QAction* HelpAction;

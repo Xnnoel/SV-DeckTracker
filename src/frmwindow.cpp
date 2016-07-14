@@ -393,7 +393,11 @@ void frmWindow::createActions()
     LoadAction->setToolTip(tr("Load a deck"));
     connect(LoadAction, &QAction::triggered, this, &frmWindow::slotLoad);
 
-    SaveAction = new QAction(tr("&Save as..."), this);
+    SaveAsAction = new QAction(tr("&Save deck as..."), this);
+    SaveAsAction->setToolTip(tr("Save current deck as"));
+    connect(SaveAsAction, &QAction::triggered, this, &frmWindow::slotSaveAs);
+
+    SaveAction = new QAction(tr("&Save deck"), this);
     SaveAction->setToolTip(tr("Save current deck"));
     connect(SaveAction, &QAction::triggered, this, &frmWindow::slotSave);
 
@@ -425,7 +429,11 @@ void frmWindow::createMenus()
     DeckMenu->setTitle(tr("&Deck"));
     menuBar()->addMenu(DeckMenu);
     DeckMenu->addAction(LoadAction);
+    DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
+    DeckMenu->addAction(SaveAsAction);
+
+
 
     HelpMenu = new Menu();
     HelpMenu->setTitle(tr("&Help"));
@@ -529,6 +537,7 @@ void frmWindow::slotLoad()
     playingDeck.setName(deckname);
     playingDeck.setDesc(deckdesc);
     playingDeck.setClass(classnum);
+    playingDeck.setFileName(fileName);
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
     DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
     loadfile.close();
@@ -546,7 +555,8 @@ void frmWindow::slotLoad()
     classBox->setGeometry(0,0,0,0);
     setFixedWidth(WINWIDTH);
 }
-void frmWindow::slotSave()
+
+void frmWindow::slotSaveAs()
 {
     int decksize = playingDeck.getDeckSize();
     if(decksize < 40)
@@ -589,6 +599,55 @@ void frmWindow::slotSave()
     }
     savefile.close();
 }
+
+void frmWindow::slotSave()
+{
+    if (playingDeck.getFileName() == "" || playingDeck.getFileName().isEmpty())
+    {
+        slotSaveAs();
+        return;
+    }
+
+    int decksize = playingDeck.getDeckSize();
+    if(decksize < 40)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Save"), tr("There are less than 40 cards in the deck. Do you still want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::No) {
+             return;
+        }
+    }
+
+    QFile savefile(playingDeck.getFileName());
+    if (!savefile.open(QIODevice::WriteOnly)) {
+           qWarning("Couldn't open save");
+           return;
+    }
+
+    QString textname = DeckNameEdit->text();
+    playingDeck.setName(textname.toStdString());
+    QString textdesc = DeckDescEdit->document()->toPlainText();
+    playingDeck.setDesc(textdesc.toStdString());
+
+    std::string final = playingDeck.getName() + '\n';
+    savefile.write(final.c_str());
+    std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
+    savefile.write(classnum.c_str());
+    std::string desc = playingDeck.getDescription() + '\n';
+    savefile.write(desc.c_str());
+    savefile.write("--deck--\n");
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
+    {
+        for (int j = 0; j < playingDeck.countInDeck[i]; j++)
+        {
+            std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
+            savefile.write(writeID.c_str());
+        }
+    }
+    savefile.close();
+}
+
 void frmWindow::slotAbout()
 {
     QMessageBox::StandardButton reply;

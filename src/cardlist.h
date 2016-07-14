@@ -26,12 +26,16 @@ public:
     int getClass(){return myClass;}
     void setClass(int classnum){myClass = classnum;}
     int getDeckSize();
+    QString getFileName(){return filename;}
+    void setFileName(QString fileName){filename = fileName;}
+
 private:
     std::string deckName;
     std::string description;
     svDatabase* databasePtr;
-    int myClass;
+    int myClass;        //deck class
     bool editMode;
+    QString filename;   //file loaded from
 };
 
 #endif // CARDLIST_H
