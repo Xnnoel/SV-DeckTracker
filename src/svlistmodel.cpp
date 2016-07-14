@@ -77,12 +77,7 @@ void SVListModel::subCard(int id)
             break;
         }
     }
-
-    cardsInDeck[row].second--;
-    QModelIndex cardIndex =  this->index(row,2);
-
-    emit dataChanged(cardIndex, cardIndex);
-    emit countChanged(getDeckSize());
+    slotDown(row);
 }
 
 int SVListModel::getDeckSize()
