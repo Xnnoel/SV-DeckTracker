@@ -159,8 +159,7 @@ void frmWindow::loadDeck(SVListModel* model)
     PlayingDeckList->setFixedHeight(std::min(MAXWINHEIGHT-71, std::max(listsize,400)));
     setFixedHeight(std::min(MAXWINHEIGHT, PlayingDeckList->height() + 70));
     //Set text description
-    DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
-    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
+
 
     int decksize = playingDeck.getDeckSize();
 
@@ -312,6 +311,7 @@ void frmWindow::update()
                     // if card art is way off, cost could randomly spike below
                     if (bestguess[0].distance > settingsMap.value("WorstGuessSens").toInt())
                         break;
+
                     // if card art matches well, assume that the card is true
                     if (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt())
                     {
@@ -322,7 +322,7 @@ void frmWindow::update()
                         ignoreNext = (int)round(1000/refreshRate);
                         break;
                     }
-                    else
+
                     //Matches best 3 to cost, hopefully one matches
                     for (int i = 0; i < 3; i++)
                     if (cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).manaCost == cost)
@@ -331,7 +331,7 @@ void frmWindow::update()
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).name;
                         turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---" );
 
-                        ignoreNext = (int)round(1000/refreshRate);
+                        ignoreNext = (int)round(500/refreshRate);
                         break;
                     }
                 }
@@ -529,6 +529,8 @@ void frmWindow::slotLoad()
     playingDeck.setName(deckname);
     playingDeck.setDesc(deckdesc);
     playingDeck.setClass(classnum);
+    DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
+    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
     loadfile.close();
     loadDeck(model);
     delegate->editMode = false;
@@ -542,7 +544,6 @@ void frmWindow::slotLoad()
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
     classBox->setGeometry(0,0,0,0);
-
     setFixedWidth(WINWIDTH);
 }
 void frmWindow::slotSave()
@@ -849,10 +850,10 @@ void frmWindow::slotStart()
     theirWidth = (int)round(0.6508 * width);
     theirHeight = (int)round(0.1736 * height);
 
-    costLeft = (int)round(0.5795 * width) + left;
-    costTop = (int)round(0.4461 * height) + top;
-    costWidth = (int)round(0.02789 * width);
-    costHeight = (int)round(0.04956 * height);
+    costLeft = (int)round(0.5792 * width) + left;
+    costTop = (int)round(0.4465 * height) + top;
+    costWidth = (int)round(0.02825 * width);
+    costHeight = (int)round(0.05020 * height);
 
     resultsLeft = (int)round(0.3773 * width) + left;
     resultsTop = (int)round(0.06805 * height) + top;
@@ -920,7 +921,7 @@ void frmWindow::slotStart()
         mainLayout->removeWidget(label3);
         label3->setGeometry(0,0,0,0);
         turnLog->clear();
-        turnLog->append("Turn Log\n******************\n");
+        turnLog->append("Draw Log\n******************\n");
 
         //result init group
         bestID = std::vector<int>(3,0);
