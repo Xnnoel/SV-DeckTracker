@@ -33,7 +33,6 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 #define WINWIDTH 550
 #define EDITWINWIDTH 850
-#define MAXWINHEIGHT 810
 
 std::wstring s2ws(const std::string& s);
 
@@ -156,8 +155,8 @@ void frmWindow::loadDeck(SVListModel* model)
     }
     setFixedWidth(WINWIDTH);
     int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
-    PlayingDeckList->setFixedHeight(std::min(MAXWINHEIGHT-71, std::max(listsize,400)));
-    setFixedHeight(std::min(MAXWINHEIGHT, PlayingDeckList->height() + 70));
+    PlayingDeckList->setFixedHeight(std::max(listsize,400));
+    setFixedHeight(PlayingDeckList->height() + 70);
     //Set text description
 
 
@@ -207,12 +206,12 @@ void frmWindow::update()
                     PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
                     if (result.distance < 18)
                     {
+                        bestID[i+3] = bestID[i];
                         bestID[i] = playingDeck.cardsInDeck[result.index];
                     }
                 }
 
-
-                // Try and the 1st turn/ Card selection ended
+                // My turn scanbox
                 boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
                 drawer = pixmap.copy(boxRect);
                 mat = ASM::QPixmapToCvMat(drawer);
@@ -220,6 +219,7 @@ void frmWindow::update()
 
                 int distance1 = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
 
+                // Their turn scanbox
                 boxRect.setRect(theirLeft,theirTop,theirWidth,theirHeight);
                 drawer = pixmap.copy(boxRect);
                 mat = ASM::QPixmapToCvMat(drawer);
@@ -227,6 +227,7 @@ void frmWindow::update()
 
                 int distance2 = PerceptualHash::hammingDistance(theirTexturePhash, imagePHash);
                 int distanceSens = settingsMap.value("TurnSens").toInt();
+
                 if (distance1 < distanceSens || distance2 < distanceSens)
                 {
                     //Remove guessed cards from active list
@@ -757,8 +758,8 @@ void frmWindow::createEditor()
     setFixedWidth(EDITWINWIDTH);
 
     delegate->editMode = true;
-    PlayingDeckList->setFixedHeight(MAXWINHEIGHT-68);
-    setFixedHeight(MAXWINHEIGHT);
+    PlayingDeckList->setFixedHeight(810-68);
+    setFixedHeight(810);
 }
 
 void frmWindow::slotButtonPushed()
@@ -848,7 +849,6 @@ void frmWindow::slotLoadEdit(int)
 
 void frmWindow::refreshList(int meh)
 {
-    qWarning("refreshed list");
     //clear model first
     model->clearData();
 
@@ -865,7 +865,6 @@ void frmWindow::refreshList(int meh)
         model->setCount(id, count);
     }
     updateCount(meh);
-    qWarning("updatehtecount");
 }
 
 void frmWindow::slotEditMode()
@@ -983,7 +982,7 @@ void frmWindow::slotStart()
         turnLog->append("Draw Log\n******************\n");
 
         //result init group
-        bestID = std::vector<int>(3,0);
+        bestID = std::vector<int>(6,0);
         menuBar()->setEnabled(false);
 
         loadDeck(model);
