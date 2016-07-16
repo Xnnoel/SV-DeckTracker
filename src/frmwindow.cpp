@@ -4,7 +4,6 @@
 #include "perceptualhash.h"
 #include "cardlist.h"
 
-
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
 #include <QDirIterator>
@@ -14,6 +13,7 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDialog>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -313,14 +313,17 @@ void frmWindow::update()
                     if (bestguess[0].distance > settingsMap.value("WorstGuessSens").toInt())
                         break;
 
+
+                    int cardConf = 6 * std::min(10, std::max(0, settingsMap.value("BestGuessSens").toInt() - (bestguess[0].distance-5)));
+                    int costConf = 4 * std::min(10, std::max(0, settingsMap.value("CostGuessSens").toInt() - (costDistance-5)));
+                    int confidence = cardConf + costConf;
                     // if card art matches well, assume that the card is true
                     if (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt())
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[0].index]);
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[0].index]).name;
-                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[0].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---" );
-
-                        ignoreNext = (int)round(1000/refreshRate);
+                        turnLog->append("Drew " + cardname + ", Confidence = "+ QString::number(confidence)+ "\n-------");
+                        ignoreNext = (int)round(500/refreshRate);
                         break;
                     }
 
@@ -330,8 +333,7 @@ void frmWindow::update()
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).name;
-                        turnLog->append("Drew " + cardname + ", card dist = "+ QString::number(bestguess[i].distance) + ", cost dist =" + QString::number(costDistance)+ ",cost: "+ QString::number(cost)+"\n---" );
-
+                        turnLog->append("Drew " + cardname + ", Confidence = "+ QString::number(confidence)+ "\n-------");
                         ignoreNext = (int)round(500/refreshRate);
                         break;
                     }
@@ -876,6 +878,7 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
+
     //Begin the app loop
     std::string appName = settingsMap.value("Windowname").toStdString();
     std::wstring stemp = s2ws(appName);
