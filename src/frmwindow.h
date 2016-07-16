@@ -23,6 +23,8 @@
 #include <QPushButton>
 #include <QCheckBox>
 
+#include <QNetworkReply>
+
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
@@ -36,10 +38,14 @@ class frmWindow : public QMainWindow
 {
     Q_OBJECT
 
+signals:
+    void signalGenerateDeck();
+
 public slots:
     void update();
     void updateCount(int);
     void refreshList(int);
+    void replyFinished(QNetworkReply*);
 
 public:
     explicit frmWindow(QWidget *parent = 0);
@@ -55,6 +61,7 @@ private slots:
     void slotBishop();
 
     void slotLoad();
+    void slotLoadURL();
 
     void slotSaveAs();
     void slotSave();
@@ -126,6 +133,7 @@ private:
     QAction* NewBishop;
     //Load/Save Decks
     QAction* LoadAction;
+    QAction* LoadURLAction;
     QAction* SaveAsAction;
     QAction* SaveAction;
     //Help

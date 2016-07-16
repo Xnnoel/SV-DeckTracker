@@ -1,8 +1,6 @@
 #include "frmwindow.h"
 #include "ui_frmwindow.h"
 #include "asmopencv.h"
-#include "perceptualhash.h"
-#include "cardlist.h"
 
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
@@ -13,7 +11,10 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QDialog>
+#include <QInputDialog>
+
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -22,9 +23,6 @@
 #include <qtimer.h>
 #include <Windows.h>
 #include <iostream>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 
 Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0);
 
@@ -49,7 +47,7 @@ frmWindow::frmWindow(QWidget *parent) :
     // Set up some inits
     mat = 0;
     matTexture = 0;
-    setWindowTitle("ShadowVerse Deck Tracker");
+    setWindowTitle("Shadowverse Deck Tracker");
 
     //add menubar?
     this->setMyLayout();
@@ -392,9 +390,13 @@ void frmWindow::createActions()
     NewBishop->setToolTip(tr("Create an Bishop deck"));
     connect(NewBishop, &QAction::triggered, this, &frmWindow::slotBishop);
 
-    LoadAction = new QAction(tr("&Load"), this);
+    LoadAction = new QAction(tr("&Load from file"), this);
     LoadAction->setToolTip(tr("Load a deck"));
     connect(LoadAction, &QAction::triggered, this, &frmWindow::slotLoad);
+
+    LoadURLAction = new QAction(tr("&Load from url"), this);
+    LoadURLAction->setToolTip(tr("Load using shadowportal URL"));
+    connect(LoadURLAction, &QAction::triggered, this, &frmWindow::slotLoadURL);
 
     SaveAsAction = new QAction(tr("&Save deck as..."), this);
     SaveAsAction->setToolTip(tr("Save current deck as"));
@@ -432,6 +434,7 @@ void frmWindow::createMenus()
     DeckMenu->setTitle(tr("&Deck"));
     menuBar()->addMenu(DeckMenu);
     DeckMenu->addAction(LoadAction);
+    DeckMenu->addAction(LoadURLAction);
     DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
@@ -463,6 +466,7 @@ void frmWindow::slotRoyal()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotWitch()
 {
     playingDeck.clear();
@@ -471,6 +475,7 @@ void frmWindow::slotWitch()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotDragon()
 {
     playingDeck.clear();
@@ -479,6 +484,7 @@ void frmWindow::slotDragon()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotNecro()
 {
     playingDeck.clear();
@@ -487,6 +493,7 @@ void frmWindow::slotNecro()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotVampire()
 {
     playingDeck.clear();
@@ -495,6 +502,7 @@ void frmWindow::slotVampire()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotBishop()
 {
     playingDeck.clear();
@@ -503,6 +511,7 @@ void frmWindow::slotBishop()
     createEditor();
     slotLoadEdit(0);
 }
+
 void frmWindow::slotLoad()
 {
 
@@ -559,6 +568,32 @@ void frmWindow::slotLoad()
     setFixedWidth(WINWIDTH);
 }
 
+void frmWindow::slotLoadURL()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr(""),
+                                    tr("Shadowverse Portal link:"), QLineEdit::Normal,
+                                    "", &ok,Qt::WindowSystemMenuHint | Qt::WindowTitleHint);
+
+    if (ok && !text.isEmpty())
+    {
+        QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+                this, SLOT(replyFinished(QNetworkReply*)));
+        QUrl url(text);
+        QNetworkRequest req(url);
+        manager->get(req);
+
+        //Create a dialog box while building deck (prevent user from touching)
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::NoIcon, "", "Building Deck...");
+        msgBox->setStandardButtons(QMessageBox::NoButton);
+        msgBox->setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+        connect(this, SIGNAL(signalGenerateDeck()), msgBox, SLOT(reject()));
+        msgBox->exec();
+    }
+
+}
+
 void frmWindow::slotSaveAs()
 {
     int decksize = playingDeck.getDeckSize();
@@ -576,7 +611,7 @@ void frmWindow::slotSaveAs()
         tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Decks (*.dck)"));
     QFile savefile(fileName);
     if (!savefile.open(QIODevice::WriteOnly)) {
-           qWarning("Couldn't open save");
+           qWarning("Couldn't open save from slotSaveAs");
            return;
     }
 
@@ -624,28 +659,30 @@ void frmWindow::slotSave()
 
     QFile savefile(playingDeck.getFileName());
     if (!savefile.open(QIODevice::WriteOnly)) {
-           qWarning("Couldn't open save");
+           qWarning("Couldn't open save from slotSave");
            return;
     }
-
-    QString textname = DeckNameEdit->text();
-    playingDeck.setName(textname.toStdString());
-    QString textdesc = DeckDescEdit->document()->toPlainText();
-    playingDeck.setDesc(textdesc.toStdString());
-
-    std::string final = playingDeck.getName() + '\n';
-    savefile.write(final.c_str());
-    std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
-    savefile.write(classnum.c_str());
-    std::string desc = playingDeck.getDescription() + '\n';
-    savefile.write(desc.c_str());
-    savefile.write("--deck--\n");
-    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
+    else
     {
-        for (int j = 0; j < playingDeck.countInDeck[i]; j++)
+        QString textname = DeckNameEdit->text();
+        playingDeck.setName(textname.toStdString());
+        QString textdesc = DeckDescEdit->document()->toPlainText();
+        playingDeck.setDesc(textdesc.toStdString());
+
+        std::string final = playingDeck.getName() + '\n';
+        savefile.write(final.c_str());
+        std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
+        savefile.write(classnum.c_str());
+        std::string desc = playingDeck.getDescription() + '\n';
+        savefile.write(desc.c_str());
+        savefile.write("--deck--\n");
+        for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
         {
-            std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
-            savefile.write(writeID.c_str());
+            for (int j = 0; j < playingDeck.countInDeck[i]; j++)
+            {
+                std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
+                savefile.write(writeID.c_str());
+            }
         }
     }
     savefile.close();
@@ -655,7 +692,7 @@ void frmWindow::slotAbout()
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
-                                     tr("ShadowVerse Deck Tracker\n"
+                                     tr("Shadowverse Deck Tracker\n"
                                         "Version 0.7\n"
                                         "All Rights Reserved\n"
                                         "\n"
@@ -738,22 +775,20 @@ void frmWindow::setMyLayout()
 
     turnLog = new QTextEdit();
     turnLog->setReadOnly(true);;
-    //turnLog->setTextInteractionFlags(turnLog->textInteractionFlags()|Qt::TextSelectableByKeyboard);
 
 }
 
 void frmWindow::createEditor()
 {
-    // This Spawns an editor to the right side that you can use to click on the deck with
-    // Need a new list delegate and model for the editor damnit
-    // shrink window size
-    // Maybe we cheat and have it loaded beforehand so we only need to expand win width?
+    // This spawns an editor to the right side that you can use to click on the deck with
     mainLayout->addWidget(okButton, 0, 3);
     mainLayout->addWidget(neutralBox, 0, 4);
     mainLayout->addWidget(classBox, 0, 5);
     mainLayout->addWidget(EditDeckList, 1, 3,5,3);
     mainLayout->removeWidget(editButton);
+    mainLayout->removeWidget(startButton);
     editButton->setGeometry(0,0,0,0);
+    startButton->setGeometry(0,0,0,0);
     neutralBox->setChecked(true);
     classBox->setChecked(true);
 
@@ -762,6 +797,8 @@ void frmWindow::createEditor()
     delegate->editMode = true;
     PlayingDeckList->setFixedHeight(810-68);
     setFixedHeight(810);
+
+    menuBar()->setEnabled(false);
 }
 
 void frmWindow::slotButtonPushed()
@@ -771,6 +808,7 @@ void frmWindow::slotButtonPushed()
     mainLayout->removeWidget(neutralBox);
     mainLayout->removeWidget(classBox);
     mainLayout->addWidget(editButton,0,2);
+    mainLayout->addWidget(startButton,4,0);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
@@ -778,6 +816,7 @@ void frmWindow::slotButtonPushed()
     setFixedWidth(WINWIDTH);
     delegate->editMode = false;
     loadDeck(model);
+    menuBar()->setEnabled(true);
 }
 
 void frmWindow::slotLoadEdit(int)
@@ -878,7 +917,6 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
-
     //Begin the app loop
     std::string appName = settingsMap.value("Windowname").toStdString();
     std::wstring stemp = s2ws(appName);
@@ -1006,4 +1044,80 @@ void frmWindow::slotStop()
 
     menuBar()->setEnabled(true);
     loadDeck(model);
+}
+
+void frmWindow::replyFinished(QNetworkReply * reply)
+{
+    if ( reply->error() != QNetworkReply::NoError ) {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("An error has occured. Please provide a proper URL."));
+        emit signalGenerateDeck();
+    }
+    else
+    {
+        std::vector<QString> deckVector;
+
+        // Extract number and card from http page
+        int classType;
+        char buf[1024];
+        while (!reply->atEnd())
+        {
+            qint64 lineLength = reply->readLine(buf, sizeof(buf));
+            if (lineLength != -1)
+            {
+                QString newLine = QString(buf);
+
+                if (newLine.contains("el-card-list-info-count"))
+                {
+                    QStringRef numberLine(&newLine,36,1);
+                    deckVector.push_back(numberLine.toString());
+                }
+
+                if (newLine.contains("\"/card/"))
+                {
+                    QStringRef numberLine(&newLine,12,9);
+                    deckVector.push_back(numberLine.toString());
+                }
+                if (newLine.contains("class_name"))
+                {
+                    QStringRef numberLine(&newLine,77,1);
+                    classType = numberLine.toInt() - 1;
+
+                }
+            }
+            else
+                break;
+        }
+
+        //if no size, then no cards gotten
+        if (deckVector.size() == 0)
+        {
+            QMessageBox::StandardButton errorMessage;
+            errorMessage = QMessageBox::information(this, tr(""),
+                                             tr("No cards detected."));
+            emit signalGenerateDeck();
+            return;
+        }
+
+        // Create a deck from the loaded values
+        //for sanity's sake, clear the deck first
+        playingDeck.clear();
+        playingDeck.setClass(classType);
+        DeckNameEdit->setText("");
+        DeckDescEdit->document()->setPlainText("");
+
+        int pageAmount = deckVector.size()/2;
+
+        for (int i = 0; i < pageAmount; i++)
+        {
+
+            int cardAmount = deckVector[i*2].toInt();
+            int cardID = deckVector[i*2+1].toInt();
+            for(int j = 0; j < cardAmount; j++)
+                playingDeck.addCard(cardID);
+        }
+        loadDeck(model);
+        emit signalGenerateDeck();
+    }
 }

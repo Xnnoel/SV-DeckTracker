@@ -14,7 +14,7 @@ public:
     std::vector<ulong64> deckPHash; //updates as the same as the upper 2
     void addCard(int id);
     void removeCard(int id);
-    void clear(){deckName.clear(); description.clear(); cardsInDeck.clear(); countInDeck.clear(); deckPHash.clear();}
+    void clear(){deckName.clear(); description.clear(); cardsInDeck.clear(); countInDeck.clear(); deckPHash.clear();filename.clear();}
     int getPosition(int id);
     std::string getName(){return deckName;}
     std::string getDescription(){return description;}
