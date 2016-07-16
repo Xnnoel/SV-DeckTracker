@@ -156,8 +156,8 @@ void frmWindow::loadDeck(SVListModel* model)
     PlayingDeckList->setFixedHeight(std::max(listsize,400));
     setFixedHeight(PlayingDeckList->height() + 70);
     //Set text description
-
-
+    DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
+    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
     int decksize = playingDeck.getDeckSize();
 
     updateCount(decksize);
