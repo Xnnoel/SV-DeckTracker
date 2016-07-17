@@ -86,23 +86,6 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
-
-    // Load in application settings
-    QFile file(dir.absolutePath() + "/data/settings.ini");
-    if (!file.open(QIODevice::ReadOnly))
-        qWarning("Couldn't find settings.ini");
-
-    QTextStream in(&file);
-
-    settingsMap;
-
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList splitLines = line.split("=");
-        settingsMap.insert(splitLines[0],splitLines[1]);
-    }
-    file.close();
-
 }
 
 frmWindow::~frmWindow()
@@ -917,6 +900,25 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
+    // Load in application settings
+    QFile file(dir.absolutePath() + "/data/settings.ini");
+    if (!file.open(QIODevice::ReadOnly)){
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Couldn't find settings.ini."));
+        return;
+    }
+    QTextStream in(&file);
+
+    settingsMap;
+
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList splitLines = line.split("=");
+        settingsMap.insert(splitLines[0],splitLines[1]);
+    }
+    file.close();
+
     //Begin the app loop
     std::string appName = settingsMap.value("Windowname").toStdString();
     std::wstring stemp = s2ws(appName);
