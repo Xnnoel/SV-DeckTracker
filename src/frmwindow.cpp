@@ -597,7 +597,7 @@ void frmWindow::slotSaveAs()
            qWarning("Couldn't open save from slotSaveAs");
            return;
     }
-
+    playingDeck.setFileName(fileName);
     QString textname = DeckNameEdit->text();
     playingDeck.setName(textname.toStdString());
     QString textdesc = DeckDescEdit->document()->toPlainText();
