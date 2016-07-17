@@ -589,16 +589,19 @@ void frmWindow::slotSaveAs()
              return;
         }
     }
-
+    QString textname = DeckNameEdit->text();
+    QString fileTextName = "NewDeck";
+    if (!textname.isEmpty())
+        fileTextName = textname.replace(" ","_");
     QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Decks (*.dck)"));
+        tr("Save Deck as"), dir.absolutePath() + "/Decks/" + fileTextName, tr("Decks (*.dck)"));
     QFile savefile(fileName);
     if (!savefile.open(QIODevice::WriteOnly)) {
            qWarning("Couldn't open save from slotSaveAs");
            return;
     }
     playingDeck.setFileName(fileName);
-    QString textname = DeckNameEdit->text();
+
     playingDeck.setName(textname.toStdString());
     QString textdesc = DeckDescEdit->document()->toPlainText();
     playingDeck.setDesc(textdesc.toStdString());
