@@ -86,6 +86,23 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
+
+    // Load in application settings
+    QFile file(dir.absolutePath() + "/data/settings.ini");
+    if (!file.open(QIODevice::ReadOnly)){
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Couldn't find settings.ini."));
+        return;
+    }
+    QTextStream in(&file);
+
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList splitLines = line.split("=");
+        settingsMap.insert(splitLines[0],splitLines[1]);
+    }
+    file.close();
 }
 
 frmWindow::~frmWindow()
@@ -140,7 +157,6 @@ void frmWindow::loadDeck(SVListModel* model)
     setFixedHeight(PlayingDeckList->height() + 70);
     //Set text description
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
-    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
     int decksize = playingDeck.getDeckSize();
 
     updateCount(decksize);
@@ -152,7 +168,7 @@ void frmWindow::updateCount(int cardsize)
     int decksize = playingDeck.getDeckSize();
 
     QString cardCountLabel = QString::number(cardsize) + "/" + QString::number(decksize) + " Cards";
-    label4->setText(cardCountLabel);
+    labelCards->setText(cardCountLabel);
 }
 
 void frmWindow::update()
@@ -387,11 +403,27 @@ void frmWindow::createActions()
 
     SaveAction = new QAction(tr("&Save deck"), this);
     SaveAction->setToolTip(tr("Save current deck"));
+    SaveAction->setShortcuts(QKeySequence::Save);
     connect(SaveAction, &QAction::triggered, this, &frmWindow::slotSave);
 
     HelpAction = new QAction(tr("&Help"), this);
     HelpAction->setToolTip(tr("Open the help text"));
     connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
+
+    NoxAction = new QAction(tr("&Nox"), this);
+    NoxAction->setToolTip(tr("Use Nox Settings"));
+    NoxAction->setCheckable(true);
+    connect(NoxAction, &QAction::triggered, this, &frmWindow::slotNox);
+
+    BluestacksAction = new QAction(tr("&Bluestacks"), this);
+    BluestacksAction->setToolTip(tr("Use Bluestacks Settings"));
+    BluestacksAction->setCheckable(true);
+    connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
+
+    HelpAction = new QAction(tr("&Help"), this);
+    HelpAction->setToolTip(tr("Open the help text"));
+    connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
+
 
     About = new QAction(tr("&About"), this);
     connect(About, &QAction::triggered, this, &frmWindow::slotAbout);
@@ -422,6 +454,12 @@ void frmWindow::createMenus()
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
 
+
+    EmuMenu = new Menu();
+    EmuMenu->setTitle(tr("&Emulator"));
+    menuBar()->addMenu(EmuMenu);
+    EmuMenu->addAction(NoxAction);
+    EmuMenu->addAction(BluestacksAction);
 
 
     HelpMenu = new Menu();
@@ -513,15 +551,6 @@ void frmWindow::slotLoad()
     line = textStream.readLine();
     int classnum = std::stoi(line.toStdString());
     line = textStream.readLine();
-    std::string deckdesc;
-    while (line != "--deck--")
-    {
-        deckdesc += line.toStdString();
-        deckdesc += '\n';
-        line = textStream.readLine();
-    }
-    line = textStream.readLine();
-
     while (line != "")
     {
         int ID = line.toInt();
@@ -530,11 +559,9 @@ void frmWindow::slotLoad()
     }
 
     playingDeck.setName(deckname);
-    playingDeck.setDesc(deckdesc);
     playingDeck.setClass(classnum);
     playingDeck.setFileName(fileName);
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
-    DeckDescEdit->document()->setPlainText(QString::fromStdString(playingDeck.getDescription()));
     loadfile.close();
     loadDeck(model);
     delegate->editMode = false;
@@ -603,16 +630,12 @@ void frmWindow::slotSaveAs()
     playingDeck.setFileName(fileName);
 
     playingDeck.setName(textname.toStdString());
-    QString textdesc = DeckDescEdit->document()->toPlainText();
-    playingDeck.setDesc(textdesc.toStdString());
+
 
     std::string final = playingDeck.getName() + '\n';
     savefile.write(final.c_str());
     std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
     savefile.write(classnum.c_str());
-    std::string desc = playingDeck.getDescription() + '\n';
-    savefile.write(desc.c_str());
-    savefile.write("--deck--\n");
     for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
     {
         for (int j = 0; j < playingDeck.countInDeck[i]; j++)
@@ -652,16 +675,11 @@ void frmWindow::slotSave()
     {
         QString textname = DeckNameEdit->text();
         playingDeck.setName(textname.toStdString());
-        QString textdesc = DeckDescEdit->document()->toPlainText();
-        playingDeck.setDesc(textdesc.toStdString());
 
         std::string final = playingDeck.getName() + '\n';
         savefile.write(final.c_str());
         std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
         savefile.write(classnum.c_str());
-        std::string desc = playingDeck.getDescription() + '\n';
-        savefile.write(desc.c_str());
-        savefile.write("--deck--\n");
         for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
         {
             for (int j = 0; j < playingDeck.countInDeck[i]; j++)
@@ -679,8 +697,7 @@ void frmWindow::slotAbout()
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
                                      tr("Shadowverse Deck Tracker\n"
-                                        "Version 0.7\n"
-                                        "All Rights Reserved\n"
+                                        "Version 0.7.8\n"
                                         "\n"
                                         "For any comments or questions,\n"
                                         "Send an email to xnnoelx@gmail.com"));
@@ -694,35 +711,48 @@ void frmWindow::slotHelp()
     proc->start("notepad.exe "+path);
 }
 
+void frmWindow::slotNox()
+{
+    settingsMap.insert("Windowname","Nox App Player");
+    settingsMap.insert("Topborder","36");
+    settingsMap.insert("Leftborder","2");
+    settingsMap.insert("Botborder","2");
+    settingsMap.insert("Rightborder","2");
+    BluestacksAction->setChecked(false);
+    NoxAction->setChecked(true);
+}
+
+void frmWindow::slotBluestacks()
+{
+    settingsMap.insert("Windowname","BlueStacks App Player");
+    settingsMap.insert("Topborder","40");
+    settingsMap.insert("Leftborder","68");
+    settingsMap.insert("Botborder","0");
+    settingsMap.insert("Rightborder","0");
+    NoxAction->setChecked(false);
+    BluestacksAction->setChecked(true);
+}
+
 void frmWindow::setMyLayout()
 {
     //layout of all those things yay
     mainLayout = new QGridLayout();
-    label1 = new QLabel("Deck Name");
-    label1->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label1->setMaximumHeight(25);
+    labelDeckName = new QLabel("Deck Name");
+    labelDeckName->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    labelDeckName->setMaximumHeight(25);
 
-    label2 = new QLabel("Deck Description");
-    label2->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label2->setMaximumHeight(25);
+    labelBlank = new QLabel("");
+    labelBlank->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
 
-    label3 = new QLabel("");
-    label3->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-
-    label4 = new QLabel("Cards");
-    label4->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    label4->setMaximumHeight(25);
-    label4->setAutoFillBackground(true);
+    labelCards = new QLabel("Cards");
+    labelCards->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    labelCards->setMaximumHeight(25);
+    labelCards->setAutoFillBackground(true);
 
     DeckNameEdit = new QLineEdit();
     DeckNameEdit->setMaximumHeight(25);
     DeckNameEdit->setMaxLength(35);
     DeckNameEdit->setPlaceholderText(tr(" Deck name here"));
-
-    DeckDescEdit = new QPlainTextEdit();
-    DeckDescEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    DeckDescEdit->setMinimumHeight(250);
-    DeckDescEdit->setPlaceholderText(tr(" Default Description"));
 
     PlayingDeckList = new QListView();
     PlayingDeckList->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -735,13 +765,11 @@ void frmWindow::setMyLayout()
     connect(startButton,SIGNAL(released()), this, SLOT(slotStart()));
     connect(stopButton, SIGNAL(released()), this, SLOT(slotStop()));
 
-    mainLayout->addWidget(label1, 0, 0);
+    mainLayout->addWidget(labelDeckName, 0, 0);
     mainLayout->addWidget(DeckNameEdit, 1, 0);
-    mainLayout->addWidget(label2, 2, 0);
-    mainLayout->addWidget(DeckDescEdit, 3, 0);
-    mainLayout->addWidget(startButton,4,0);
-    mainLayout->addWidget(label3, 5, 0);
-    mainLayout->addWidget(label4, 0, 1);
+    mainLayout->addWidget(startButton,2,0);
+    mainLayout->addWidget(labelBlank, 3, 0);
+    mainLayout->addWidget(labelCards, 0, 1);
     mainLayout->addWidget(editButton, 0, 2);
     mainLayout->addWidget(PlayingDeckList, 1, 1,5,2, Qt::AlignTop);
 
@@ -761,7 +789,6 @@ void frmWindow::setMyLayout()
 
     turnLog = new QTextEdit();
     turnLog->setReadOnly(true);;
-
 }
 
 void frmWindow::createEditor()
@@ -794,7 +821,7 @@ void frmWindow::slotButtonPushed()
     mainLayout->removeWidget(neutralBox);
     mainLayout->removeWidget(classBox);
     mainLayout->addWidget(editButton,0,2);
-    mainLayout->addWidget(startButton,4,0);
+    mainLayout->addWidget(startButton,2,0);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
@@ -903,25 +930,6 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
-    // Load in application settings
-    QFile file(dir.absolutePath() + "/data/settings.ini");
-    if (!file.open(QIODevice::ReadOnly)){
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Couldn't find settings.ini."));
-        return;
-    }
-    QTextStream in(&file);
-
-    settingsMap;
-
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList splitLines = line.split("=");
-        settingsMap.insert(splitLines[0],splitLines[1]);
-    }
-    file.close();
-
     //Begin the app loop
     std::string appName = settingsMap.value("Windowname").toStdString();
     std::wstring stemp = s2ws(appName);
@@ -1022,8 +1030,8 @@ void frmWindow::slotStart()
 
         //replace blank space with turn log
         mainLayout->addWidget(turnLog,5,0);
-        mainLayout->removeWidget(label3);
-        label3->setGeometry(0,0,0,0);
+        mainLayout->removeWidget(labelBlank);
+        labelBlank->setGeometry(0,0,0,0);
         turnLog->clear();
         turnLog->append("Draw Log\n******************\n");
 
@@ -1040,12 +1048,12 @@ void frmWindow::slotStop()
     timer->stop();
     mainLayout->removeWidget(stopButton);
     stopButton->setGeometry(0,0,0,0);
-    mainLayout->addWidget(startButton,4,0);
+    mainLayout->addWidget(startButton,2,0);
     mainLayout->addWidget(editButton,0,2);
 
     mainLayout->removeWidget(turnLog);
     turnLog->setGeometry(0,0,0,0);
-    mainLayout->addWidget(label3,5,0);
+    mainLayout->addWidget(labelBlank,5,0);
 
     menuBar()->setEnabled(true);
     loadDeck(model);
@@ -1110,7 +1118,6 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         playingDeck.clear();
         playingDeck.setClass(classType);
         DeckNameEdit->setText("");
-        DeckDescEdit->document()->setPlainText("");
 
         int pageAmount = deckVector.size()/2;
 

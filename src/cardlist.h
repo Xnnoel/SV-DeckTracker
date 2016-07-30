@@ -14,12 +14,10 @@ public:
     std::vector<ulong64> deckPHash; //updates as the same as the upper 2
     void addCard(int id);
     void removeCard(int id);
-    void clear(){deckName.clear(); description.clear(); cardsInDeck.clear(); countInDeck.clear(); deckPHash.clear();filename.clear();}
+    void clear(){deckName.clear(); cardsInDeck.clear(); countInDeck.clear(); deckPHash.clear();filename.clear();}
     int getPosition(int id);
     std::string getName(){return deckName;}
-    std::string getDescription(){return description;}
     void setName(std::string name){deckName = name;}
-    void setDesc(std::string desc){description = desc;}
     cardlist(svDatabase* database);          //name of card
     bool getMode(){return editMode;}
     void setMode(bool mode){editMode = mode;}
@@ -31,7 +29,6 @@ public:
 
 private:
     std::string deckName;
-    std::string description;
     svDatabase* databasePtr;
     int myClass;        //deck class
     bool editMode;

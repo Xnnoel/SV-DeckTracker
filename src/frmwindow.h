@@ -69,6 +69,9 @@ private slots:
     void slotHelp();
     void slotAbout();
 
+    void slotNox();
+    void slotBluestacks();
+
     void slotButtonPushed();
     void slotEditMode();
     void slotLoadEdit(int);
@@ -122,6 +125,7 @@ private:
     Menu *NewMenu;
     Menu *DeckMenu;
     Menu *HelpMenu;
+    Menu *EmuMenu;
 
     // Class Create New
     QAction* NewElf;
@@ -139,6 +143,10 @@ private:
     //Help
     QAction* HelpAction;
     QAction* About;
+    //emulator actions
+    QAction* NoxAction;
+    QAction* BluestacksAction;
+
 
     QDir dir;
     bool handleValid;
@@ -157,13 +165,11 @@ private:
 
     // Stuff pertaining to grid layout
     QGridLayout* mainLayout;
-    QLabel* label1;
-    QLabel* label2;
-    QLabel* label3;
-    QLabel* label4;
+    QLabel* labelDeckName;
+    QLabel* labelBlank;
+    QLabel* labelCards;
 
     QLineEdit* DeckNameEdit;
-    QPlainTextEdit* DeckDescEdit;
     QListView* PlayingDeckList;
     CardDelegate * delegate;
     SVListModel* model;
