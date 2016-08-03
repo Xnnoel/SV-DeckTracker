@@ -420,6 +420,10 @@ void frmWindow::createActions()
     BluestacksAction->setCheckable(true);
     connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
 
+    UpdateHashAction = new QAction(tr("Update Hash"), this);
+    UpdateHashAction->setToolTip("Update card hash using deck preview");
+    connect(UpdateHashAction, &QAction::triggered, this, &frmWindow::slotUpdateHash);
+
     HelpAction = new QAction(tr("&Help"), this);
     HelpAction->setToolTip(tr("Open the help text"));
     connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
@@ -429,7 +433,6 @@ void frmWindow::createActions()
     connect(About, &QAction::triggered, this, &frmWindow::slotAbout);
 
 }
-
 
 void frmWindow::createMenus()
 {
@@ -460,7 +463,8 @@ void frmWindow::createMenus()
     menuBar()->addMenu(EmuMenu);
     EmuMenu->addAction(NoxAction);
     EmuMenu->addAction(BluestacksAction);
-
+    EmuMenu->addSeparator();
+    EmuMenu->addAction(UpdateHashAction);
 
     HelpMenu = new Menu();
     HelpMenu->setTitle(tr("&Help"));
@@ -733,6 +737,57 @@ void frmWindow::slotBluestacks()
     BluestacksAction->setChecked(true);
 }
 
+void frmWindow::slotUpdateHash()
+{
+    //get constants
+    int Top = (int)round(0.43115 * height) + top;
+    int Left = (int)round(0.025039 * width) + left;
+    int Width = (int)round(0.0954 * width);
+    int Height = (int)round(0.21001 * height);
+    int HorGap = (int)round(0.1212833 * width);
+    int VerGap = (int)round(0.30876 * height);
+    int RightStart = (int)round(0.8795 * width);
+
+    // Create array of outdated card hashes
+    QVector<bool> needphash;
+
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++)
+    {
+        if (cardDatabase.getCard(playingDeck.cardsInDeck[i]).newpHash == 0)
+            needphash.push_back(true);
+        else
+            needphash.push_back(false);
+    }
+
+    // Take a snapshot of screen
+
+    PrintWindow(handle, hdc, PW_CLIENTONLY);
+    QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
+
+    QRect boxRect;
+    QPixmap drawer;
+    ulong64 imagePHash;
+
+    for (int i = 0; i < std::min(16, needphash.size());i++)
+    {
+        if (needphash[i])
+        {
+            // get new imagephash
+            boxRect.setRect(Left + (HorGap * std::floor(i/2)), Top + (VerGap * (i%2)), Width, Height);
+            drawer = pixmap.copy(boxRect);
+            resultMat = ASM::QPixmapToCvMat(drawer);
+            cv::imwrite(std::to_string(i) + ".png", resultMat);
+            imagePHash = PerceptualHash::phash(resultMat);
+
+            // update playingdeck
+            playingDeck.deckPHash[i] = imagePHash;
+        }
+    }
+    // Save database??
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::information(this, tr("Saved Deck"), tr("Done"));
+}
+
 void frmWindow::setMyLayout()
 {
     //layout of all those things yay
@@ -944,6 +999,7 @@ void frmWindow::slotStart()
     int leftborder = settingsMap.value("Leftborder").toInt();
     int rightborder = settingsMap.value("Rightborder").toInt();
 
+
     //Window rect
     RECT rc;
     GetClientRect(handle, &rc);
@@ -983,6 +1039,8 @@ void frmWindow::slotStart()
     if (handle != 0)
     {
         setWindowTitle("Shadowverse Deck Tracker");
+        setWindowTitle(QString::number(topborder) +"," + QString::number(botborder) +"," +QString::number(leftborder) +"," +QString::number(rightborder));
+
 
         // Start the update loop to check for cards in images
         refreshRate = settingsMap.value("RefreshRate").toInt();

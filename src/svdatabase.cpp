@@ -86,6 +86,9 @@ void svDatabase::load(){
             QString pHashString = cardObject["pHash"].toString();
             card.pHash = pHashString.toDouble();
 
+            QString newpHashString = cardObject["newpHash"].toString();
+            card.newpHash = newpHashString.toDouble();
+
             addCard(card.ID, card);
         }
 
@@ -108,6 +111,8 @@ void svDatabase::load(){
         ulong64 cardpHash = pHashString.toDouble();
 
         costPHashMap.insert(cost,cardpHash) ;
+
+
     }
 
     loadFile.close();

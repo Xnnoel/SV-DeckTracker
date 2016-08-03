@@ -20,6 +20,7 @@ public:
     std::vector<ulong64> getCostPHash();
     int getCostfromPHash(ulong64);
     void load();
+    void save();
     int size();
     QVector<int> cardID;
 private:

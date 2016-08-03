@@ -10,6 +10,7 @@ struct Card{
     int manaCost;
     int ID;
     ulong64 pHash;
+    ulong64 newpHash;
 };
 
 #endif // CARD_H

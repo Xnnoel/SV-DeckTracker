@@ -71,6 +71,7 @@ private slots:
 
     void slotNox();
     void slotBluestacks();
+    void slotUpdateHash();
 
     void slotButtonPushed();
     void slotEditMode();
@@ -146,7 +147,7 @@ private:
     //emulator actions
     QAction* NoxAction;
     QAction* BluestacksAction;
-
+    QAction* UpdateHashAction;
 
     QDir dir;
     bool handleValid;
