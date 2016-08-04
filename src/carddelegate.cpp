@@ -84,7 +84,7 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     if (mycount < playingDeck->countInDeck[index.row()])
         color = QColor(200,200,0);
     if (mycount == 0)
-        color = QColor(220,0,0);
+        color = QColor(80,80,80);
     painter->setPen(color);
     painter->setFont(font);
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
