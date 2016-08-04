@@ -701,7 +701,7 @@ void frmWindow::slotAbout()
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
                                      tr("Shadowverse Deck Tracker\n"
-                                        "Version 0.7.8\n"
+                                        "Version 0.8.2\n"
                                         "\n"
                                         "For any comments or questions,\n"
                                         "Send an email to xnnoelx@gmail.com"));
@@ -722,8 +722,37 @@ void frmWindow::slotNox()
     settingsMap.insert("Leftborder","2");
     settingsMap.insert("Botborder","2");
     settingsMap.insert("Rightborder","2");
+    settingsMap.insert("RefreshRate","80");
     BluestacksAction->setChecked(false);
     NoxAction->setChecked(true);
+
+    //try and setup the handle?
+    std::string appName = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp = s2ws(appName);
+    LPCWSTR result = stemp.c_str();
+
+    handle = 0;
+    handle = ::FindWindow(NULL, result);
+
+    if (handle != 0)
+    {
+        //create bitmap and screen to save rect
+        hdcScreen = GetDC(NULL);
+        hdc = CreateCompatibleDC(hdcScreen);
+
+        RECT rc;
+        GetClientRect(handle, &rc);
+        width = (rc.right - rc.left) - 2 - 2;
+        height = (rc.bottom - rc.top) - 36 - 2;
+        top = rc.top+36;
+        left = rc.left+2;
+
+
+        hbmp = CreateCompatibleBitmap(hdcScreen,
+            width + 2, height + 36);
+
+        SelectObject(hdc, hbmp);
+    }
 }
 
 void frmWindow::slotBluestacks()
@@ -733,12 +762,48 @@ void frmWindow::slotBluestacks()
     settingsMap.insert("Leftborder","68");
     settingsMap.insert("Botborder","0");
     settingsMap.insert("Rightborder","0");
+    settingsMap.insert("RefreshRate","60");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(true);
+
+    //try and setup the handle?
+    std::string appName = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp = s2ws(appName);
+    LPCWSTR result = stemp.c_str();
+
+    handle = 0;
+    handle = ::FindWindow(NULL, result);
+
+    if (handle != 0)
+    {
+        //create bitmap and screen to save rect
+        hdcScreen = GetDC(NULL);
+        hdc = CreateCompatibleDC(hdcScreen);
+
+        RECT rc;
+        GetClientRect(handle, &rc);
+        width = (rc.right - rc.left) - 68;
+        height = (rc.bottom - rc.top) - 40;
+        top = rc.top+40;
+        left = rc.left+68;
+
+        hbmp = CreateCompatibleBitmap(hdcScreen,
+            width + 68, height + 40);
+        SelectObject(hdc, hbmp);
+    }
 }
 
 void frmWindow::slotUpdateHash()
 {
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Could not detect window."));
+        return;
+
+    }
+
     //get constants
     int Top = (int)round(0.43115 * height) + top;
     int Left = (int)round(0.025039 * width) + left;
@@ -781,8 +846,10 @@ void frmWindow::slotUpdateHash()
 
             // update playingdeck
             playingDeck.deckPHash[i] = imagePHash;
+
         }
     }
+
     // Save database??
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("Saved Deck"), tr("Done"));
@@ -1039,10 +1106,7 @@ void frmWindow::slotStart()
     if (handle != 0)
     {
         setWindowTitle("Shadowverse Deck Tracker");
-        setWindowTitle(QString::number(topborder) +"," + QString::number(botborder) +"," +QString::number(leftborder) +"," +QString::number(rightborder));
 
-
-        // Start the update loop to check for cards in images
         refreshRate = settingsMap.value("RefreshRate").toInt();
         handleValid = true;
 
@@ -1057,7 +1121,6 @@ void frmWindow::slotStart()
         curState = Ui::STATE::MYTURN;
 
         //Create a "you start" mat
-
         matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic.png");
         matTexturePhash = PerceptualHash::phash(matTexture);
         matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic2.png");
