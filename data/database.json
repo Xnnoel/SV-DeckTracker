@@ -1,2468 +1,2871 @@
 {
     "Cards": [
         {
-            "Cost": 1,
-            "ID": "100011010",
-            "Name": "Goblin ",
-            "pHash": "8407408175587031040"
-        },
-        {
-            "Cost": 2,
-            "ID": "100011020",
-            "Name": "Fighter ",
-            "pHash": "10888002051965218816"
-        },
-        {
-            "Cost": 3,
-            "ID": "100011030",
-            "Name": "Mercenary Drifter ",
-            "pHash": "13622527012104425472"
-        },
-        {
-            "Cost": 4,
-            "ID": "100011040",
-            "Name": "Goliath ",
-            "pHash": "15045651653633349632"
-        },
-        {
-            "Cost": 5,
-            "ID": "100011050",
-            "Name": "Angelic Sword Maiden ",
-            "pHash": "17154483563439974400"
-        },
-        {
-            "Cost": 2,
-            "ID": "100012010",
-            "Name": "Well of Destiny ",
-            "pHash": "12559144753008207872"
-        },
-        {
-            "Cost": 3,
-            "ID": "100031010",
-            "Name": "Harnessed Flame ",
-            "pHash": "2566752061567003648"
-        },
-        {
-            "Cost": 3,
-            "ID": "100031020",
-            "Name": "Harnessed Glass ",
-            "pHash": "11273588166857846784"
-        },
-        {
-            "Cost": 1,
-            "ID": "100111010",
-            "Name": "Water Fairy ",
-            "pHash": "11328090497233475584"
-        },
-        {
-            "Cost": 2,
-            "ID": "100111020",
-            "Name": "Fairy Whisperer ",
-            "pHash": "5957081330917875712"
-        },
-        {
-            "Cost": 4,
-            "ID": "100111030",
-            "Name": "Okami ",
-            "pHash": "15905816905107869696"
-        },
-        {
-            "Cost": 2,
-            "ID": "100111040",
-            "Name": "Elf Guard ",
-            "pHash": "14256420892710195200"
-        },
-        {
-            "Cost": 5,
-            "ID": "100111050",
-            "Name": "Treant ",
-            "pHash": "17616909976307302400"
-        },
-        {
-            "Cost": 3,
-            "ID": "100111060",
-            "Name": "Dark Elf Faure ",
-            "pHash": "17731744205268160512"
-        },
-        {
             "Cost": 6,
-            "ID": "100111070",
-            "Name": "Elf Tracker ",
-            "pHash": "8523509056411594752"
-        },
-        {
-            "Cost": 2,
-            "ID": "100114010",
-            "Name": "Sylvan Justice ",
-            "pHash": "17770355551666001920"
-        },
-        {
-            "Cost": 6,
-            "ID": "100121010",
-            "Name": "Magna Botanist ",
-            "pHash": "16720686176181020672"
-        },
-        {
-            "Cost": 2,
-            "ID": "100121020",
-            "Name": "Elf Metallurgist ",
-            "pHash": "17148799204893626368"
-        },
-        {
-            "Cost": 4,
-            "ID": "100121030",
-            "Name": "Rose Gardener ",
-            "pHash": "16505069037568978944"
-        },
-        {
-            "Cost": 1,
-            "ID": "100211010",
-            "Name": "Quickblader ",
-            "pHash": "13033963566093324288"
-        },
-        {
-            "Cost": 2,
-            "ID": "100211020",
-            "Name": "Oathless Knight ",
-            "pHash": "13170659949154779136"
-        },
-        {
-            "Cost": 3,
-            "ID": "100211030",
-            "Name": "Ascetic Knight ",
-            "pHash": "15554374857225713664"
-        },
-        {
-            "Cost": 4,
-            "ID": "100211040",
-            "Name": "White General ",
-            "pHash": "3397351757637532672"
-        },
-        {
-            "Cost": 5,
-            "ID": "100211050",
-            "Name": "Ninja Master ",
-            "pHash": "14510874101117431808"
-        },
-        {
-            "Cost": 2,
-            "ID": "100211060",
-            "Name": "Kunoichi Trainee ",
-            "pHash": "17629804109302749184"
-        },
-        {
-            "Cost": 2,
-            "ID": "100214010",
-            "Name": "Unbridled Fury ",
-            "pHash": "972193505520965760"
-        },
-        {
-            "Cost": 3,
-            "ID": "100214020",
-            "Name": "Forge Weaponry ",
-            "pHash": "2042796095479244800"
-        },
-        {
-            "Cost": 4,
-            "ID": "100221010",
-            "Name": "Floral Fencer ",
-            "pHash": "15112625814910564352"
-        },
-        {
-            "Cost": 6,
-            "ID": "100221020",
-            "Name": "Sage Commander ",
-            "pHash": "12224378005834547200"
-        },
-        {
-            "Cost": 4,
-            "ID": "100222010",
-            "Name": "Royal Banner ",
-            "pHash": "7187278179320574976"
-        },
-        {
-            "Cost": 2,
-            "ID": "100311010",
-            "Name": "Sammy, Wizard's Apprentice ",
-            "pHash": "14914766383128375296"
-        },
-        {
-            "Cost": 1,
-            "ID": "100314010",
-            "Name": "Insight ",
-            "pHash": "7832960607490317312"
-        },
-        {
-            "Cost": 2,
-            "ID": "100314020",
-            "Name": "Magic Missile ",
-            "pHash": "7502133251694170112"
-        },
-        {
-            "Cost": 2,
-            "ID": "100314030",
-            "Name": "Conjure Golem ",
-            "pHash": "12159997096543920128"
-        },
-        {
-            "Cost": 2,
-            "ID": "100314040",
-            "Name": "Wind Blast ",
-            "pHash": "698471826091422720"
-        },
-        {
-            "Cost": 3,
-            "ID": "100314050",
-            "Name": "Summon Snow ",
-            "pHash": "9762904159807342592"
-        },
-        {
-            "Cost": 4,
-            "ID": "100314060",
-            "Name": "Conjure Twosome ",
-            "pHash": "16454495942255564800"
-        },
-        {
-            "Cost": 8,
-            "ID": "100314070",
-            "Name": "Fiery Embrace ",
-            "pHash": "11405500400441724928"
-        },
-        {
-            "Cost": 10,
-            "ID": "100321010",
-            "Name": "Flame Destroyer ",
-            "pHash": "3705603150078329856"
-        },
-        {
-            "Cost": 4,
-            "ID": "100321020",
-            "Name": "Demonflame Mage ",
-            "pHash": "13670063572691054592"
-        },
-        {
-            "Cost": 5,
-            "ID": "100321030",
-            "Name": "Lightning Shooter ",
-            "pHash": "15415042349237854208"
-        },
-        {
-            "Cost": 2,
-            "ID": "100411010",
-            "Name": "Dragonrider ",
-            "pHash": "18436844779200466944"
-        },
-        {
-            "Cost": 5,
-            "ID": "100411020",
-            "Name": "Disaster Dragon ",
-            "pHash": "5438339721723064320"
-        },
-        {
-            "Cost": 4,
-            "ID": "100411030",
-            "Name": "Death Dragon ",
-            "pHash": "10778650174720088064"
-        },
-        {
-            "Cost": 6,
-            "ID": "100411040",
-            "Name": "Dragonguard ",
-            "pHash": "14710714547828482048"
-        },
-        {
-            "Cost": 3,
-            "ID": "100411050",
-            "Name": "Firstborn Dragon ",
-            "pHash": "13569281234831728640"
-        },
-        {
-            "Cost": 2,
-            "ID": "100414010",
-            "Name": "Dragon Oracle ",
-            "pHash": "10365665566644400128"
-        },
-        {
-            "Cost": 1,
-            "ID": "100414020",
-            "Name": "Blazing Breath ",
-            "pHash": "7612767189047212032"
-        },
-        {
-            "Cost": 4,
-            "ID": "100414030",
-            "Name": "Serpent Wrath ",
-            "pHash": "16777558573807374336"
-        },
-        {
-            "Cost": 4,
-            "ID": "100421010",
-            "Name": "Dragon Warrior ",
-            "pHash": "15371637982683052032"
-        },
-        {
-            "Cost": 7,
-            "ID": "100421020",
-            "Name": "Dread Dragon ",
-            "pHash": "512816852401429824"
-        },
-        {
-            "Cost": 7,
-            "ID": "100424010",
-            "Name": "Conflagration ",
-            "pHash": "17318812507127771136"
-        },
-        {
-            "Cost": 2,
-            "ID": "100511010",
-            "Name": "Spartoi Sergeant ",
-            "pHash": "17868270620362235904"
-        },
-        {
-            "Cost": 2,
-            "ID": "100511020",
-            "Name": "Spectre ",
-            "pHash": "8030112859956901888"
-        },
-        {
-            "Cost": 3,
-            "ID": "100511030",
-            "Name": "Apprentice Necromancer ",
-            "pHash": "6706044795012426752"
-        },
-        {
-            "Cost": 4,
-            "ID": "100511040",
-            "Name": "Elder Spartoi Soldier ",
-            "pHash": "8445326225030895616"
-        },
-        {
-            "Cost": 5,
-            "ID": "100511050",
-            "Name": "Gravewaker ",
-            "pHash": "17711168910497320960"
-        },
-        {
-            "Cost": 6,
-            "ID": "100511060",
-            "Name": "Ghostly Rider ",
-            "pHash": "10933048880598413312"
-        },
-        {
-            "Cost": 2,
-            "ID": "100514010",
-            "Name": "Undying Resentment ",
-            "pHash": "17098117897327540224"
-        },
-        {
-            "Cost": 5,
-            "ID": "100514020",
-            "Name": "Call of the Void ",
-            "pHash": "2715297531573663232"
-        },
-        {
-            "Cost": 4,
-            "ID": "100521010",
-            "Name": "Playful Necromancer ",
-            "pHash": "10108715990055245824"
-        },
-        {
-            "Cost": 4,
-            "ID": "100521020",
-            "Name": "Hell's Unleasher ",
-            "pHash": "15607704375745994752"
-        },
-        {
-            "Cost": 7,
-            "ID": "100521030",
-            "Name": "Undead King ",
-            "pHash": "10816421712214556672"
-        },
-        {
-            "Cost": 2,
-            "ID": "100611010",
-            "Name": "Nightmare ",
-            "pHash": "10580825211638044672"
-        },
-        {
-            "Cost": 2,
-            "ID": "100611020",
-            "Name": "Sweetfang Vampire ",
-            "pHash": "13166963847496327168"
-        },
-        {
-            "Cost": 3,
-            "ID": "100611030",
-            "Name": "Crazed Executioner ",
-            "pHash": "2246739452268180480"
-        },
-        {
-            "Cost": 6,
-            "ID": "100611040",
-            "Name": "Imp Lancer ",
-            "pHash": "16711125446120882176"
-        },
-        {
-            "Cost": 4,
-            "ID": "100611050",
-            "Name": "Dark General ",
-            "pHash": "6456866042934323200"
-        },
-        {
-            "Cost": 2,
-            "ID": "100614010",
-            "Name": "Blood Pact ",
-            "pHash": "4139508913642099712"
-        },
-        {
-            "Cost": 2,
-            "ID": "100614020",
-            "Name": "Razory Claw ",
-            "pHash": "7828373667543910400"
-        },
-        {
-            "Cost": 4,
-            "ID": "100614030",
-            "Name": "Crimson Purge ",
-            "pHash": "10596068666183864320"
-        },
-        {
-            "Cost": 7,
-            "ID": "100621010",
-            "Name": "Abyss Beast ",
-            "pHash": "11407307870674272256"
-        },
-        {
-            "Cost": 4,
-            "ID": "100621020",
-            "Name": "Wardrobe Raider ",
-            "pHash": "3829554385488771584"
-        },
-        {
-            "Cost": 6,
-            "ID": "100624010",
-            "Name": "Demonic Storm ",
-            "pHash": "3514709746881543680"
-        },
-        {
-            "Cost": 2,
-            "ID": "100711010",
-            "Name": "Snake Priest ",
-            "pHash": "14157496430578401280"
-        },
-        {
-            "Cost": 7,
-            "ID": "100711020",
-            "Name": "Curate ",
-            "pHash": "11509424298760359936"
-        },
-        {
-            "Cost": 2,
-            "ID": "100713010",
-            "Name": "Beastly Vow ",
-            "pHash": "2965111873285846528"
-        },
-        {
-            "Cost": 1,
-            "ID": "100713020",
-            "Name": "Summon Pegasus ",
-            "pHash": "13275000821903626240"
-        },
-        {
-            "Cost": 3,
-            "ID": "100713030",
-            "Name": "Featherwyrm's Descent ",
-            "pHash": "15550382611777189888"
-        },
-        {
-            "Cost": 2,
-            "ID": "100714010",
-            "Name": "Hallowed Dogma ",
-            "pHash": "6946852997196807168"
-        },
-        {
-            "Cost": 2,
-            "ID": "100714020",
-            "Name": "Blackened Scripture ",
-            "pHash": "14246573001750544384"
-        },
-        {
-            "Cost": 5,
-            "ID": "100714030",
-            "Name": "Acolyte's Light ",
-            "pHash": "9023088612312850432"
-        },
-        {
-            "Cost": 5,
-            "ID": "100721010",
-            "Name": "Greater Priestess ",
-            "pHash": "15972239934329714688"
-        },
-        {
-            "Cost": 4,
-            "ID": "100721020",
-            "Name": "Priest of the Cudgel ",
-            "pHash": "13190726324146786304"
-        },
-        {
-            "Cost": 5,
-            "ID": "100723010",
-            "Name": "Dual Flames ",
-            "pHash": "3192597976947852800"
-        },
-        {
-            "Cost": 2,
-            "ID": "101011010",
-            "Name": "Minotaur ",
-            "pHash": "11452782691804692480"
-        },
-        {
-            "Cost": 4,
-            "ID": "101011020",
-            "Name": "Desert Rider ",
-            "pHash": "10771107405424805888"
-        },
-        {
-            "Cost": 3,
-            "ID": "101011030",
-            "Name": "Shield Angel ",
-            "pHash": "10735979753250340864"
-        },
-        {
-            "Cost": 3,
-            "ID": "101011040",
-            "Name": "Healing Angel ",
-            "pHash": "8339704603986646016"
-        },
-        {
-            "Cost": 2,
-            "ID": "101014010",
-            "Name": "Keen Enchantment ",
-            "pHash": "13896685844364883968"
-        },
-        {
-            "Cost": 3,
-            "ID": "101014020",
-            "Name": "Cloud Chorus ",
-            "pHash": "1199164725606921984"
-        },
-        {
-            "Cost": 4,
-            "ID": "101014030",
-            "Name": "Demonic Strike ",
-            "pHash": "11647430607605342208"
-        },
-        {
-            "Cost": 2,
-            "ID": "101021010",
-            "Name": "Bellringer Angel ",
-            "pHash": "5096990326078149632"
-        },
-        {
-            "Cost": 3,
-            "ID": "101021020",
-            "Name": "Lizardman ",
-            "pHash": "17490364317358268416"
-        },
-        {
-            "Cost": 8,
-            "ID": "101021030",
-            "Name": "Gilgamesh ",
-            "pHash": "9082640629573482496"
-        },
-        {
-            "Cost": 5,
-            "ID": "101021040",
-            "Name": "Goblinmount Demon ",
-            "pHash": "11571752114296027136"
-        },
-        {
-            "Cost": 1,
-            "ID": "101024010",
-            "Name": "Angelic Snipe ",
-            "pHash": "4452527252649737728"
-        },
-        {
-            "Cost": 1,
-            "ID": "101024020",
-            "Name": "Angelic Barrage ",
-            "pHash": "17951240152718362624"
-        },
-        {
-            "Cost": 5,
-            "ID": "101024030",
-            "Name": "Execution ",
-            "pHash": "14219606621354055680"
-        },
-        {
-            "Cost": 2,
-            "ID": "101024040",
-            "Name": "Trail of Light ",
-            "pHash": "17059957484237369344"
-        },
-        {
-            "Cost": 4,
-            "ID": "101031010",
-            "Name": "Urd ",
-            "pHash": "14626176888775966720"
-        },
-        {
-            "Cost": 5,
-            "ID": "101031020",
-            "Name": "Wind God ",
-            "pHash": "14981743664243982336"
-        },
-        {
-            "Cost": 6,
-            "ID": "101031030",
-            "Name": "Angel Crusher ",
-            "pHash": "6299666007409607680"
-        },
-        {
-            "Cost": 6,
-            "ID": "101031040",
-            "Name": "Athena ",
-            "pHash": "13954950825389852672"
-        },
-        {
-            "Cost": 4,
-            "ID": "101032010",
-            "Name": "Path to Purgatory ",
-            "pHash": "10046558192969306112"
-        },
-        {
-            "Cost": 2,
-            "ID": "101034010",
-            "Name": "Altered Fate ",
-            "pHash": "15919656854945538048"
-        },
-        {
-            "Cost": 7,
-            "ID": "101041010",
-            "Name": "Gabriel ",
-            "pHash": "10777894275154548736"
-        },
-        {
-            "Cost": 8,
-            "ID": "101041020",
-            "Name": "Lucifer ",
-            "pHash": "17112000614219917312"
-        },
-        {
-            "Cost": 10,
-            "ID": "101041030",
-            "Name": "Satan ",
-            "pHash": "11212710147255810048"
-        },
-        {
-            "Cost": 1,
-            "ID": "101111010",
-            "Name": "Elf Child May ",
-            "pHash": "17686499690087792640"
-        },
-        {
-            "Cost": 1,
-            "ID": "101111020",
-            "Name": "Fairy Champion ",
-            "pHash": "15370387424814231552"
-        },
-        {
-            "Cost": 2,
-            "ID": "101111030",
-            "Name": "Dungeoncrawl Fairy ",
-            "pHash": "12785362274736451584"
-        },
-        {
-            "Cost": 2,
-            "ID": "101111040",
-            "Name": "Fairy Bringer ",
-            "pHash": "14409359099095386112"
-        },
-        {
-            "Cost": 2,
-            "ID": "101111050",
-            "Name": "Archer ",
-            "pHash": "14296555711766781952"
-        },
-        {
-            "Cost": 3,
-            "ID": "101111060",
-            "Name": "Fen Sprite ",
-            "pHash": "11454303436347463680"
-        },
-        {
-            "Cost": 3,
-            "ID": "101111070",
-            "Name": "Wandering Elf Mage ",
-            "pHash": "12910332657380020224"
-        },
-        {
-            "Cost": 5,
-            "ID": "101111080",
-            "Name": "Fairy Caster ",
-            "pHash": "5079656831989898240"
-        },
-        {
-            "Cost": 2,
-            "ID": "101111090",
-            "Name": "Elf Wanderer ",
-            "pHash": "17503705286625495040"
-        },
-        {
-            "Cost": 3,
-            "ID": "101112010",
-            "Name": "Pixie Paradise ",
-            "pHash": "11415717096289656832"
-        },
-        {
-            "Cost": 2,
-            "ID": "101113010",
-            "Name": "Forest of Dreams ",
-            "pHash": "15658676770477058048"
-        },
-        {
-            "Cost": 1,
-            "ID": "101114010",
-            "Name": "Nature's Guidance ",
-            "pHash": "7801835948188929024"
-        },
-        {
-            "Cost": 2,
-            "ID": "101114020",
-            "Name": "Pixie Mischief ",
-            "pHash": "12218459049568989184"
-        },
-        {
-            "Cost": 4,
-            "ID": "101114030",
-            "Name": "Way of the Outlaw ",
-            "pHash": "3391388329964107776"
-        },
-        {
-            "Cost": 2,
-            "ID": "101114040",
-            "Name": "Woodkin Curse ",
-            "pHash": "7882880178961387520"
-        },
-        {
-            "Cost": 1,
-            "ID": "101114050",
-            "Name": "Fairy Circle ",
-            "pHash": "13311598357461889024"
-        },
-        {
-            "Cost": 3,
-            "ID": "101114060",
-            "Name": "Elemental Lance ",
-            "pHash": "6442521268830636032"
-        },
-        {
-            "Cost": 3,
-            "ID": "101121010",
-            "Name": "Waltzing Fairy ",
-            "pHash": "15950787188144830464"
-        },
-        {
-            "Cost": 2,
-            "ID": "101121020",
-            "Name": "Blessed Fairy Dancer ",
-            "pHash": "15697790361022205952"
-        },
-        {
-            "Cost": 3,
-            "ID": "101121030",
-            "Name": "Tam Lin ",
-            "pHash": "12528408387521601536"
-        },
-        {
-            "Cost": 3,
-            "ID": "101121040",
-            "Name": "Carnivorous Flower ",
-            "pHash": "16716517136791769088"
-        },
-        {
-            "Cost": 5,
-            "ID": "101121050",
-            "Name": "Elf Prophetess ",
-            "pHash": "16257944222971314176"
-        },
-        {
-            "Cost": 6,
-            "ID": "101121060",
+            "ID": 101121060,
             "Name": "Elder Treant ",
-            "pHash": "8344216946715925504"
-        },
-        {
-            "Cost": 6,
-            "ID": "101121070",
-            "Name": "Fairy Beast ",
-            "pHash": "14160898650372026368"
-        },
-        {
-            "Cost": 4,
-            "ID": "101121080",
-            "Name": "Elven Princess Mage ",
-            "pHash": "6207824923457366016"
-        },
-        {
-            "Cost": 4,
-            "ID": "101121090",
-            "Name": "Mana Elk ",
-            "pHash": "5182182071299458048"
-        },
-        {
-            "Cost": 8,
-            "ID": "101121100",
-            "Name": "Forest Giant ",
-            "pHash": "10844326408389517312"
-        },
-        {
-            "Cost": 7,
-            "ID": "101121110",
-            "Name": "Forest Archelon ",
-            "pHash": "17628739727548303360"
-        },
-        {
-            "Cost": 2,
-            "ID": "101122010",
-            "Name": "Harvest Festival ",
-            "pHash": "1110326681476633088"
+            "newpHash": 0,
+            "pHash": 8344216946715926000
         },
         {
             "Cost": 1,
-            "ID": "101122020",
-            "Name": "Woodland Refuge ",
-            "pHash": "14733279447366152192"
-        },
-        {
-            "Cost": 4,
-            "ID": "101131010",
-            "Name": "Petal Fencer ",
-            "pHash": "17957231024172732416"
+            "ID": 101511120,
+            "Name": "Skull Beast ",
+            "newpHash": 0,
+            "pHash": 11292888511049716000
         },
         {
             "Cost": 2,
-            "ID": "101131020",
-            "Name": "Rhinoceroach ",
-            "pHash": "9222510060408979456"
-        },
-        {
-            "Cost": 5,
-            "ID": "101131030",
-            "Name": "Noble Fairy ",
-            "pHash": "6609283578266776576"
+            "ID": 100511010,
+            "Name": "Spartoi Sergeant ",
+            "newpHash": 0,
+            "pHash": 17868270620362236000
         },
         {
             "Cost": 8,
-            "ID": "101131040",
-            "Name": "Ancient Forest Dragon ",
-            "pHash": "10663349259706927104"
+            "ID": 101441030,
+            "Name": "Zirnitra ",
+            "newpHash": 0,
+            "pHash": 17600054592980767000
+        },
+        {
+            "Cost": 3,
+            "ID": 101011040,
+            "Name": "Healing Angel ",
+            "newpHash": 0,
+            "pHash": 8339704603986646000
+        },
+        {
+            "Cost": 1,
+            "ID": 100011010,
+            "Name": "Goblin ",
+            "newpHash": 0,
+            "pHash": 8407408175587031000
         },
         {
             "Cost": 5,
-            "ID": "101131050",
-            "Name": "Robin Hood ",
-            "pHash": "13195993347676569600"
+            "ID": 101121050,
+            "Name": "Elf Prophetess ",
+            "newpHash": 0,
+            "pHash": 16257944222971314000
+        },
+        {
+            "Cost": 7,
+            "ID": 101333010,
+            "Name": "Juno's Secret Laboratory ",
+            "newpHash": 0,
+            "pHash": 14892424010836845000
+        },
+        {
+            "Cost": 4,
+            "ID": 101014030,
+            "Name": "Demonic Strike ",
+            "newpHash": 0,
+            "pHash": 11647430607605342000
         },
         {
             "Cost": 5,
-            "ID": "101132010",
-            "Name": "Titania's Sanctuary ",
-            "pHash": "5817444205817046016"
+            "ID": 101334050,
+            "Name": "Winter's Caprice ",
+            "newpHash": 0,
+            "pHash": 4071194470961472000
         },
         {
-            "Cost": 5,
-            "ID": "101134010",
-            "Name": "Will of the Forest ",
-            "pHash": "3255955447028492800"
+            "Cost": 8,
+            "ID": 101541030,
+            "Name": "Pluto ",
+            "newpHash": 0,
+            "pHash": 15956949650176910000
+        },
+        {
+            "Cost": 3,
+            "ID": 101121040,
+            "Name": "Carnivorous Flower ",
+            "newpHash": 0,
+            "pHash": 16716517136791770000
+        },
+        {
+            "Cost": 3,
+            "ID": 101014020,
+            "Name": "Cloud Chorus ",
+            "newpHash": 0,
+            "pHash": 1199164725606922000
+        },
+        {
+            "Cost": 2,
+            "ID": 101121020,
+            "Name": "Blessed Fairy Dancer ",
+            "newpHash": 0,
+            "pHash": 15697790361022206000
+        },
+        {
+            "Cost": 4,
+            "ID": 101334040,
+            "Name": "Fire Chain ",
+            "newpHash": 0,
+            "pHash": 5510741186300933000
         },
         {
             "Cost": 9,
-            "ID": "101134020",
-            "Name": "Silver Bolt ",
-            "pHash": "8243432599861493760"
-        },
-        {
-            "Cost": 5,
-            "ID": "101134030",
-            "Name": "Homecoming ",
-            "pHash": "3018746518690237952"
+            "ID": 101541020,
+            "Name": "Lord Atomy ",
+            "newpHash": 0,
+            "pHash": 12625509257544055000
         },
         {
             "Cost": 6,
-            "ID": "101141010",
-            "Name": "Fairy Princess ",
-            "pHash": "15791674978290536448"
-        },
-        {
-            "Cost": 3,
-            "ID": "101141020",
-            "Name": "Ancient Elf ",
-            "pHash": "17392583220285976576"
-        },
-        {
-            "Cost": 8,
-            "ID": "101141030",
-            "Name": "Rose Queen ",
-            "pHash": "14920380983457908736"
-        },
-        {
-            "Cost": 1,
-            "ID": "101211010",
-            "Name": "Ninja Trainee ",
-            "pHash": "17429992988740798464"
-        },
-        {
-            "Cost": 2,
-            "ID": "101211020",
-            "Name": "Fervid Soldier ",
-            "pHash": "15382804933318848512"
-        },
-        {
-            "Cost": 2,
-            "ID": "101211030",
-            "Name": "Palace Fencer ",
-            "pHash": "17973272759293470720"
-        },
-        {
-            "Cost": 2,
-            "ID": "101211040",
-            "Name": "Cyclone Soldier ",
-            "pHash": "6694775787958457344"
-        },
-        {
-            "Cost": 2,
-            "ID": "101211050",
-            "Name": "Centaur Vanguard ",
-            "pHash": "10726717662169880576"
-        },
-        {
-            "Cost": 3,
-            "ID": "101211060",
-            "Name": "Fencer ",
-            "pHash": "13920059032249991168"
-        },
-        {
-            "Cost": 4,
-            "ID": "101211070",
-            "Name": "Courageous Knight ",
-            "pHash": "17833064406488498176"
+            "ID": 101441020,
+            "Name": "Dark Dragoon Forte ",
+            "newpHash": 0,
+            "pHash": 8165584446174893000
         },
         {
             "Cost": 5,
-            "ID": "101211080",
-            "Name": "Sentry ",
-            "pHash": "14944002949700890624"
+            "ID": 100714030,
+            "Name": "Acolyte's Light ",
+            "newpHash": 0,
+            "pHash": 9023088612312850000
         },
         {
             "Cost": 3,
-            "ID": "101211090",
-            "Name": "Novice Trooper ",
-            "pHash": "15847802707625623552"
-        },
-        {
-            "Cost": 3,
-            "ID": "101211100",
-            "Name": "Snippy Gardener ",
-            "pHash": "14327033539337844736"
+            "ID": 101121010,
+            "Name": "Waltzing Fairy ",
+            "newpHash": 0,
+            "pHash": 15950787188144830000
         },
         {
             "Cost": 2,
-            "ID": "101211110",
-            "Name": "Veteran Lancer ",
-            "pHash": "8595535151342437376"
+            "ID": 100012010,
+            "Name": "Well of Destiny ",
+            "newpHash": 0,
+            "pHash": 12559144753008208000
         },
         {
-            "Cost": 1,
-            "ID": "101211120",
-            "Name": "Vanguard ",
-            "pHash": "7266579111929037824"
+            "Cost": 5,
+            "ID": 101541010,
+            "Name": "Cerberus ",
+            "newpHash": 0,
+            "pHash": 14212289821753436000
         },
         {
             "Cost": 6,
-            "ID": "101211130",
-            "Name": "Warbound Cavalier ",
-            "pHash": "18052381159740479488"
-        },
-        {
-            "Cost": 6,
-            "ID": "101211140",
-            "Name": "Admiral ",
-            "pHash": "14262026275747082240"
-        },
-        {
-            "Cost": 4,
-            "ID": "101214010",
-            "Name": "Rousing Step ",
-            "pHash": "17430964434799452160"
-        },
-        {
-            "Cost": 5,
-            "ID": "101214020",
-            "Name": "Onslaught ",
-            "pHash": "9002890729533879296"
-        },
-        {
-            "Cost": 3,
-            "ID": "101214030",
-            "Name": "Giant Slayer ",
-            "pHash": "10185779951618027520"
-        },
-        {
-            "Cost": 2,
-            "ID": "101221010",
-            "Name": "Maid Leader ",
-            "pHash": "13813847679614701568"
-        },
-        {
-            "Cost": 2,
-            "ID": "101221020",
-            "Name": "Assassin ",
-            "pHash": "6026510084489981952"
-        },
-        {
-            "Cost": 4,
-            "ID": "101221030",
-            "Name": "Cursed General ",
-            "pHash": "12976084610081671168"
-        },
-        {
-            "Cost": 5,
-            "ID": "101221040",
-            "Name": "Percival ",
-            "pHash": "17371434717904031744"
-        },
-        {
-            "Cost": 3,
-            "ID": "101221050",
-            "Name": "Navy Lieutenant ",
-            "pHash": "15332589718230585344"
-        },
-        {
-            "Cost": 5,
-            "ID": "101221060",
-            "Name": "Noble Knight ",
-            "pHash": "17603716917938409472"
-        },
-        {
-            "Cost": 3,
-            "ID": "101221070",
-            "Name": "Pompous Princess ",
-            "pHash": "12950786840290371584"
-        },
-        {
-            "Cost": 2,
-            "ID": "101221080",
-            "Name": "Luminous Knight ",
-            "pHash": "15207679192336326656"
-        },
-        {
-            "Cost": 2,
-            "ID": "101221090",
-            "Name": "Princess Vanguard ",
-            "pHash": "15523772789462001664"
-        },
-        {
-            "Cost": 4,
-            "ID": "101221100",
-            "Name": "Swordsman ",
-            "pHash": "9595440110944546816"
-        },
-        {
-            "Cost": 8,
-            "ID": "101221110",
-            "Name": "Enraged General ",
-            "pHash": "17375192966247858176"
-        },
-        {
-            "Cost": 2,
-            "ID": "101222010",
-            "Name": "Ironwrought Fortress ",
-            "pHash": "9437245088230912000"
-        },
-        {
-            "Cost": 2,
-            "ID": "101224010",
-            "Name": "Conscription ",
-            "pHash": "11086423766878576640"
-        },
-        {
-            "Cost": 4,
-            "ID": "101231010",
-            "Name": "Shadowed Assassin ",
-            "pHash": "15160935139527741440"
-        },
-        {
-            "Cost": 8,
-            "ID": "101231020",
-            "Name": "Dragonewt Charlotte ",
-            "pHash": "15630685399780282368"
-        },
-        {
-            "Cost": 3,
-            "ID": "101231030",
-            "Name": "Gemstaff Commander ",
-            "pHash": "15113306914769666048"
-        },
-        {
-            "Cost": 7,
-            "ID": "101231040",
-            "Name": "Frontguard General ",
-            "pHash": "12304236244001112064"
-        },
-        {
-            "Cost": 4,
-            "ID": "101231050",
-            "Name": "Latham, Vanguard Captain ",
-            "pHash": "13974360233317818368"
-        },
-        {
-            "Cost": 5,
-            "ID": "101232010",
-            "Name": "Arthurian Light ",
-            "pHash": "14318656777697363968"
-        },
-        {
-            "Cost": 1,
-            "ID": "101232020",
-            "Name": "Front Lines ",
-            "pHash": "4883723060545294336"
-        },
-        {
-            "Cost": 4,
-            "ID": "101234010",
-            "Name": "Stratagem ",
-            "pHash": "5505360669126325248"
-        },
-        {
-            "Cost": 6,
-            "ID": "101234020",
-            "Name": "Alwida's Command ",
-            "pHash": "12476628786364889088"
-        },
-        {
-            "Cost": 6,
-            "ID": "101241010",
-            "Name": "Sea Queen Otohime ",
-            "pHash": "15954551858377304064"
-        },
-        {
-            "Cost": 5,
-            "ID": "101241020",
-            "Name": "Aurelia, Regal Saber ",
-            "pHash": "14373480522810454016"
-        },
-        {
-            "Cost": 6,
-            "ID": "101241030",
-            "Name": "Tsubaki ",
-            "pHash": "2094154708083796736"
-        },
-        {
-            "Cost": 2,
-            "ID": "101311010",
-            "Name": "Penguin Wizard ",
-            "pHash": "11356843288758710272"
-        },
-        {
-            "Cost": 2,
-            "ID": "101311020",
-            "Name": "Crafty Warlock ",
-            "pHash": "14784454591680622592"
-        },
-        {
-            "Cost": 4,
-            "ID": "101311030",
-            "Name": "Crest Wizard ",
-            "pHash": "3978598651848664576"
-        },
-        {
-            "Cost": 3,
-            "ID": "101311040",
-            "Name": "Runic Guardian ",
-            "pHash": "17091393814235799552"
-        },
-        {
-            "Cost": 3,
-            "ID": "101311050",
-            "Name": "Gauntleted Healer ",
-            "pHash": "15542366562779985920"
-        },
-        {
-            "Cost": 2,
-            "ID": "101311060",
-            "Name": "Apprentice Alchemist ",
-            "pHash": "17672940133184534528"
-        },
-        {
-            "Cost": 6,
-            "ID": "101311070",
-            "Name": "Master Alchemist ",
-            "pHash": "13577094989774729216"
-        },
-        {
-            "Cost": 5,
-            "ID": "101311080",
-            "Name": "Whirlwind Mage ",
-            "pHash": "4384904658371491328"
-        },
-        {
-            "Cost": 6,
-            "ID": "101311090",
-            "Name": "Spurned Witch ",
-            "pHash": "11321034790434762752"
-        },
-        {
-            "Cost": 4,
-            "ID": "101311100",
-            "Name": "Veteran Alchemist ",
-            "pHash": "8576750213658070016"
-        },
-        {
-            "Cost": 2,
-            "ID": "101312010",
-            "Name": "Teachings of Creation ",
-            "pHash": "15348161777305894912"
-        },
-        {
-            "Cost": 4,
-            "ID": "101312020",
-            "Name": "Alchemist's Workshop ",
-            "pHash": "16750212828277491712"
-        },
-        {
-            "Cost": 3,
-            "ID": "101312030",
-            "Name": "Elementary Alchemy ",
-            "pHash": "2291139758128914944"
-        },
-        {
-            "Cost": 2,
-            "ID": "101314010",
-            "Name": "Kaleidoscopic Glow ",
-            "pHash": "1024912507793541120"
-        },
-        {
-            "Cost": 5,
-            "ID": "101314020",
-            "Name": "Fate's Hand ",
-            "pHash": "9217850160344173568"
-        },
-        {
-            "Cost": 4,
-            "ID": "101314030",
-            "Name": "Fissure Bomb ",
-            "pHash": "13035908232676610048"
-        },
-        {
-            "Cost": 7,
-            "ID": "101314040",
-            "Name": "Twin Guardians ",
-            "pHash": "16824533346547986432"
-        },
-        {
-            "Cost": 6,
-            "ID": "101321010",
-            "Name": "Gem Golem ",
-            "pHash": "7587434490209361920"
-        },
-        {
-            "Cost": 3,
-            "ID": "101321020",
-            "Name": "Spectral Wizard ",
-            "pHash": "5285746093796788224"
-        },
-        {
-            "Cost": 6,
-            "ID": "101321030",
-            "Name": "Witchcrafter Magisa ",
-            "pHash": "17342460822941437952"
-        },
-        {
-            "Cost": 2,
-            "ID": "101321040",
-            "Name": "Scholarly Witch ",
-            "pHash": "6880802137462992896"
-        },
-        {
-            "Cost": 4,
-            "ID": "101321050",
-            "Name": "Queen Medb ",
-            "pHash": "14308906725843566592"
-        },
-        {
-            "Cost": 5,
-            "ID": "101321060",
-            "Name": "Flame Witch ",
-            "pHash": "10644985039087699968"
-        },
-        {
-            "Cost": 4,
-            "ID": "101321070",
-            "Name": "Rune Blade Summoner ",
-            "pHash": "5316106231652665344"
-        },
-        {
-            "Cost": 3,
-            "ID": "101322010",
-            "Name": "Price of Magic ",
-            "pHash": "12094080223195766784"
-        },
-        {
-            "Cost": 5,
-            "ID": "101324010",
-            "Name": "Golem Protection ",
-            "pHash": "4700066739681630208"
-        },
-        {
-            "Cost": 7,
-            "ID": "101324020",
-            "Name": "Alchemical Lore ",
-            "pHash": "14842480313709766656"
-        },
-        {
-            "Cost": 1,
-            "ID": "101324030",
-            "Name": "Commence Experiment ",
-            "pHash": "4426137431133954048"
-        },
-        {
-            "Cost": 3,
-            "ID": "101324040",
-            "Name": "Sorcery Cache ",
-            "pHash": "6228840186949548032"
-        },
-        {
-            "Cost": 3,
-            "ID": "101324050",
-            "Name": "Petrification ",
-            "pHash": "13072889486885742592"
-        },
-        {
-            "Cost": 5,
-            "ID": "101331010",
-            "Name": "Ancient Alchemist ",
-            "pHash": "346447978907993728"
-        },
-        {
-            "Cost": 7,
-            "ID": "101331020",
-            "Name": "Dragonbond Mage ",
-            "pHash": "15084876438458443776"
-        },
-        {
-            "Cost": 5,
-            "ID": "101332010",
-            "Name": "Conjuring Force ",
-            "pHash": "15493472238559068160"
-        },
-        {
-            "Cost": 7,
-            "ID": "101333010",
-            "Name": "Juno's Secret Laboratory ",
-            "pHash": "14892424010836844544"
-        },
-        {
-            "Cost": 6,
-            "ID": "101334010",
+            "ID": 101334010,
             "Name": "Arcane Enlightenment ",
-            "pHash": "5893987421996435456"
+            "newpHash": 0,
+            "pHash": 5893987421996435000
+        },
+        {
+            "Cost": 5,
+            "ID": 101024030,
+            "Name": "Execution ",
+            "newpHash": 0,
+            "pHash": 14219606621354056000
+        },
+        {
+            "Cost": 9,
+            "ID": 101441010,
+            "Name": "Fafnir ",
+            "newpHash": 0,
+            "pHash": 8714984767608037000
+        },
+        {
+            "Cost": 2,
+            "ID": 101511110,
+            "Name": "Lesser Mummy ",
+            "newpHash": 0,
+            "pHash": 17660521884847230000
+        },
+        {
+            "Cost": 2,
+            "ID": 100714020,
+            "Name": "Blackened Scripture ",
+            "newpHash": 0,
+            "pHash": 14246573001750544000
+        },
+        {
+            "Cost": 3,
+            "ID": 101011030,
+            "Name": "Shield Angel ",
+            "newpHash": 0,
+            "pHash": 10735979753250340000
+        },
+        {
+            "Cost": 1,
+            "ID": 101024020,
+            "Name": "Angelic Barrage ",
+            "newpHash": 0,
+            "pHash": 17951240152718363000
+        },
+        {
+            "Cost": 2,
+            "ID": 101014010,
+            "Name": "Keen Enchantment ",
+            "newpHash": 0,
+            "pHash": 13896685844364884000
+        },
+        {
+            "Cost": 7,
+            "ID": 101511100,
+            "Name": "Orcus ",
+            "newpHash": 0,
+            "pHash": 17531698919824600000
+        },
+        {
+            "Cost": 2,
+            "ID": 100714010,
+            "Name": "Hallowed Dogma ",
+            "newpHash": 0,
+            "pHash": 6946852997196807000
+        },
+        {
+            "Cost": 4,
+            "ID": 101011020,
+            "Name": "Desert Rider ",
+            "newpHash": 0,
+            "pHash": 10771107405424806000
+        },
+        {
+            "Cost": 1,
+            "ID": 101024010,
+            "Name": "Angelic Snipe ",
+            "newpHash": 0,
+            "pHash": 4452527252649737700
+        },
+        {
+            "Cost": 3,
+            "ID": 101121030,
+            "Name": "Tam Lin ",
+            "newpHash": 0,
+            "pHash": 12528408387521602000
+        },
+        {
+            "Cost": 2,
+            "ID": 101511090,
+            "Name": "Spartoi ",
+            "newpHash": 0,
+            "pHash": 18122044046454157000
+        },
+        {
+            "Cost": 3,
+            "ID": 101334030,
+            "Name": "First Curse ",
+            "newpHash": 0,
+            "pHash": 16006070653177160000
+        },
+        {
+            "Cost": 5,
+            "ID": 101332010,
+            "Name": "Conjuring Force ",
+            "newpHash": 0,
+            "pHash": 15493472238559068000
+        },
+        {
+            "Cost": 2,
+            "ID": 101011010,
+            "Name": "Minotaur ",
+            "newpHash": 0,
+            "pHash": 11452782691804692000
+        },
+        {
+            "Cost": 2,
+            "ID": 101733040,
+            "Name": "Devourer of Heavens ",
+            "newpHash": 0,
+            "pHash": 4032627442080403000
+        },
+        {
+            "Cost": 4,
+            "ID": 100721020,
+            "Name": "Priest of the Cudgel ",
+            "newpHash": 0,
+            "pHash": 13190726324146786000
+        },
+        {
+            "Cost": 5,
+            "ID": 101511080,
+            "Name": "Soul Eater ",
+            "newpHash": 0,
+            "pHash": 10776495953706586000
         },
         {
             "Cost": 18,
-            "ID": "101334020",
+            "ID": 101334020,
             "Name": "Dimension Shift ",
-            "pHash": "13031318558610917376"
-        },
-        {
-            "Cost": 3,
-            "ID": "101334030",
-            "Name": "First Curse ",
-            "pHash": "16006070653177159680"
-        },
-        {
-            "Cost": 4,
-            "ID": "101334040",
-            "Name": "Fire Chain ",
-            "pHash": "5510741186300933120"
+            "newpHash": 0,
+            "pHash": 13031318558610917000
         },
         {
             "Cost": 5,
-            "ID": "101334050",
-            "Name": "Winter's Caprice ",
-            "pHash": "4071194470961472000"
-        },
-        {
-            "Cost": 9,
-            "ID": "101341010",
-            "Name": "Mythril Golem ",
-            "pHash": "10322158148838813696"
+            "ID": 100721010,
+            "Name": "Greater Priestess ",
+            "newpHash": 0,
+            "pHash": 15972239934329715000
         },
         {
             "Cost": 4,
-            "ID": "101341020",
-            "Name": "Merlin ",
-            "pHash": "18173989774590478336"
+            "ID": 101311100,
+            "Name": "Veteran Alchemist ",
+            "newpHash": 0,
+            "pHash": 8576750213658070000
         },
         {
-            "Cost": 8,
-            "ID": "101341030",
-            "Name": "Arch Summoner Erasmus ",
-            "pHash": "14838442804330721280"
+            "Cost": 6,
+            "ID": 101311090,
+            "Name": "Spurned Witch ",
+            "newpHash": 0,
+            "pHash": 11321034790434763000
+        },
+        {
+            "Cost": 6,
+            "ID": 101731020,
+            "Name": "Arch Priestess Laelia ",
+            "newpHash": 0,
+            "pHash": 16224585645355160000
         },
         {
             "Cost": 1,
-            "ID": "101411010",
-            "Name": "Ivory Dragon ",
-            "pHash": "11078363737452732416"
-        },
-        {
-            "Cost": 2,
-            "ID": "101411020",
-            "Name": "Maelstrom Dragon ",
-            "pHash": "15393688740663042048"
-        },
-        {
-            "Cost": 3,
-            "ID": "101411030",
-            "Name": "Aiela, Dragon Knight ",
-            "pHash": "3690917564743309312"
-        },
-        {
-            "Cost": 3,
-            "ID": "101411040",
-            "Name": "Twin-Headed Dragon ",
-            "pHash": "4753947298613928960"
-        },
-        {
-            "Cost": 4,
-            "ID": "101411050",
-            "Name": "Glint Dragon ",
-            "pHash": "15306979918278664192"
-        },
-        {
-            "Cost": 3,
-            "ID": "101411060",
-            "Name": "Sandstorm Dragon ",
-            "pHash": "15849435104084621312"
+            "ID": 101122020,
+            "Name": "Woodland Refuge ",
+            "newpHash": 0,
+            "pHash": 14733279447366152000
         },
         {
             "Cost": 5,
-            "ID": "101411070",
-            "Name": "Seabrand Dragon ",
-            "pHash": "15505017287416737792"
+            "ID": 100723010,
+            "Name": "Dual Flames ",
+            "newpHash": 0,
+            "pHash": 3192597976947853000
+        },
+        {
+            "Cost": 4,
+            "ID": 101711100,
+            "Name": "Canoness ",
+            "newpHash": 0,
+            "pHash": 10190357574440493000
+        },
+        {
+            "Cost": 5,
+            "ID": 101311080,
+            "Name": "Whirlwind Mage ",
+            "newpHash": 0,
+            "pHash": 4384904658371491300
+        },
+        {
+            "Cost": 9,
+            "ID": 101731010,
+            "Name": "Incandescent Dragon ",
+            "newpHash": 0,
+            "pHash": 18244350893523044000
+        },
+        {
+            "Cost": 6,
+            "ID": 101733030,
+            "Name": "Chorus of Prayer ",
+            "newpHash": 0,
+            "pHash": 17233950170345249000
+        },
+        {
+            "Cost": 2,
+            "ID": 101122010,
+            "Name": "Harvest Festival ",
+            "newpHash": 0,
+            "pHash": 1110326681476633100
         },
         {
             "Cost": 7,
-            "ID": "101411080",
-            "Name": "Skull Dragon ",
-            "pHash": "17116421390980315136"
+            "ID": 101511070,
+            "Name": "Cursed Soldier ",
+            "newpHash": 0,
+            "pHash": 10726402562926440000
+        },
+        {
+            "Cost": 3,
+            "ID": 101514040,
+            "Name": "Impious Resurrection ",
+            "newpHash": 0,
+            "pHash": 9042437239795336000
+        },
+        {
+            "Cost": 2,
+            "ID": 101711090,
+            "Name": "Mainyu ",
+            "newpHash": 0,
+            "pHash": 7316549048967675000
+        },
+        {
+            "Cost": 2,
+            "ID": 101733020,
+            "Name": "Holy Sentinel ",
+            "newpHash": 0,
+            "pHash": 16102727178512020000
+        },
+        {
+            "Cost": 2,
+            "ID": 101511060,
+            "Name": "Wight ",
+            "newpHash": 0,
+            "pHash": 15428932306439328000
         },
         {
             "Cost": 8,
-            "ID": "101411090",
-            "Name": "Inferno Dragon ",
-            "pHash": "15258685738533036032"
+            "ID": 101711080,
+            "Name": "Masked Giant ",
+            "newpHash": 0,
+            "pHash": 16244659042020870000
         },
         {
-            "Cost": 3,
-            "ID": "101411100",
-            "Name": "Roc ",
-            "pHash": "17865978244814505984"
-        },
-        {
-            "Cost": 2,
-            "ID": "101411110",
-            "Name": "Fire Lizard ",
-            "pHash": "15940322908418908160"
-        },
-        {
-            "Cost": 3,
-            "ID": "101411120",
-            "Name": "Trinity Dragon ",
-            "pHash": "14415641812405243904"
-        },
-        {
-            "Cost": 7,
-            "ID": "101411130",
-            "Name": "Glacial Dragon ",
-            "pHash": "13086752751640236032"
-        },
-        {
-            "Cost": 2,
-            "ID": "101414010",
-            "Name": "Dragon Wings ",
-            "pHash": "424949511433272512"
-        },
-        {
-            "Cost": 3,
-            "ID": "101414020",
-            "Name": "Dragon Cry ",
-            "pHash": "17337741325706366976"
-        },
-        {
-            "Cost": 4,
-            "ID": "101414030",
-            "Name": "Serpent Force ",
-            "pHash": "12699391066325594112"
-        },
-        {
-            "Cost": 2,
-            "ID": "101414040",
-            "Name": "Wild Hunt ",
-            "pHash": "1084079937850339456"
-        },
-        {
-            "Cost": 3,
-            "ID": "101421010",
-            "Name": "Dragonewt Princess ",
-            "pHash": "15149367130487365632"
-        },
-        {
-            "Cost": 4,
-            "ID": "101421020",
-            "Name": "Grim Reaper ",
-            "pHash": "3753458635237159936"
-        },
-        {
-            "Cost": 3,
-            "ID": "101421030",
-            "Name": "Sky Dragon Ethica ",
-            "pHash": "14667087955281221632"
-        },
-        {
-            "Cost": 4,
-            "ID": "101421040",
-            "Name": "Leviathan ",
-            "pHash": "15329621350587125760"
+            "Cost": 1,
+            "ID": 101733010,
+            "Name": "Hare of Illusions ",
+            "newpHash": 0,
+            "pHash": 14223480297312623000
         },
         {
             "Cost": 5,
-            "ID": "101421050",
-            "Name": "Lightning Behemoth ",
-            "pHash": "16431544206102999040"
+            "ID": 101021040,
+            "Name": "Goblinmount Demon ",
+            "newpHash": 0,
+            "pHash": 11571752114296027000
         },
         {
-            "Cost": 6,
-            "ID": "101421060",
-            "Name": "Dragonrider Devil ",
-            "pHash": "14655588639040948224"
-        },
-        {
-            "Cost": 7,
-            "ID": "101421070",
-            "Name": "Shenlong ",
-            "pHash": "11967740821555826688"
+            "Cost": 8,
+            "ID": 100314070,
+            "Name": "Fiery Embrace ",
+            "newpHash": 0,
+            "pHash": 11405500400441725000
         },
         {
             "Cost": 3,
-            "ID": "101421080",
-            "Name": "Imprisoned Dragon ",
-            "pHash": "17576596961295237120"
-        },
-        {
-            "Cost": 3,
-            "ID": "101421090",
-            "Name": "Ace Dragoon ",
-            "pHash": "16389149301412775936"
+            "ID": 101511050,
+            "Name": "Skeleton Knight ",
+            "newpHash": 0,
+            "pHash": 8767829060480446000
         },
         {
             "Cost": 6,
-            "ID": "101421100",
-            "Name": "Mist Dragon ",
-            "pHash": "18085537292157874176"
-        },
-        {
-            "Cost": 2,
-            "ID": "101422010",
-            "Name": "Golden Dragon's Den ",
-            "pHash": "10331630398859964416"
-        },
-        {
-            "Cost": 2,
-            "ID": "101424010",
-            "Name": "Dragon Emissary ",
-            "pHash": "17887005249088831488"
+            "ID": 101311070,
+            "Name": "Master Alchemist ",
+            "newpHash": 0,
+            "pHash": 13577094989774730000
         },
         {
             "Cost": 4,
-            "ID": "101424020",
-            "Name": "Draconification ",
-            "pHash": "12645656942563930112"
+            "ID": 100314060,
+            "Name": "Conjure Twosome ",
+            "newpHash": 0,
+            "pHash": 16454495942255565000
+        },
+        {
+            "Cost": 3,
+            "ID": 101511040,
+            "Name": "Rabbit Necromancer ",
+            "newpHash": 0,
+            "pHash": 15933432518452484000
+        },
+        {
+            "Cost": 3,
+            "ID": 101514030,
+            "Name": "Soul Hunt ",
+            "newpHash": 0,
+            "pHash": 3224247369332660700
         },
         {
             "Cost": 2,
-            "ID": "101431010",
-            "Name": "Dragonewt Scholar ",
-            "pHash": "16153434907802169344"
+            "ID": 101311060,
+            "Name": "Apprentice Alchemist ",
+            "newpHash": 0,
+            "pHash": 17672940133184535000
+        },
+        {
+            "Cost": 6,
+            "ID": 101031040,
+            "Name": "Athena ",
+            "newpHash": 0,
+            "pHash": 13954950825389853000
+        },
+        {
+            "Cost": 3,
+            "ID": 100314050,
+            "Name": "Summon Snow ",
+            "newpHash": 0,
+            "pHash": 9762904159807343000
+        },
+        {
+            "Cost": 4,
+            "ID": 101032010,
+            "Name": "Path to Purgatory ",
+            "newpHash": 0,
+            "pHash": 10046558192969306000
+        },
+        {
+            "Cost": 2,
+            "ID": 101514020,
+            "Name": "Highway to Hell ",
+            "newpHash": 0,
+            "pHash": 10434343823143727000
+        },
+        {
+            "Cost": 6,
+            "ID": 101711070,
+            "Name": "Divine Armor ",
+            "newpHash": 0,
+            "pHash": 7786689791082749000
+        },
+        {
+            "Cost": 3,
+            "ID": 101311050,
+            "Name": "Gauntleted Healer ",
+            "newpHash": 0,
+            "pHash": 15542366562779986000
+        },
+        {
+            "Cost": 2,
+            "ID": 100314040,
+            "Name": "Wind Blast ",
+            "newpHash": 0,
+            "pHash": 698471826091422700
+        },
+        {
+            "Cost": 8,
+            "ID": 101021030,
+            "Name": "Gilgamesh ",
+            "newpHash": 0,
+            "pHash": 9082640629573482000
+        },
+        {
+            "Cost": 4,
+            "ID": 100611050,
+            "Name": "Dark General ",
+            "newpHash": 0,
+            "pHash": 6456866042934323000
+        },
+        {
+            "Cost": 1,
+            "ID": 101514010,
+            "Name": "Soul Conversion ",
+            "newpHash": 0,
+            "pHash": 16162457612475859000
+        },
+        {
+            "Cost": 5,
+            "ID": 101711060,
+            "Name": "Healing Priestess ",
+            "newpHash": 0,
+            "pHash": 11370635054840099000
+        },
+        {
+            "Cost": 3,
+            "ID": 101311040,
+            "Name": "Runic Guardian ",
+            "newpHash": 0,
+            "pHash": 17091393814235800000
+        },
+        {
+            "Cost": 3,
+            "ID": 101021020,
+            "Name": "Lizardman ",
+            "newpHash": 0,
+            "pHash": 17490364317358268000
+        },
+        {
+            "Cost": 6,
+            "ID": 100611040,
+            "Name": "Imp Lancer ",
+            "newpHash": 0,
+            "pHash": 16711125446120882000
+        },
+        {
+            "Cost": 4,
+            "ID": 101734030,
+            "Name": "Dark Offering ",
+            "newpHash": 0,
+            "pHash": 11893599581515477000
+        },
+        {
+            "Cost": 3,
+            "ID": 100411050,
+            "Name": "Firstborn Dragon ",
+            "newpHash": 0,
+            "pHash": 13569281234831729000
+        },
+        {
+            "Cost": 2,
+            "ID": 101034010,
+            "Name": "Altered Fate ",
+            "newpHash": 0,
+            "pHash": 15919656854945538000
+        },
+        {
+            "Cost": 3,
+            "ID": 101511030,
+            "Name": "Tenacious Ghost ",
+            "newpHash": 0,
+            "pHash": 17606643844432914000
+        },
+        {
+            "Cost": 4,
+            "ID": 101711050,
+            "Name": "Guardian Nun ",
+            "newpHash": 0,
+            "pHash": 14274989929544751000
+        },
+        {
+            "Cost": 2,
+            "ID": 101021010,
+            "Name": "Bellringer Angel ",
+            "newpHash": 0,
+            "pHash": 5096990326078150000
+        },
+        {
+            "Cost": 2,
+            "ID": 101734020,
+            "Name": "Love's Gospel ",
+            "newpHash": 0,
+            "pHash": 12670689155440624000
+        },
+        {
+            "Cost": 6,
+            "ID": 101031030,
+            "Name": "Angel Crusher ",
+            "newpHash": 0,
+            "pHash": 6299666007409608000
+        },
+        {
+            "Cost": 6,
+            "ID": 100411040,
+            "Name": "Dragonguard ",
+            "newpHash": 0,
+            "pHash": 14710714547828482000
+        },
+        {
+            "Cost": 2,
+            "ID": 101511020,
+            "Name": "Skullcradle Widow ",
+            "newpHash": 0,
+            "pHash": 9724606243684375000
+        },
+        {
+            "Cost": 3,
+            "ID": 101711040,
+            "Name": "Dark Priest ",
+            "newpHash": 0,
+            "pHash": 17378175264385788000
+        },
+        {
+            "Cost": 4,
+            "ID": 100414030,
+            "Name": "Serpent Wrath ",
+            "newpHash": 0,
+            "pHash": 16777558573807374000
+        },
+        {
+            "Cost": 7,
+            "ID": 100521030,
+            "Name": "Undead King ",
+            "newpHash": 0,
+            "pHash": 10816421712214557000
+        },
+        {
+            "Cost": 2,
+            "ID": 100211060,
+            "Name": "Kunoichi Trainee ",
+            "newpHash": 0,
+            "pHash": 17629804109302750000
+        },
+        {
+            "Cost": 6,
+            "ID": 101734010,
+            "Name": "Themis's Decree ",
+            "newpHash": 0,
+            "pHash": 7791757108864060000
+        },
+        {
+            "Cost": 5,
+            "ID": 101031020,
+            "Name": "Wind God ",
+            "newpHash": 0,
+            "pHash": 14981743664243982000
+        },
+        {
+            "Cost": 2,
+            "ID": 100314030,
+            "Name": "Conjure Golem ",
+            "newpHash": 0,
+            "pHash": 12159997096543920000
+        },
+        {
+            "Cost": 2,
+            "ID": 101511010,
+            "Name": "Skeleton Viper ",
+            "newpHash": 0,
+            "pHash": 7803628191313689000
+        },
+        {
+            "Cost": 8,
+            "ID": 101741030,
+            "Name": "Jeanne D'Arc ",
+            "newpHash": 0,
+            "pHash": 17940333562033312000
+        },
+        {
+            "Cost": 1,
+            "ID": 100414020,
+            "Name": "Blazing Breath ",
+            "newpHash": 0,
+            "pHash": 7612767189047212000
+        },
+        {
+            "Cost": 4,
+            "ID": 100521020,
+            "Name": "Hell's Unleasher ",
+            "newpHash": 0,
+            "pHash": 15607704375745995000
+        },
+        {
+            "Cost": 5,
+            "ID": 100211050,
+            "Name": "Ninja Master ",
+            "newpHash": 0,
+            "pHash": 14510874101117432000
+        },
+        {
+            "Cost": 4,
+            "ID": 101311030,
+            "Name": "Crest Wizard ",
+            "newpHash": 0,
+            "pHash": 3978598651848664600
+        },
+        {
+            "Cost": 4,
+            "ID": 101031010,
+            "Name": "Urd ",
+            "newpHash": 0,
+            "pHash": 14626176888775967000
+        },
+        {
+            "Cost": 2,
+            "ID": 100314020,
+            "Name": "Magic Missile ",
+            "newpHash": 0,
+            "pHash": 7502133251694170000
+        },
+        {
+            "Cost": 3,
+            "ID": 100611030,
+            "Name": "Crazed Executioner ",
+            "newpHash": 0,
+            "pHash": 2246739452268180500
+        },
+        {
+            "Cost": 6,
+            "ID": 101741020,
+            "Name": "Moon Al-mi'raj ",
+            "newpHash": 0,
+            "pHash": 17406511385089794000
+        },
+        {
+            "Cost": 2,
+            "ID": 100414010,
+            "Name": "Dragon Oracle ",
+            "newpHash": 0,
+            "pHash": 10365665566644400000
+        },
+        {
+            "Cost": 4,
+            "ID": 100521010,
+            "Name": "Playful Necromancer ",
+            "newpHash": 0,
+            "pHash": 10108715990055246000
+        },
+        {
+            "Cost": 4,
+            "ID": 100211040,
+            "Name": "White General ",
+            "newpHash": 0,
+            "pHash": 3397351757637532700
+        },
+        {
+            "Cost": 2,
+            "ID": 101311020,
+            "Name": "Crafty Warlock ",
+            "newpHash": 0,
+            "pHash": 14784454591680623000
+        },
+        {
+            "Cost": 1,
+            "ID": 100314010,
+            "Name": "Insight ",
+            "newpHash": 0,
+            "pHash": 7832960607490317000
+        },
+        {
+            "Cost": 2,
+            "ID": 100611020,
+            "Name": "Sweetfang Vampire ",
+            "newpHash": 0,
+            "pHash": 13166963847496327000
+        },
+        {
+            "Cost": 7,
+            "ID": 101741010,
+            "Name": "Skullfane ",
+            "newpHash": 0,
+            "pHash": 15261249397778932000
+        },
+        {
+            "Cost": 4,
+            "ID": 100411030,
+            "Name": "Death Dragon ",
+            "newpHash": 0,
+            "pHash": 10778650174720088000
+        },
+        {
+            "Cost": 3,
+            "ID": 101711030,
+            "Name": "Sister Initiate ",
+            "newpHash": 0,
+            "pHash": 3533633459555917000
+        },
+        {
+            "Cost": 2,
+            "ID": 101311010,
+            "Name": "Penguin Wizard ",
+            "newpHash": 0,
+            "pHash": 11356843288758710000
+        },
+        {
+            "Cost": 2,
+            "ID": 100611010,
+            "Name": "Nightmare ",
+            "newpHash": 0,
+            "pHash": 10580825211638045000
+        },
+        {
+            "Cost": 5,
+            "ID": 100411020,
+            "Name": "Disaster Dragon ",
+            "newpHash": 0,
+            "pHash": 5438339721723064000
+        },
+        {
+            "Cost": 2,
+            "ID": 101711020,
+            "Name": "Ardent Nun ",
+            "newpHash": 0,
+            "pHash": 11347033869409829000
+        },
+        {
+            "Cost": 8,
+            "ID": 101341030,
+            "Name": "Arch Summoner Erasmus ",
+            "newpHash": 0,
+            "pHash": 14838442804330721000
+        },
+        {
+            "Cost": 2,
+            "ID": 100411010,
+            "Name": "Dragonrider ",
+            "newpHash": 0,
+            "pHash": 18436844779200467000
+        },
+        {
+            "Cost": 2,
+            "ID": 101711010,
+            "Name": "Rabbit Healer ",
+            "newpHash": 0,
+            "pHash": 10925364778324857000
+        },
+        {
+            "Cost": 2,
+            "ID": 100311010,
+            "Name": "Sammy, Wizard's Apprentice ",
+            "newpHash": 0,
+            "pHash": 14914766383128375000
+        },
+        {
+            "Cost": 3,
+            "ID": 100211030,
+            "Name": "Ascetic Knight ",
+            "newpHash": 0,
+            "pHash": 15554374857225714000
+        },
+        {
+            "Cost": 4,
+            "ID": 101341020,
+            "Name": "Merlin ",
+            "newpHash": 0,
+            "pHash": 18173989774590478000
+        },
+        {
+            "Cost": 3,
+            "ID": 101611140,
+            "Name": "Succubus ",
+            "newpHash": 0,
+            "pHash": 3986490864772609000
+        },
+        {
+            "Cost": 6,
+            "ID": 101211130,
+            "Name": "Warbound Cavalier ",
+            "newpHash": 0,
+            "pHash": 18052381159740480000
+        },
+        {
+            "Cost": 2,
+            "ID": 100211020,
+            "Name": "Oathless Knight ",
+            "newpHash": 0,
+            "pHash": 13170659949154780000
+        },
+        {
+            "Cost": 9,
+            "ID": 101341010,
+            "Name": "Mythril Golem ",
+            "newpHash": 0,
+            "pHash": 10322158148838814000
+        },
+        {
+            "Cost": 3,
+            "ID": 101611130,
+            "Name": "Demonic Sniper ",
+            "newpHash": 0,
+            "pHash": 15156561853234637000
+        },
+        {
+            "Cost": 3,
+            "ID": 100031020,
+            "Name": "Harnessed Glass ",
+            "newpHash": 0,
+            "pHash": 11273588166857847000
+        },
+        {
+            "Cost": 1,
+            "ID": 101211120,
+            "Name": "Vanguard ",
+            "newpHash": 0,
+            "pHash": 7266579111929038000
+        },
+        {
+            "Cost": 1,
+            "ID": 100211010,
+            "Name": "Quickblader ",
+            "newpHash": 0,
+            "pHash": 13033963566093324000
+        },
+        {
+            "Cost": 7,
+            "ID": 101314040,
+            "Name": "Twin Guardians ",
+            "newpHash": 0,
+            "pHash": 16824533346547986000
+        },
+        {
+            "Cost": 6,
+            "ID": 101611120,
+            "Name": "Rampaging Giant ",
+            "newpHash": 0,
+            "pHash": 13577436093829403000
+        },
+        {
+            "Cost": 3,
+            "ID": 101312030,
+            "Name": "Elementary Alchemy ",
+            "newpHash": 0,
+            "pHash": 2291139758128915000
+        },
+        {
+            "Cost": 3,
+            "ID": 100031010,
+            "Name": "Harnessed Flame ",
+            "newpHash": 0,
+            "pHash": 2566752061567003600
+        },
+        {
+            "Cost": 4,
+            "ID": 101312020,
+            "Name": "Alchemist's Workshop ",
+            "newpHash": 0,
+            "pHash": 16750212828277492000
+        },
+        {
+            "Cost": 7,
+            "ID": 101411130,
+            "Name": "Glacial Dragon ",
+            "newpHash": 0,
+            "pHash": 13086752751640236000
+        },
+        {
+            "Cost": 6,
+            "ID": 101211140,
+            "Name": "Admiral ",
+            "newpHash": 0,
+            "pHash": 14262026275747082000
+        },
+        {
+            "Cost": 2,
+            "ID": 101312010,
+            "Name": "Teachings of Creation ",
+            "newpHash": 0,
+            "pHash": 15348161777305895000
+        },
+        {
+            "Cost": 4,
+            "ID": 100614030,
+            "Name": "Crimson Purge ",
+            "newpHash": 0,
+            "pHash": 10596068666183864000
+        },
+        {
+            "Cost": 3,
+            "ID": 101411120,
+            "Name": "Trinity Dragon ",
+            "newpHash": 0,
+            "pHash": 14415641812405244000
+        },
+        {
+            "Cost": 2,
+            "ID": 101211110,
+            "Name": "Veteran Lancer ",
+            "newpHash": 0,
+            "pHash": 8595535151342437000
+        },
+        {
+            "Cost": 2,
+            "ID": 100614020,
+            "Name": "Razory Claw ",
+            "newpHash": 0,
+            "pHash": 7828373667543910000
+        },
+        {
+            "Cost": 4,
+            "ID": 101314030,
+            "Name": "Fissure Bomb ",
+            "newpHash": 0,
+            "pHash": 13035908232676610000
+        },
+        {
+            "Cost": 3,
+            "ID": 101611110,
+            "Name": "Demonhand Assassin ",
+            "newpHash": 0,
+            "pHash": 13953126486188243000
+        },
+        {
+            "Cost": 3,
+            "ID": 101211100,
+            "Name": "Snippy Gardener ",
+            "newpHash": 0,
+            "pHash": 14327033539337845000
+        },
+        {
+            "Cost": 5,
+            "ID": 101314020,
+            "Name": "Fate's Hand ",
+            "newpHash": 0,
+            "pHash": 9217850160344174000
+        },
+        {
+            "Cost": 2,
+            "ID": 100614010,
+            "Name": "Blood Pact ",
+            "newpHash": 0,
+            "pHash": 4139508913642099700
+        },
+        {
+            "Cost": 5,
+            "ID": 101611100,
+            "Name": "Gluttonous Gorger ",
+            "newpHash": 0,
+            "pHash": 15370305565118202000
+        },
+        {
+            "Cost": 3,
+            "ID": 101211090,
+            "Name": "Novice Trooper ",
+            "newpHash": 0,
+            "pHash": 15847802707625624000
+        },
+        {
+            "Cost": 2,
+            "ID": 101314010,
+            "Name": "Kaleidoscopic Glow ",
+            "newpHash": 0,
+            "pHash": 1024912507793541100
+        },
+        {
+            "Cost": 8,
+            "ID": 101221110,
+            "Name": "Enraged General ",
+            "newpHash": 0,
+            "pHash": 17375192966247858000
+        },
+        {
+            "Cost": 4,
+            "ID": 101611090,
+            "Name": "Barbaric Demon ",
+            "newpHash": 0,
+            "pHash": 8545966642126254000
         },
         {
             "Cost": 10,
-            "ID": "101431020",
-            "Name": "Genesis Dragon ",
-            "pHash": "16522784211405748224"
-        },
-        {
-            "Cost": 6,
-            "ID": "101431030",
-            "Name": "Wyvern Cavalier ",
-            "pHash": "204906038212168032"
-        },
-        {
-            "Cost": 2,
-            "ID": "101431040",
-            "Name": "Shapeshifting Mage ",
-            "pHash": "17567000789927270400"
-        },
-        {
-            "Cost": 9,
-            "ID": "101431050",
-            "Name": "Orb Dragon ",
-            "pHash": "8077332795602349056"
-        },
-        {
-            "Cost": 7,
-            "ID": "101431060",
-            "Name": "Hydra ",
-            "pHash": "17072713473466796032"
-        },
-        {
-            "Cost": 4,
-            "ID": "101431070",
-            "Name": "Deathmist Dragon ",
-            "pHash": "16936511949266206720"
-        },
-        {
-            "Cost": 6,
-            "ID": "101432010",
-            "Name": "Wyrm Spire ",
-            "pHash": "16343454963165050880"
+            "ID": 101041030,
+            "Name": "Satan ",
+            "newpHash": 0,
+            "pHash": 11212710147255810000
         },
         {
             "Cost": 5,
-            "ID": "101432020",
-            "Name": "Phoenix Roost ",
-            "pHash": "11259662760174266368"
-        },
-        {
-            "Cost": 9,
-            "ID": "101441010",
-            "Name": "Fafnir ",
-            "pHash": "8714984767608037376"
-        },
-        {
-            "Cost": 6,
-            "ID": "101441020",
-            "Name": "Dark Dragoon Forte ",
-            "pHash": "8165584446174893056"
-        },
-        {
-            "Cost": 8,
-            "ID": "101441030",
-            "Name": "Zirnitra ",
-            "pHash": "17600054592980766720"
-        },
-        {
-            "Cost": 2,
-            "ID": "101511010",
-            "Name": "Skeleton Viper ",
-            "pHash": "7803628191313688576"
-        },
-        {
-            "Cost": 2,
-            "ID": "101511020",
-            "Name": "Skullcradle Widow ",
-            "pHash": "9724606243684374528"
+            "ID": 101211080,
+            "Name": "Sentry ",
+            "newpHash": 0,
+            "pHash": 14944002949700890000
         },
         {
             "Cost": 3,
-            "ID": "101511030",
-            "Name": "Tenacious Ghost ",
-            "pHash": "17606643844432914432"
-        },
-        {
-            "Cost": 3,
-            "ID": "101511040",
-            "Name": "Rabbit Necromancer ",
-            "pHash": "15933432518452484096"
-        },
-        {
-            "Cost": 3,
-            "ID": "101511050",
-            "Name": "Skeleton Knight ",
-            "pHash": "8767829060480446464"
-        },
-        {
-            "Cost": 2,
-            "ID": "101511060",
-            "Name": "Wight ",
-            "pHash": "15428932306439327744"
-        },
-        {
-            "Cost": 7,
-            "ID": "101511070",
-            "Name": "Cursed Soldier ",
-            "pHash": "10726402562926440448"
-        },
-        {
-            "Cost": 5,
-            "ID": "101511080",
-            "Name": "Soul Eater ",
-            "pHash": "10776495953706586112"
-        },
-        {
-            "Cost": 2,
-            "ID": "101511090",
-            "Name": "Spartoi ",
-            "pHash": "18122044046454157312"
-        },
-        {
-            "Cost": 7,
-            "ID": "101511100",
-            "Name": "Orcus ",
-            "pHash": "17531698919824599040"
-        },
-        {
-            "Cost": 2,
-            "ID": "101511110",
-            "Name": "Lesser Mummy ",
-            "pHash": "17660521884847230976"
-        },
-        {
-            "Cost": 1,
-            "ID": "101511120",
-            "Name": "Skull Beast ",
-            "pHash": "11292888511049715712"
-        },
-        {
-            "Cost": 4,
-            "ID": "101511130",
-            "Name": "Guilty Courier ",
-            "pHash": "15542079572343242752"
-        },
-        {
-            "Cost": 1,
-            "ID": "101514010",
-            "Name": "Soul Conversion ",
-            "pHash": "16162457612475858944"
-        },
-        {
-            "Cost": 2,
-            "ID": "101514020",
-            "Name": "Highway to Hell ",
-            "pHash": "10434343823143727104"
-        },
-        {
-            "Cost": 3,
-            "ID": "101514030",
-            "Name": "Soul Hunt ",
-            "pHash": "3224247369332660736"
-        },
-        {
-            "Cost": 3,
-            "ID": "101514040",
-            "Name": "Impious Resurrection ",
-            "pHash": "9042437239795336192"
-        },
-        {
-            "Cost": 1,
-            "ID": "101521010",
-            "Name": "Skeleton Fighter ",
-            "pHash": "16276402115458596864"
-        },
-        {
-            "Cost": 2,
-            "ID": "101521020",
-            "Name": "Deadly Widow ",
-            "pHash": "10626920425917622272"
-        },
-        {
-            "Cost": 3,
-            "ID": "101521030",
-            "Name": "Necroelementist ",
-            "pHash": "14261446787301193728"
-        },
-        {
-            "Cost": 4,
-            "ID": "101521040",
-            "Name": "Skull Rider ",
-            "pHash": "14058244252105025536"
-        },
-        {
-            "Cost": 3,
-            "ID": "101521050",
-            "Name": "Goetia Mage ",
-            "pHash": "15518163246012313600"
-        },
-        {
-            "Cost": 5,
-            "ID": "101521060",
-            "Name": "Soul Glutton ",
-            "pHash": "13617434405283430400"
-        },
-        {
-            "Cost": 6,
-            "ID": "101521070",
-            "Name": "Necropolis Queen ",
-            "pHash": "18359962077279029248"
-        },
-        {
-            "Cost": 5,
-            "ID": "101521080",
-            "Name": "Soulhungry Wraith ",
-            "pHash": "6302462055159290880"
-        },
-        {
-            "Cost": 8,
-            "ID": "101521090",
-            "Name": "Soul Grinder ",
-            "pHash": "15559034478175889408"
-        },
-        {
-            "Cost": 5,
-            "ID": "101521100",
-            "Name": "Dullahan ",
-            "pHash": "17365596669051383808"
-        },
-        {
-            "Cost": 1,
-            "ID": "101522010",
-            "Name": "Burial Grounds ",
-            "pHash": "16950871614836457472"
-        },
-        {
-            "Cost": 4,
-            "ID": "101524010",
-            "Name": "Curse of Rebirth ",
-            "pHash": "13289252461294551040"
-        },
-        {
-            "Cost": 2,
-            "ID": "101524020",
-            "Name": "Ethereal Form ",
-            "pHash": "14802519032220497920"
-        },
-        {
-            "Cost": 4,
-            "ID": "101531010",
-            "Name": "Wight King ",
-            "pHash": "15221839136055234560"
-        },
-        {
-            "Cost": 3,
-            "ID": "101531020",
-            "Name": "Madame Lich ",
-            "pHash": "13445983866282893312"
-        },
-        {
-            "Cost": 4,
-            "ID": "101531030",
-            "Name": "Phantom Dragon ",
-            "pHash": "15272178223991537664"
-        },
-        {
-            "Cost": 6,
-            "ID": "101531040",
-            "Name": "Deathly Tyrant ",
-            "pHash": "6416384056517263360"
-        },
-        {
-            "Cost": 8,
-            "ID": "101531050",
-            "Name": "Mordecai the Duelist ",
-            "pHash": "17697699874562152448"
-        },
-        {
-            "Cost": 1,
-            "ID": "101532010",
-            "Name": "Ghouls' Banquet ",
-            "pHash": "4335591479700193280"
-        },
-        {
-            "Cost": 4,
-            "ID": "101534010",
-            "Name": "Phantom Howl ",
-            "pHash": "14318646466168909824"
-        },
-        {
-            "Cost": 3,
-            "ID": "101534020",
-            "Name": "Foul Tempest ",
-            "pHash": "677692501081277952"
-        },
-        {
-            "Cost": 6,
-            "ID": "101534030",
-            "Name": "Death's Breath ",
-            "pHash": "12490727326137008128"
-        },
-        {
-            "Cost": 5,
-            "ID": "101541010",
-            "Name": "Cerberus ",
-            "pHash": "14212289821753436160"
-        },
-        {
-            "Cost": 9,
-            "ID": "101541020",
-            "Name": "Lord Atomy ",
-            "pHash": "12625509257544054784"
-        },
-        {
-            "Cost": 8,
-            "ID": "101541030",
-            "Name": "Pluto ",
-            "pHash": "15956949650176909312"
-        },
-        {
-            "Cost": 2,
-            "ID": "101611010",
-            "Name": "Lilith ",
-            "pHash": "10681162802442610688"
-        },
-        {
-            "Cost": 2,
-            "ID": "101611020",
-            "Name": "Venomous Cobra ",
-            "pHash": "15094773742291861504"
-        },
-        {
-            "Cost": 2,
-            "ID": "101611030",
-            "Name": "Rain Devil ",
-            "pHash": "17521883496800962560"
-        },
-        {
-            "Cost": 2,
-            "ID": "101611040",
-            "Name": "Ambling Wraith ",
-            "pHash": "17791928077050640384"
-        },
-        {
-            "Cost": 2,
-            "ID": "101611050",
-            "Name": "Blood Wolf ",
-            "pHash": "17386927619472343040"
-        },
-        {
-            "Cost": 3,
-            "ID": "101611060",
-            "Name": "Metal Gargoyle ",
-            "pHash": "535926332055584768"
-        },
-        {
-            "Cost": 3,
-            "ID": "101611070",
-            "Name": "Killer Devil ",
-            "pHash": "6750609714068454400"
-        },
-        {
-            "Cost": 4,
-            "ID": "101611080",
-            "Name": "Raging Giant ",
-            "pHash": "6041823012972845056"
-        },
-        {
-            "Cost": 4,
-            "ID": "101611090",
-            "Name": "Barbaric Demon ",
-            "pHash": "8545966642126254080"
-        },
-        {
-            "Cost": 5,
-            "ID": "101611100",
-            "Name": "Gluttonous Gorger ",
-            "pHash": "15370305565118201856"
-        },
-        {
-            "Cost": 3,
-            "ID": "101611110",
-            "Name": "Demonhand Assassin ",
-            "pHash": "13953126486188242944"
-        },
-        {
-            "Cost": 6,
-            "ID": "101611120",
-            "Name": "Rampaging Giant ",
-            "pHash": "13577436093829402624"
-        },
-        {
-            "Cost": 3,
-            "ID": "101611130",
-            "Name": "Demonic Sniper ",
-            "pHash": "15156561853234636800"
-        },
-        {
-            "Cost": 3,
-            "ID": "101611140",
-            "Name": "Succubus ",
-            "pHash": "3986490864772609024"
-        },
-        {
-            "Cost": 2,
-            "ID": "101614010",
-            "Name": "Limil's Way ",
-            "pHash": "11929606782470078464"
-        },
-        {
-            "Cost": 2,
-            "ID": "101614020",
-            "Name": "Summon Bloodkin ",
-            "pHash": "7971940287303383040"
-        },
-        {
-            "Cost": 3,
-            "ID": "101614030",
+            "ID": 101614030,
             "Name": "Blood Rage ",
-            "pHash": "2970908677890460160"
-        },
-        {
-            "Cost": 3,
-            "ID": "101621010",
-            "Name": "Devil of Vengeance ",
-            "pHash": "3882823468805676544"
+            "newpHash": 0,
+            "pHash": 2970908677890460000
         },
         {
             "Cost": 2,
-            "ID": "101621020",
-            "Name": "Mormo ",
-            "pHash": "6478116664720847872"
-        },
-        {
-            "Cost": 3,
-            "ID": "101621030",
-            "Name": "Midnight Vampire ",
-            "pHash": "4003630926442871808"
+            "ID": 101411110,
+            "Name": "Fire Lizard ",
+            "newpHash": 0,
+            "pHash": 15940322908418908000
         },
         {
             "Cost": 4,
-            "ID": "101621040",
-            "Name": "Geryon ",
-            "pHash": "16263614748421488640"
+            "ID": 101221100,
+            "Name": "Swordsman ",
+            "newpHash": 0,
+            "pHash": 9595440110944547000
         },
         {
-            "Cost": 7,
-            "ID": "101621050",
-            "Name": "Alucard ",
-            "pHash": "16513275651852189696"
+            "Cost": 4,
+            "ID": 101611080,
+            "Name": "Raging Giant ",
+            "newpHash": 0,
+            "pHash": 6041823012972845000
         },
         {
-            "Cost": 1,
-            "ID": "101621060",
-            "Name": "Cursebrand Vampire ",
-            "pHash": "14086895476714840064"
-        },
-        {
-            "Cost": 2,
-            "ID": "101621070",
-            "Name": "Dark Summoner ",
-            "pHash": "14602374202524237824"
-        },
-        {
-            "Cost": 3,
-            "ID": "101621080",
-            "Name": "Vampire Lykos ",
-            "pHash": "16078058403897159680"
-        },
-        {
-            "Cost": 3,
-            "ID": "101621090",
-            "Name": "Masked Butcher ",
-            "pHash": "4495150217551391744"
+            "Cost": 8,
+            "ID": 101041020,
+            "Name": "Lucifer ",
+            "newpHash": 0,
+            "pHash": 17112000614219917000
         },
         {
             "Cost": 5,
-            "ID": "101621100",
+            "ID": 101621100,
             "Name": "Vampire Bard ",
-            "pHash": "14176982927026200576"
-        },
-        {
-            "Cost": 1,
-            "ID": "101623010",
-            "Name": "Bloodfed Flowerbed ",
-            "pHash": "14036760658241482752"
-        },
-        {
-            "Cost": 4,
-            "ID": "101624010",
-            "Name": "Night Horde ",
-            "pHash": "14550212633235245056"
+            "newpHash": 0,
+            "pHash": 14176982927026200000
         },
         {
             "Cost": 5,
-            "ID": "101624020",
+            "ID": 101131050,
+            "Name": "Robin Hood ",
+            "newpHash": 0,
+            "pHash": 13195993347676570000
+        },
+        {
+            "Cost": 2,
+            "ID": 101614020,
+            "Name": "Summon Bloodkin ",
+            "newpHash": 0,
+            "pHash": 7971940287303383000
+        },
+        {
+            "Cost": 3,
+            "ID": 101411100,
+            "Name": "Roc ",
+            "newpHash": 0,
+            "pHash": 17865978244814506000
+        },
+        {
+            "Cost": 2,
+            "ID": 101221090,
+            "Name": "Princess Vanguard ",
+            "newpHash": 0,
+            "pHash": 15523772789462002000
+        },
+        {
+            "Cost": 3,
+            "ID": 100214020,
+            "Name": "Forge Weaponry ",
+            "newpHash": 0,
+            "pHash": 2042796095479244800
+        },
+        {
+            "Cost": 7,
+            "ID": 101041010,
+            "Name": "Gabriel ",
+            "newpHash": 0,
+            "pHash": 10777894275154549000
+        },
+        {
+            "Cost": 3,
+            "ID": 101621090,
+            "Name": "Masked Butcher ",
+            "newpHash": 0,
+            "pHash": 4495150217551392000
+        },
+        {
+            "Cost": 8,
+            "ID": 101131040,
+            "Name": "Ancient Forest Dragon ",
+            "newpHash": 0,
+            "pHash": 10663349259706927000
+        },
+        {
+            "Cost": 2,
+            "ID": 101614010,
+            "Name": "Limil's Way ",
+            "newpHash": 0,
+            "pHash": 11929606782470078000
+        },
+        {
+            "Cost": 8,
+            "ID": 101411090,
+            "Name": "Inferno Dragon ",
+            "newpHash": 0,
+            "pHash": 15258685738533036000
+        },
+        {
+            "Cost": 2,
+            "ID": 101221080,
+            "Name": "Luminous Knight ",
+            "newpHash": 0,
+            "pHash": 15207679192336327000
+        },
+        {
+            "Cost": 3,
+            "ID": 101621080,
+            "Name": "Vampire Lykos ",
+            "newpHash": 0,
+            "pHash": 16078058403897160000
+        },
+        {
+            "Cost": 7,
+            "ID": 101411080,
+            "Name": "Skull Dragon ",
+            "newpHash": 0,
+            "pHash": 17116421390980315000
+        },
+        {
+            "Cost": 6,
+            "ID": 101421100,
+            "Name": "Mist Dragon ",
+            "newpHash": 0,
+            "pHash": 18085537292157874000
+        },
+        {
+            "Cost": 4,
+            "ID": 101211070,
+            "Name": "Courageous Knight ",
+            "newpHash": 0,
+            "pHash": 17833064406488498000
+        },
+        {
+            "Cost": 2,
+            "ID": 100214010,
+            "Name": "Unbridled Fury ",
+            "newpHash": 0,
+            "pHash": 972193505520965800
+        },
+        {
+            "Cost": 3,
+            "ID": 101611070,
+            "Name": "Killer Devil ",
+            "newpHash": 0,
+            "pHash": 6750609714068454000
+        },
+        {
+            "Cost": 3,
+            "ID": 101421090,
+            "Name": "Ace Dragoon ",
+            "newpHash": 0,
+            "pHash": 16389149301412776000
+        },
+        {
+            "Cost": 3,
+            "ID": 101211060,
+            "Name": "Fencer ",
+            "newpHash": 0,
+            "pHash": 13920059032249991000
+        },
+        {
+            "Cost": 3,
+            "ID": 101611060,
+            "Name": "Metal Gargoyle ",
+            "newpHash": 0,
+            "pHash": 535926332055584800
+        },
+        {
+            "Cost": 3,
+            "ID": 101421080,
+            "Name": "Imprisoned Dragon ",
+            "newpHash": 0,
+            "pHash": 17576596961295237000
+        },
+        {
+            "Cost": 5,
+            "ID": 101131030,
+            "Name": "Noble Fairy ",
+            "newpHash": 0,
+            "pHash": 6609283578266777000
+        },
+        {
+            "Cost": 2,
+            "ID": 101211050,
+            "Name": "Centaur Vanguard ",
+            "newpHash": 0,
+            "pHash": 10726717662169880000
+        },
+        {
+            "Cost": 3,
+            "ID": 101221070,
+            "Name": "Pompous Princess ",
+            "newpHash": 0,
+            "pHash": 12950786840290372000
+        },
+        {
+            "Cost": 2,
+            "ID": 101611050,
+            "Name": "Blood Wolf ",
+            "newpHash": 0,
+            "pHash": 17386927619472343000
+        },
+        {
+            "Cost": 2,
+            "ID": 101621070,
+            "Name": "Dark Summoner ",
+            "newpHash": 0,
+            "pHash": 14602374202524238000
+        },
+        {
+            "Cost": 2,
+            "ID": 101131020,
+            "Name": "Rhinoceroach ",
+            "newpHash": 0,
+            "pHash": 9222510060408979000
+        },
+        {
+            "Cost": 2,
+            "ID": 101211040,
+            "Name": "Cyclone Soldier ",
+            "newpHash": 0,
+            "pHash": 6694775787958457000
+        },
+        {
+            "Cost": 5,
+            "ID": 101221060,
+            "Name": "Noble Knight ",
+            "newpHash": 0,
+            "pHash": 17603716917938410000
+        },
+        {
+            "Cost": 2,
+            "ID": 101611040,
+            "Name": "Ambling Wraith ",
+            "newpHash": 0,
+            "pHash": 17791928077050640000
+        },
+        {
+            "Cost": 1,
+            "ID": 101621060,
+            "Name": "Cursebrand Vampire ",
+            "newpHash": 0,
+            "pHash": 14086895476714840000
+        },
+        {
+            "Cost": 4,
+            "ID": 101131010,
+            "Name": "Petal Fencer ",
+            "newpHash": 0,
+            "pHash": 17957231024172732000
+        },
+        {
+            "Cost": 3,
+            "ID": 101221050,
+            "Name": "Navy Lieutenant ",
+            "newpHash": 0,
+            "pHash": 15332589718230585000
+        },
+        {
+            "Cost": 5,
+            "ID": 100321030,
+            "Name": "Lightning Shooter ",
+            "newpHash": 0,
+            "pHash": 15415042349237854000
+        },
+        {
+            "Cost": 5,
+            "ID": 101411070,
+            "Name": "Seabrand Dragon ",
+            "newpHash": 0,
+            "pHash": 15505017287416738000
+        },
+        {
+            "Cost": 7,
+            "ID": 100424010,
+            "Name": "Conflagration ",
+            "newpHash": 0,
+            "pHash": 17318812507127771000
+        },
+        {
+            "Cost": 7,
+            "ID": 101621050,
+            "Name": "Alucard ",
+            "newpHash": 0,
+            "pHash": 16513275651852190000
+        },
+        {
+            "Cost": 5,
+            "ID": 101221040,
+            "Name": "Percival ",
+            "newpHash": 0,
+            "pHash": 17371434717904032000
+        },
+        {
+            "Cost": 4,
+            "ID": 100621020,
+            "Name": "Wardrobe Raider ",
+            "newpHash": 0,
+            "pHash": 3829554385488771600
+        },
+        {
+            "Cost": 7,
+            "ID": 101421070,
+            "Name": "Shenlong ",
+            "newpHash": 0,
+            "pHash": 11967740821555827000
+        },
+        {
+            "Cost": 3,
+            "ID": 101411060,
+            "Name": "Sandstorm Dragon ",
+            "newpHash": 0,
+            "pHash": 15849435104084621000
+        },
+        {
+            "Cost": 4,
+            "ID": 101621040,
+            "Name": "Geryon ",
+            "newpHash": 0,
+            "pHash": 16263614748421489000
+        },
+        {
+            "Cost": 7,
+            "ID": 100621010,
+            "Name": "Abyss Beast ",
+            "newpHash": 0,
+            "pHash": 11407307870674272000
+        },
+        {
+            "Cost": 6,
+            "ID": 101421060,
+            "Name": "Dragonrider Devil ",
+            "newpHash": 0,
+            "pHash": 14655588639040948000
+        },
+        {
+            "Cost": 4,
+            "ID": 101411050,
+            "Name": "Glint Dragon ",
+            "newpHash": 0,
+            "pHash": 15306979918278664000
+        },
+        {
+            "Cost": 7,
+            "ID": 100421020,
+            "Name": "Dread Dragon ",
+            "newpHash": 0,
+            "pHash": 512816852401429800
+        },
+        {
+            "Cost": 2,
+            "ID": 101211030,
+            "Name": "Palace Fencer ",
+            "newpHash": 0,
+            "pHash": 17973272759293470000
+        },
+        {
+            "Cost": 4,
+            "ID": 100321020,
+            "Name": "Demonflame Mage ",
+            "newpHash": 0,
+            "pHash": 13670063572691055000
+        },
+        {
+            "Cost": 5,
+            "ID": 101521100,
+            "Name": "Dullahan ",
+            "newpHash": 0,
+            "pHash": 17365596669051384000
+        },
+        {
+            "Cost": 2,
+            "ID": 101611030,
+            "Name": "Rain Devil ",
+            "newpHash": 0,
+            "pHash": 17521883496800963000
+        },
+        {
+            "Cost": 3,
+            "ID": 101411040,
+            "Name": "Twin-Headed Dragon ",
+            "newpHash": 0,
+            "pHash": 4753947298613929000
+        },
+        {
+            "Cost": 4,
+            "ID": 100421010,
+            "Name": "Dragon Warrior ",
+            "newpHash": 0,
+            "pHash": 15371637982683052000
+        },
+        {
+            "Cost": 2,
+            "ID": 101211020,
+            "Name": "Fervid Soldier ",
+            "newpHash": 0,
+            "pHash": 15382804933318849000
+        },
+        {
+            "Cost": 10,
+            "ID": 100321010,
+            "Name": "Flame Destroyer ",
+            "newpHash": 0,
+            "pHash": 3705603150078330000
+        },
+        {
+            "Cost": 8,
+            "ID": 101521090,
+            "Name": "Soul Grinder ",
+            "newpHash": 0,
+            "pHash": 15559034478175890000
+        },
+        {
+            "Cost": 2,
+            "ID": 101611020,
+            "Name": "Venomous Cobra ",
+            "newpHash": 0,
+            "pHash": 15094773742291862000
+        },
+        {
+            "Cost": 1,
+            "ID": 101211010,
+            "Name": "Ninja Trainee ",
+            "newpHash": 0,
+            "pHash": 17429992988740798000
+        },
+        {
+            "Cost": 5,
+            "ID": 101624020,
             "Name": "Savage Hunt ",
-            "pHash": "2662174851999087616"
-        },
-        {
-            "Cost": 8,
-            "ID": "101631010",
-            "Name": "Furiae ",
-            "pHash": "9481139835145797632"
-        },
-        {
-            "Cost": 3,
-            "ID": "101631020",
-            "Name": "Demon Commander Laura ",
-            "pHash": "12482555196396576768"
-        },
-        {
-            "Cost": 5,
-            "ID": "101631030",
-            "Name": "Erinyes ",
-            "pHash": "16410641059712382976"
+            "newpHash": 0,
+            "pHash": 2662174851999087600
         },
         {
             "Cost": 4,
-            "ID": "101631040",
-            "Name": "Righteous Devil ",
-            "pHash": "11211930413775618048"
+            "ID": 101221030,
+            "Name": "Cursed General ",
+            "newpHash": 0,
+            "pHash": 12976084610081671000
         },
         {
-            "Cost": 9,
-            "ID": "101631050",
-            "Name": "Temptress Vampire ",
-            "pHash": "14367305572420585472"
+            "Cost": 5,
+            "ID": 101521080,
+            "Name": "Soulhungry Wraith ",
+            "newpHash": 0,
+            "pHash": 6302462055159291000
+        },
+        {
+            "Cost": 2,
+            "ID": 101611010,
+            "Name": "Lilith ",
+            "newpHash": 0,
+            "pHash": 10681162802442610000
+        },
+        {
+            "Cost": 3,
+            "ID": 101621030,
+            "Name": "Midnight Vampire ",
+            "newpHash": 0,
+            "pHash": 4003630926442872000
         },
         {
             "Cost": 6,
-            "ID": "101631060",
+            "ID": 100221020,
+            "Name": "Sage Commander ",
+            "newpHash": 0,
+            "pHash": 12224378005834547000
+        },
+        {
+            "Cost": 4,
+            "ID": 101624010,
+            "Name": "Night Horde ",
+            "newpHash": 0,
+            "pHash": 14550212633235245000
+        },
+        {
+            "Cost": 2,
+            "ID": 101221020,
+            "Name": "Assassin ",
+            "newpHash": 0,
+            "pHash": 6026510084489982000
+        },
+        {
+            "Cost": 2,
+            "ID": 101621020,
+            "Name": "Mormo ",
+            "newpHash": 0,
+            "pHash": 6478116664720848000
+        },
+        {
+            "Cost": 4,
+            "ID": 100221010,
+            "Name": "Floral Fencer ",
+            "newpHash": 0,
+            "pHash": 15112625814910564000
+        },
+        {
+            "Cost": 2,
+            "ID": 101221010,
+            "Name": "Maid Leader ",
+            "newpHash": 0,
+            "pHash": 13813847679614702000
+        },
+        {
+            "Cost": 3,
+            "ID": 101411030,
+            "Name": "Aiela, Dragon Knight ",
+            "newpHash": 0,
+            "pHash": 3690917564743309300
+        },
+        {
+            "Cost": 3,
+            "ID": 101621010,
+            "Name": "Devil of Vengeance ",
+            "newpHash": 0,
+            "pHash": 3882823468805676500
+        },
+        {
+            "Cost": 2,
+            "ID": 101411020,
+            "Name": "Maelstrom Dragon ",
+            "newpHash": 0,
+            "pHash": 15393688740663042000
+        },
+        {
+            "Cost": 5,
+            "ID": 101132010,
+            "Name": "Titania's Sanctuary ",
+            "newpHash": 0,
+            "pHash": 5817444205817046000
+        },
+        {
+            "Cost": 5,
+            "ID": 101134030,
+            "Name": "Homecoming ",
+            "newpHash": 0,
+            "pHash": 3018746518690238000
+        },
+        {
+            "Cost": 6,
+            "ID": 101521070,
+            "Name": "Necropolis Queen ",
+            "newpHash": 0,
+            "pHash": 18359962077279030000
+        },
+        {
+            "Cost": 1,
+            "ID": 101411010,
+            "Name": "Ivory Dragon ",
+            "newpHash": 0,
+            "pHash": 11078363737452732000
+        },
+        {
+            "Cost": 9,
+            "ID": 101134020,
+            "Name": "Silver Bolt ",
+            "newpHash": 0,
+            "pHash": 8243432599861494000
+        },
+        {
+            "Cost": 5,
+            "ID": 101521060,
+            "Name": "Soul Glutton ",
+            "newpHash": 0,
+            "pHash": 13617434405283430000
+        },
+        {
+            "Cost": 6,
+            "ID": 100111070,
+            "Name": "Elf Tracker ",
+            "newpHash": 0,
+            "pHash": 8523509056411595000
+        },
+        {
+            "Cost": 5,
+            "ID": 101134010,
+            "Name": "Will of the Forest ",
+            "newpHash": 0,
+            "pHash": 3255955447028493000
+        },
+        {
+            "Cost": 3,
+            "ID": 101521050,
+            "Name": "Goetia Mage ",
+            "newpHash": 0,
+            "pHash": 15518163246012314000
+        },
+        {
+            "Cost": 1,
+            "ID": 101623010,
+            "Name": "Bloodfed Flowerbed ",
+            "newpHash": 0,
+            "pHash": 14036760658241483000
+        },
+        {
+            "Cost": 5,
+            "ID": 101421050,
+            "Name": "Lightning Behemoth ",
+            "newpHash": 0,
+            "pHash": 1.6431544206103e+19
+        },
+        {
+            "Cost": 3,
+            "ID": 100111060,
+            "Name": "Dark Elf Faure ",
+            "newpHash": 0,
+            "pHash": 17731744205268160000
+        },
+        {
+            "Cost": 6,
+            "ID": 100624010,
+            "Name": "Demonic Storm ",
+            "newpHash": 0,
+            "pHash": 3514709746881543700
+        },
+        {
+            "Cost": 3,
+            "ID": 101214030,
+            "Name": "Giant Slayer ",
+            "newpHash": 0,
+            "pHash": 10185779951618028000
+        },
+        {
+            "Cost": 4,
+            "ID": 101521040,
+            "Name": "Skull Rider ",
+            "newpHash": 0,
+            "pHash": 14058244252105026000
+        },
+        {
+            "Cost": 4,
+            "ID": 101231050,
+            "Name": "Latham, Vanguard Captain ",
+            "newpHash": 0,
+            "pHash": 13974360233317818000
+        },
+        {
+            "Cost": 4,
+            "ID": 101421040,
+            "Name": "Leviathan ",
+            "newpHash": 0,
+            "pHash": 15329621350587126000
+        },
+        {
+            "Cost": 5,
+            "ID": 100111050,
+            "Name": "Treant ",
+            "newpHash": 0,
+            "pHash": 17616909976307302000
+        },
+        {
+            "Cost": 1,
+            "ID": 101522010,
+            "Name": "Burial Grounds ",
+            "newpHash": 0,
+            "pHash": 16950871614836457000
+        },
+        {
+            "Cost": 5,
+            "ID": 101214020,
+            "Name": "Onslaught ",
+            "newpHash": 0,
+            "pHash": 9002890729533879000
+        },
+        {
+            "Cost": 2,
+            "ID": 101414040,
+            "Name": "Wild Hunt ",
+            "newpHash": 0,
+            "pHash": 1084079937850339500
+        },
+        {
+            "Cost": 2,
+            "ID": 101422010,
+            "Name": "Golden Dragon's Den ",
+            "newpHash": 0,
+            "pHash": 10331630398859964000
+        },
+        {
+            "Cost": 7,
+            "ID": 101231040,
+            "Name": "Frontguard General ",
+            "newpHash": 0,
+            "pHash": 12304236244001112000
+        },
+        {
+            "Cost": 2,
+            "ID": 100111040,
+            "Name": "Elf Guard ",
+            "newpHash": 0,
+            "pHash": 14256420892710195000
+        },
+        {
+            "Cost": 2,
+            "ID": 101524020,
+            "Name": "Ethereal Form ",
+            "newpHash": 0,
+            "pHash": 14802519032220498000
+        },
+        {
+            "Cost": 4,
+            "ID": 100222010,
+            "Name": "Royal Banner ",
+            "newpHash": 0,
+            "pHash": 7187278179320575000
+        },
+        {
+            "Cost": 4,
+            "ID": 101214010,
+            "Name": "Rousing Step ",
+            "newpHash": 0,
+            "pHash": 17430964434799452000
+        },
+        {
+            "Cost": 4,
+            "ID": 101424020,
+            "Name": "Draconification ",
+            "newpHash": 0,
+            "pHash": 12645656942563930000
+        },
+        {
+            "Cost": 2,
+            "ID": 101222010,
+            "Name": "Ironwrought Fortress ",
+            "newpHash": 0,
+            "pHash": 9437245088230912000
+        },
+        {
+            "Cost": 4,
+            "ID": 101524010,
+            "Name": "Curse of Rebirth ",
+            "newpHash": 0,
+            "pHash": 13289252461294551000
+        },
+        {
+            "Cost": 2,
+            "ID": 101424010,
+            "Name": "Dragon Emissary ",
+            "newpHash": 0,
+            "pHash": 17887005249088831000
+        },
+        {
+            "Cost": 3,
+            "ID": 101521030,
+            "Name": "Necroelementist ",
+            "newpHash": 0,
+            "pHash": 14261446787301194000
+        },
+        {
+            "Cost": 3,
+            "ID": 101421030,
+            "Name": "Sky Dragon Ethica ",
+            "newpHash": 0,
+            "pHash": 14667087955281222000
+        },
+        {
+            "Cost": 2,
+            "ID": 101224010,
+            "Name": "Conscription ",
+            "newpHash": 0,
+            "pHash": 11086423766878577000
+        },
+        {
+            "Cost": 4,
+            "ID": 101414030,
+            "Name": "Serpent Force ",
+            "newpHash": 0,
+            "pHash": 12699391066325594000
+        },
+        {
+            "Cost": 2,
+            "ID": 101521020,
+            "Name": "Deadly Widow ",
+            "newpHash": 0,
+            "pHash": 10626920425917622000
+        },
+        {
+            "Cost": 3,
+            "ID": 101231030,
+            "Name": "Gemstaff Commander ",
+            "newpHash": 0,
+            "pHash": 15113306914769666000
+        },
+        {
+            "Cost": 4,
+            "ID": 101421020,
+            "Name": "Grim Reaper ",
+            "newpHash": 0,
+            "pHash": 3753458635237160000
+        },
+        {
+            "Cost": 4,
+            "ID": 100111030,
+            "Name": "Okami ",
+            "newpHash": 0,
+            "pHash": 15905816905107870000
+        },
+        {
+            "Cost": 3,
+            "ID": 101414020,
+            "Name": "Dragon Cry ",
+            "newpHash": 0,
+            "pHash": 17337741325706367000
+        },
+        {
+            "Cost": 1,
+            "ID": 101521010,
+            "Name": "Skeleton Fighter ",
+            "newpHash": 0,
+            "pHash": 16276402115458597000
+        },
+        {
+            "Cost": 8,
+            "ID": 101231020,
+            "Name": "Dragonewt Charlotte ",
+            "newpHash": 0,
+            "pHash": 15630685399780282000
+        },
+        {
+            "Cost": 3,
+            "ID": 101421010,
+            "Name": "Dragonewt Princess ",
+            "newpHash": 0,
+            "pHash": 15149367130487366000
+        },
+        {
+            "Cost": 2,
+            "ID": 100111020,
+            "Name": "Fairy Whisperer ",
+            "newpHash": 0,
+            "pHash": 5957081330917876000
+        },
+        {
+            "Cost": 2,
+            "ID": 101414010,
+            "Name": "Dragon Wings ",
+            "newpHash": 0,
+            "pHash": 424949511433272500
+        },
+        {
+            "Cost": 4,
+            "ID": 101231010,
+            "Name": "Shadowed Assassin ",
+            "newpHash": 0,
+            "pHash": 15160935139527741000
+        },
+        {
+            "Cost": 8,
+            "ID": 101141030,
+            "Name": "Rose Queen ",
+            "newpHash": 0,
+            "pHash": 14920380983457909000
+        },
+        {
+            "Cost": 1,
+            "ID": 100111010,
+            "Name": "Water Fairy ",
+            "newpHash": 0,
+            "pHash": 11328090497233476000
+        },
+        {
+            "Cost": 4,
+            "ID": 101431070,
+            "Name": "Deathmist Dragon ",
+            "newpHash": 0,
+            "pHash": 16936511949266207000
+        },
+        {
+            "Cost": 3,
+            "ID": 101141020,
+            "Name": "Ancient Elf ",
+            "newpHash": 0,
+            "pHash": 17392583220285977000
+        },
+        {
+            "Cost": 7,
+            "ID": 101431060,
+            "Name": "Hydra ",
+            "newpHash": 0,
+            "pHash": 17072713473466796000
+        },
+        {
+            "Cost": 6,
+            "ID": 101631060,
             "Name": "Medusa ",
-            "pHash": "569814658886346112"
-        },
-        {
-            "Cost": 3,
-            "ID": "101633010",
-            "Name": "Dire Bond ",
-            "pHash": "1618649871316105984"
-        },
-        {
-            "Cost": 5,
-            "ID": "101634010",
-            "Name": "Diabolic Drain ",
-            "pHash": "11426491068114200576"
-        },
-        {
-            "Cost": 8,
-            "ID": "101634020",
-            "Name": "Revelation ",
-            "pHash": "12439445708639846400"
+            "newpHash": 0,
+            "pHash": 569814658886346100
         },
         {
             "Cost": 6,
-            "ID": "101641010",
-            "Name": "Queen Vampire ",
-            "pHash": "14103619787557093376"
-        },
-        {
-            "Cost": 4,
-            "ID": "101641020",
-            "Name": "Soul Dealer ",
-            "pHash": "2124507457059075840"
-        },
-        {
-            "Cost": 5,
-            "ID": "101641030",
-            "Name": "Beast Dominator ",
-            "pHash": "9859956902113554432"
-        },
-        {
-            "Cost": 2,
-            "ID": "101711010",
-            "Name": "Rabbit Healer ",
-            "pHash": "10925364778324856832"
-        },
-        {
-            "Cost": 2,
-            "ID": "101711020",
-            "Name": "Ardent Nun ",
-            "pHash": "11347033869409828864"
-        },
-        {
-            "Cost": 3,
-            "ID": "101711030",
-            "Name": "Sister Initiate ",
-            "pHash": "3533633459555916800"
-        },
-        {
-            "Cost": 3,
-            "ID": "101711040",
-            "Name": "Dark Priest ",
-            "pHash": "17378175264385787904"
-        },
-        {
-            "Cost": 4,
-            "ID": "101711050",
-            "Name": "Guardian Nun ",
-            "pHash": "14274989929544751104"
-        },
-        {
-            "Cost": 5,
-            "ID": "101711060",
-            "Name": "Healing Priestess ",
-            "pHash": "11370635054840098816"
-        },
-        {
-            "Cost": 6,
-            "ID": "101711070",
-            "Name": "Divine Armor ",
-            "pHash": "7786689791082748928"
-        },
-        {
-            "Cost": 8,
-            "ID": "101711080",
-            "Name": "Masked Giant ",
-            "pHash": "16244659042020870144"
-        },
-        {
-            "Cost": 2,
-            "ID": "101711090",
-            "Name": "Mainyu ",
-            "pHash": "7316549048967674880"
-        },
-        {
-            "Cost": 4,
-            "ID": "101711100",
-            "Name": "Canoness ",
-            "pHash": "10190357574440493056"
-        },
-        {
-            "Cost": 1,
-            "ID": "101713010",
-            "Name": "Pinion Prayer ",
-            "pHash": "4500648455787759104"
-        },
-        {
-            "Cost": 1,
-            "ID": "101713020",
-            "Name": "Sacred Plea ",
-            "pHash": "15532120878088364032"
-        },
-        {
-            "Cost": 2,
-            "ID": "101713030",
-            "Name": "Heretical Inquiry ",
-            "pHash": "4871641220933339136"
-        },
-        {
-            "Cost": 4,
-            "ID": "101713040",
-            "Name": "Pious Fox ",
-            "pHash": "11444430686832660480"
-        },
-        {
-            "Cost": 3,
-            "ID": "101713050",
-            "Name": "Divine Birdsong ",
-            "pHash": "16631403338299996160"
-        },
-        {
-            "Cost": 3,
-            "ID": "101714010",
-            "Name": "Power of Protection ",
-            "pHash": "13486196678846566400"
-        },
-        {
-            "Cost": 3,
-            "ID": "101714020",
-            "Name": "Healing Prayer ",
-            "pHash": "659893119574457728"
-        },
-        {
-            "Cost": 3,
-            "ID": "101721010",
-            "Name": "Temple Defender ",
-            "pHash": "1697236332844006656"
-        },
-        {
-            "Cost": 3,
-            "ID": "101721020",
-            "Name": "Prism Priest ",
-            "pHash": "15248304661410990080"
-        },
-        {
-            "Cost": 5,
-            "ID": "101721030",
-            "Name": "Cleric Lancer ",
-            "pHash": "15051459823738519552"
-        },
-        {
-            "Cost": 4,
-            "ID": "101721040",
-            "Name": "Cruel Priestess ",
-            "pHash": "17316146543004352512"
-        },
-        {
-            "Cost": 7,
-            "ID": "101721050",
-            "Name": "White Knight ",
-            "pHash": "15846553553573437440"
-        },
-        {
-            "Cost": 2,
-            "ID": "101721060",
-            "Name": "Protectoress ",
-            "pHash": "11955003562689527808"
-        },
-        {
-            "Cost": 3,
-            "ID": "101721070",
-            "Name": "Radiant Shaman ",
-            "pHash": "14064058213923731456"
-        },
-        {
-            "Cost": 3,
-            "ID": "101721080",
-            "Name": "Holy Mage ",
-            "pHash": "9583044339797719040"
-        },
-        {
-            "Cost": 6,
-            "ID": "101721090",
-            "Name": "Angelic Noble ",
-            "pHash": "15954262925178638336"
-        },
-        {
-            "Cost": 5,
-            "ID": "101721100",
-            "Name": "Shrine Knight Maiden ",
-            "pHash": "6106271257096135680"
-        },
-        {
-            "Cost": 2,
-            "ID": "101722010",
-            "Name": "Guardian Sun ",
-            "pHash": "10662768175379644416"
-        },
-        {
-            "Cost": 2,
-            "ID": "101723010",
-            "Name": "Noble Fangs ",
-            "pHash": "15832553716434323456"
-        },
-        {
-            "Cost": 4,
-            "ID": "101723020",
-            "Name": "Death Sentence ",
-            "pHash": "8299574640332562432"
+            "ID": 101141010,
+            "Name": "Fairy Princess ",
+            "newpHash": 0,
+            "pHash": 15791674978290536000
         },
         {
             "Cost": 9,
-            "ID": "101731010",
-            "Name": "Incandescent Dragon ",
-            "pHash": "18244350893523044352"
+            "ID": 101431050,
+            "Name": "Orb Dragon ",
+            "newpHash": 0,
+            "pHash": 8077332795602349000
         },
         {
-            "Cost": 6,
-            "ID": "101731020",
-            "Name": "Arch Priestess Laelia ",
-            "pHash": "16224585645355159552"
-        },
-        {
-            "Cost": 1,
-            "ID": "101733010",
-            "Name": "Hare of Illusions ",
-            "pHash": "14223480297312622592"
+            "Cost": 9,
+            "ID": 101631050,
+            "Name": "Temptress Vampire ",
+            "newpHash": 0,
+            "pHash": 14367305572420585000
         },
         {
             "Cost": 2,
-            "ID": "101733020",
-            "Name": "Holy Sentinel ",
-            "pHash": "16102727178512019456"
-        },
-        {
-            "Cost": 6,
-            "ID": "101733030",
-            "Name": "Chorus of Prayer ",
-            "pHash": "17233950170345248768"
-        },
-        {
-            "Cost": 2,
-            "ID": "101733040",
-            "Name": "Devourer of Heavens ",
-            "pHash": "4032627442080402944"
-        },
-        {
-            "Cost": 6,
-            "ID": "101734010",
-            "Name": "Themis's Decree ",
-            "pHash": "7791757108864060416"
-        },
-        {
-            "Cost": 2,
-            "ID": "101734020",
-            "Name": "Love's Gospel ",
-            "pHash": "12670689155440623616"
-        },
-        {
-            "Cost": 4,
-            "ID": "101734030",
-            "Name": "Dark Offering ",
-            "pHash": "11893599581515476992"
-        },
-        {
-            "Cost": 7,
-            "ID": "101741010",
-            "Name": "Skullfane ",
-            "pHash": "15261249397778931712"
-        },
-        {
-            "Cost": 6,
-            "ID": "101741020",
-            "Name": "Moon Al-mi'raj ",
-            "pHash": "17406511385089794048"
+            "ID": 101431040,
+            "Name": "Shapeshifting Mage ",
+            "newpHash": 0,
+            "pHash": 17567000789927270000
         },
         {
             "Cost": 8,
-            "ID": "101741030",
-            "Name": "Jeanne D'Arc ",
-            "pHash": "17940333562033311744"
+            "ID": 101531050,
+            "Name": "Mordecai the Duelist ",
+            "newpHash": 0,
+            "pHash": 17697699874562152000
+        },
+        {
+            "Cost": 4,
+            "ID": 101631040,
+            "Name": "Righteous Devil ",
+            "newpHash": 0,
+            "pHash": 11211930413775618000
+        },
+        {
+            "Cost": 3,
+            "ID": 101721080,
+            "Name": "Holy Mage ",
+            "newpHash": 0,
+            "pHash": 9583044339797720000
+        },
+        {
+            "Cost": 5,
+            "ID": 101432020,
+            "Name": "Phoenix Roost ",
+            "newpHash": 0,
+            "pHash": 11259662760174266000
+        },
+        {
+            "Cost": 6,
+            "ID": 101531040,
+            "Name": "Deathly Tyrant ",
+            "newpHash": 0,
+            "pHash": 6416384056517263000
+        },
+        {
+            "Cost": 6,
+            "ID": 101432010,
+            "Name": "Wyrm Spire ",
+            "newpHash": 0,
+            "pHash": 16343454963165050000
+        },
+        {
+            "Cost": 1,
+            "ID": 101232020,
+            "Name": "Front Lines ",
+            "newpHash": 0,
+            "pHash": 4883723060545294000
+        },
+        {
+            "Cost": 4,
+            "ID": 101321070,
+            "Name": "Rune Blade Summoner ",
+            "newpHash": 0,
+            "pHash": 5316106231652665000
+        },
+        {
+            "Cost": 3,
+            "ID": 101713050,
+            "Name": "Divine Birdsong ",
+            "newpHash": 0,
+            "pHash": 16631403338299996000
+        },
+        {
+            "Cost": 5,
+            "ID": 101232010,
+            "Name": "Arthurian Light ",
+            "newpHash": 0,
+            "pHash": 14318656777697364000
+        },
+        {
+            "Cost": 3,
+            "ID": 101633010,
+            "Name": "Dire Bond ",
+            "newpHash": 0,
+            "pHash": 1618649871316106000
+        },
+        {
+            "Cost": 5,
+            "ID": 101721100,
+            "Name": "Shrine Knight Maiden ",
+            "newpHash": 0,
+            "pHash": 6106271257096136000
+        },
+        {
+            "Cost": 3,
+            "ID": 101714020,
+            "Name": "Healing Prayer ",
+            "newpHash": 0,
+            "pHash": 659893119574457700
+        },
+        {
+            "Cost": 5,
+            "ID": 101321060,
+            "Name": "Flame Witch ",
+            "newpHash": 0,
+            "pHash": 10644985039087700000
+        },
+        {
+            "Cost": 5,
+            "ID": 101631030,
+            "Name": "Erinyes ",
+            "newpHash": 0,
+            "pHash": 16410641059712383000
+        },
+        {
+            "Cost": 4,
+            "ID": 101713040,
+            "Name": "Pious Fox ",
+            "newpHash": 0,
+            "pHash": 11444430686832660000
+        },
+        {
+            "Cost": 6,
+            "ID": 101234020,
+            "Name": "Alwida's Command ",
+            "newpHash": 0,
+            "pHash": 12476628786364890000
+        },
+        {
+            "Cost": 6,
+            "ID": 101721090,
+            "Name": "Angelic Noble ",
+            "newpHash": 0,
+            "pHash": 15954262925178638000
+        },
+        {
+            "Cost": 3,
+            "ID": 101721070,
+            "Name": "Radiant Shaman ",
+            "newpHash": 0,
+            "pHash": 14064058213923731000
+        },
+        {
+            "Cost": 4,
+            "ID": 101531030,
+            "Name": "Phantom Dragon ",
+            "newpHash": 0,
+            "pHash": 15272178223991538000
+        },
+        {
+            "Cost": 3,
+            "ID": 101714010,
+            "Name": "Power of Protection ",
+            "newpHash": 0,
+            "pHash": 13486196678846566000
+        },
+        {
+            "Cost": 4,
+            "ID": 101321050,
+            "Name": "Queen Medb ",
+            "newpHash": 0,
+            "pHash": 14308906725843567000
+        },
+        {
+            "Cost": 3,
+            "ID": 101631020,
+            "Name": "Demon Commander Laura ",
+            "newpHash": 0,
+            "pHash": 12482555196396577000
+        },
+        {
+            "Cost": 6,
+            "ID": 101431030,
+            "Name": "Wyvern Cavalier ",
+            "newpHash": 0,
+            "pHash": 204906038212168030
+        },
+        {
+            "Cost": 4,
+            "ID": 101234010,
+            "Name": "Stratagem ",
+            "newpHash": 0,
+            "pHash": 5505360669126325000
+        },
+        {
+            "Cost": 2,
+            "ID": 101721060,
+            "Name": "Protectoress ",
+            "newpHash": 0,
+            "pHash": 11955003562689528000
+        },
+        {
+            "Cost": 3,
+            "ID": 101531020,
+            "Name": "Madame Lich ",
+            "newpHash": 0,
+            "pHash": 13445983866282893000
+        },
+        {
+            "Cost": 2,
+            "ID": 100114010,
+            "Name": "Sylvan Justice ",
+            "newpHash": 0,
+            "pHash": 17770355551666002000
+        },
+        {
+            "Cost": 2,
+            "ID": 101321040,
+            "Name": "Scholarly Witch ",
+            "newpHash": 0,
+            "pHash": 6880802137462993000
+        },
+        {
+            "Cost": 8,
+            "ID": 101631010,
+            "Name": "Furiae ",
+            "newpHash": 0,
+            "pHash": 9481139835145798000
+        },
+        {
+            "Cost": 10,
+            "ID": 101431020,
+            "Name": "Genesis Dragon ",
+            "newpHash": 0,
+            "pHash": 16522784211405748000
+        },
+        {
+            "Cost": 4,
+            "ID": 100121030,
+            "Name": "Rose Gardener ",
+            "newpHash": 0,
+            "pHash": 16505069037568979000
+        },
+        {
+            "Cost": 7,
+            "ID": 101721050,
+            "Name": "White Knight ",
+            "newpHash": 0,
+            "pHash": 15846553553573437000
+        },
+        {
+            "Cost": 4,
+            "ID": 101531010,
+            "Name": "Wight King ",
+            "newpHash": 0,
+            "pHash": 15221839136055235000
+        },
+        {
+            "Cost": 2,
+            "ID": 101111090,
+            "Name": "Elf Wanderer ",
+            "newpHash": 0,
+            "pHash": 17503705286625495000
+        },
+        {
+            "Cost": 2,
+            "ID": 101431010,
+            "Name": "Dragonewt Scholar ",
+            "newpHash": 0,
+            "pHash": 16153434907802170000
+        },
+        {
+            "Cost": 2,
+            "ID": 100121020,
+            "Name": "Elf Metallurgist ",
+            "newpHash": 0,
+            "pHash": 17148799204893626000
+        },
+        {
+            "Cost": 4,
+            "ID": 101721040,
+            "Name": "Cruel Priestess ",
+            "newpHash": 0,
+            "pHash": 17316146543004353000
+        },
+        {
+            "Cost": 2,
+            "ID": 101713030,
+            "Name": "Heretical Inquiry ",
+            "newpHash": 0,
+            "pHash": 4871641220933339000
+        },
+        {
+            "Cost": 5,
+            "ID": 101111080,
+            "Name": "Fairy Caster ",
+            "newpHash": 0,
+            "pHash": 5079656831989898000
+        },
+        {
+            "Cost": 6,
+            "ID": 100121010,
+            "Name": "Magna Botanist ",
+            "newpHash": 0,
+            "pHash": 16720686176181020000
+        },
+        {
+            "Cost": 1,
+            "ID": 101713020,
+            "Name": "Sacred Plea ",
+            "newpHash": 0,
+            "pHash": 15532120878088364000
+        },
+        {
+            "Cost": 8,
+            "ID": 101634020,
+            "Name": "Revelation ",
+            "newpHash": 0,
+            "pHash": 12439445708639846000
+        },
+        {
+            "Cost": 5,
+            "ID": 101641030,
+            "Name": "Beast Dominator ",
+            "newpHash": 0,
+            "pHash": 9859956902113554000
+        },
+        {
+            "Cost": 6,
+            "ID": 101321030,
+            "Name": "Witchcrafter Magisa ",
+            "newpHash": 0,
+            "pHash": 17342460822941438000
+        },
+        {
+            "Cost": 7,
+            "ID": 100711020,
+            "Name": "Curate ",
+            "newpHash": 0,
+            "pHash": 11509424298760360000
+        },
+        {
+            "Cost": 1,
+            "ID": 101713010,
+            "Name": "Pinion Prayer ",
+            "newpHash": 0,
+            "pHash": 4500648455787759000
+        },
+        {
+            "Cost": 5,
+            "ID": 101634010,
+            "Name": "Diabolic Drain ",
+            "newpHash": 0,
+            "pHash": 11426491068114200000
+        },
+        {
+            "Cost": 4,
+            "ID": 101641020,
+            "Name": "Soul Dealer ",
+            "newpHash": 0,
+            "pHash": 2124507457059075800
+        },
+        {
+            "Cost": 3,
+            "ID": 101321020,
+            "Name": "Spectral Wizard ",
+            "newpHash": 0,
+            "pHash": 5285746093796788000
+        },
+        {
+            "Cost": 2,
+            "ID": 100711010,
+            "Name": "Snake Priest ",
+            "newpHash": 0,
+            "pHash": 14157496430578401000
+        },
+        {
+            "Cost": 1,
+            "ID": 101532010,
+            "Name": "Ghouls' Banquet ",
+            "newpHash": 0,
+            "pHash": 4335591479700193300
+        },
+        {
+            "Cost": 6,
+            "ID": 101534030,
+            "Name": "Death's Breath ",
+            "newpHash": 0,
+            "pHash": 12490727326137008000
+        },
+        {
+            "Cost": 3,
+            "ID": 101114060,
+            "Name": "Elemental Lance ",
+            "newpHash": 0,
+            "pHash": 6442521268830636000
+        },
+        {
+            "Cost": 5,
+            "ID": 101721030,
+            "Name": "Cleric Lancer ",
+            "newpHash": 0,
+            "pHash": 15051459823738520000
+        },
+        {
+            "Cost": 6,
+            "ID": 101641010,
+            "Name": "Queen Vampire ",
+            "newpHash": 0,
+            "pHash": 14103619787557093000
+        },
+        {
+            "Cost": 6,
+            "ID": 101321010,
+            "Name": "Gem Golem ",
+            "newpHash": 0,
+            "pHash": 7587434490209362000
+        },
+        {
+            "Cost": 3,
+            "ID": 101111070,
+            "Name": "Wandering Elf Mage ",
+            "newpHash": 0,
+            "pHash": 12910332657380020000
+        },
+        {
+            "Cost": 3,
+            "ID": 101534020,
+            "Name": "Foul Tempest ",
+            "newpHash": 0,
+            "pHash": 677692501081278000
+        },
+        {
+            "Cost": 1,
+            "ID": 101114050,
+            "Name": "Fairy Circle ",
+            "newpHash": 0,
+            "pHash": 13311598357461890000
+        },
+        {
+            "Cost": 3,
+            "ID": 101721020,
+            "Name": "Prism Priest ",
+            "newpHash": 0,
+            "pHash": 15248304661410990000
+        },
+        {
+            "Cost": 3,
+            "ID": 101111060,
+            "Name": "Fen Sprite ",
+            "newpHash": 0,
+            "pHash": 11454303436347464000
+        },
+        {
+            "Cost": 4,
+            "ID": 101534010,
+            "Name": "Phantom Howl ",
+            "newpHash": 0,
+            "pHash": 14318646466168910000
+        },
+        {
+            "Cost": 2,
+            "ID": 101114040,
+            "Name": "Woodkin Curse ",
+            "newpHash": 0,
+            "pHash": 7882880178961388000
+        },
+        {
+            "Cost": 3,
+            "ID": 101721010,
+            "Name": "Temple Defender ",
+            "newpHash": 0,
+            "pHash": 1697236332844006700
+        },
+        {
+            "Cost": 2,
+            "ID": 101111050,
+            "Name": "Archer ",
+            "newpHash": 0,
+            "pHash": 14296555711766782000
+        },
+        {
+            "Cost": 3,
+            "ID": 101324050,
+            "Name": "Petrification ",
+            "newpHash": 0,
+            "pHash": 13072889486885743000
+        },
+        {
+            "Cost": 4,
+            "ID": 101723020,
+            "Name": "Death Sentence ",
+            "newpHash": 0,
+            "pHash": 8299574640332562000
+        },
+        {
+            "Cost": 2,
+            "ID": 101111040,
+            "Name": "Fairy Bringer ",
+            "newpHash": 0,
+            "pHash": 14409359099095386000
+        },
+        {
+            "Cost": 3,
+            "ID": 101324040,
+            "Name": "Sorcery Cache ",
+            "newpHash": 0,
+            "pHash": 6228840186949548000
+        },
+        {
+            "Cost": 6,
+            "ID": 101241030,
+            "Name": "Tsubaki ",
+            "newpHash": 0,
+            "pHash": 2094154708083796700
+        },
+        {
+            "Cost": 2,
+            "ID": 101723010,
+            "Name": "Noble Fangs ",
+            "newpHash": 0,
+            "pHash": 15832553716434323000
+        },
+        {
+            "Cost": 5,
+            "ID": 101241020,
+            "Name": "Aurelia, Regal Saber ",
+            "newpHash": 0,
+            "pHash": 14373480522810454000
+        },
+        {
+            "Cost": 7,
+            "ID": 101121110,
+            "Name": "Forest Archelon ",
+            "newpHash": 0,
+            "pHash": 17628739727548303000
+        },
+        {
+            "Cost": 6,
+            "ID": 100511060,
+            "Name": "Ghostly Rider ",
+            "newpHash": 0,
+            "pHash": 10933048880598413000
+        },
+        {
+            "Cost": 3,
+            "ID": 101112010,
+            "Name": "Pixie Paradise ",
+            "newpHash": 0,
+            "pHash": 11415717096289657000
+        },
+        {
+            "Cost": 4,
+            "ID": 101114030,
+            "Name": "Way of the Outlaw ",
+            "newpHash": 0,
+            "pHash": 3391388329964108000
+        },
+        {
+            "Cost": 6,
+            "ID": 101241010,
+            "Name": "Sea Queen Otohime ",
+            "newpHash": 0,
+            "pHash": 15954551858377304000
+        },
+        {
+            "Cost": 8,
+            "ID": 101121100,
+            "Name": "Forest Giant ",
+            "newpHash": 0,
+            "pHash": 10844326408389517000
+        },
+        {
+            "Cost": 5,
+            "ID": 100511050,
+            "Name": "Gravewaker ",
+            "newpHash": 0,
+            "pHash": 17711168910497320000
+        },
+        {
+            "Cost": 2,
+            "ID": 101114020,
+            "Name": "Pixie Mischief ",
+            "newpHash": 0,
+            "pHash": 12218459049568990000
+        },
+        {
+            "Cost": 5,
+            "ID": 100011050,
+            "Name": "Angelic Sword Maiden ",
+            "newpHash": 0,
+            "pHash": 17154483563439974000
+        },
+        {
+            "Cost": 4,
+            "ID": 101121090,
+            "Name": "Mana Elk ",
+            "newpHash": 0,
+            "pHash": 5182182071299458000
+        },
+        {
+            "Cost": 4,
+            "ID": 100511040,
+            "Name": "Elder Spartoi Soldier ",
+            "newpHash": 0,
+            "pHash": 8445326225030896000
+        },
+        {
+            "Cost": 3,
+            "ID": 101322010,
+            "Name": "Price of Magic ",
+            "newpHash": 0,
+            "pHash": 12094080223195767000
+        },
+        {
+            "Cost": 1,
+            "ID": 101114010,
+            "Name": "Nature's Guidance ",
+            "newpHash": 0,
+            "pHash": 7801835948188929000
+        },
+        {
+            "Cost": 4,
+            "ID": 100011040,
+            "Name": "Goliath ",
+            "newpHash": 0,
+            "pHash": 15045651653633350000
+        },
+        {
+            "Cost": 4,
+            "ID": 101121080,
+            "Name": "Elven Princess Mage ",
+            "newpHash": 0,
+            "pHash": 6207824923457366000
+        },
+        {
+            "Cost": 2,
+            "ID": 101111030,
+            "Name": "Dungeoncrawl Fairy ",
+            "newpHash": 0,
+            "pHash": 12785362274736452000
+        },
+        {
+            "Cost": 3,
+            "ID": 100713030,
+            "Name": "Featherwyrm's Descent ",
+            "newpHash": 0,
+            "pHash": 15550382611777190000
+        },
+        {
+            "Cost": 1,
+            "ID": 101324030,
+            "Name": "Commence Experiment ",
+            "newpHash": 0,
+            "pHash": 4426137431133954000
+        },
+        {
+            "Cost": 2,
+            "ID": 101722010,
+            "Name": "Guardian Sun ",
+            "newpHash": 0,
+            "pHash": 10662768175379644000
+        },
+        {
+            "Cost": 1,
+            "ID": 101111020,
+            "Name": "Fairy Champion ",
+            "newpHash": 0,
+            "pHash": 15370387424814232000
+        },
+        {
+            "Cost": 1,
+            "ID": 100713020,
+            "Name": "Summon Pegasus ",
+            "newpHash": 0,
+            "pHash": 13275000821903626000
+        },
+        {
+            "Cost": 7,
+            "ID": 101324020,
+            "Name": "Alchemical Lore ",
+            "newpHash": 0,
+            "pHash": 14842480313709767000
+        },
+        {
+            "Cost": 1,
+            "ID": 101111010,
+            "Name": "Elf Child May ",
+            "newpHash": 0,
+            "pHash": 17686499690087793000
+        },
+        {
+            "Cost": 5,
+            "ID": 100514020,
+            "Name": "Call of the Void ",
+            "newpHash": 0,
+            "pHash": 2715297531573663000
+        },
+        {
+            "Cost": 2,
+            "ID": 100713010,
+            "Name": "Beastly Vow ",
+            "newpHash": 0,
+            "pHash": 2965111873285846500
+        },
+        {
+            "Cost": 5,
+            "ID": 101324010,
+            "Name": "Golem Protection ",
+            "newpHash": 0,
+            "pHash": 4700066739681630000
+        },
+        {
+            "Cost": 7,
+            "ID": 101331020,
+            "Name": "Dragonbond Mage ",
+            "newpHash": 0,
+            "pHash": 15084876438458444000
+        },
+        {
+            "Cost": 3,
+            "ID": 100511030,
+            "Name": "Apprentice Necromancer ",
+            "newpHash": 0,
+            "pHash": 6706044795012427000
+        },
+        {
+            "Cost": 2,
+            "ID": 100514010,
+            "Name": "Undying Resentment ",
+            "newpHash": 0,
+            "pHash": 17098117897327540000
+        },
+        {
+            "Cost": 3,
+            "ID": 100011030,
+            "Name": "Mercenary Drifter ",
+            "newpHash": 0,
+            "pHash": 13622527012104425000
+        },
+        {
+            "Cost": 6,
+            "ID": 101121070,
+            "Name": "Fairy Beast ",
+            "newpHash": 0,
+            "pHash": 14160898650372026000
+        },
+        {
+            "Cost": 5,
+            "ID": 101331010,
+            "Name": "Ancient Alchemist ",
+            "newpHash": 0,
+            "pHash": 346447978907993700
+        },
+        {
+            "Cost": 4,
+            "ID": 101511130,
+            "Name": "Guilty Courier ",
+            "newpHash": 0,
+            "pHash": 15542079572343243000
+        },
+        {
+            "Cost": 2,
+            "ID": 100511020,
+            "Name": "Spectre ",
+            "newpHash": 0,
+            "pHash": 8030112859956902000
+        },
+        {
+            "Cost": 2,
+            "ID": 101113010,
+            "Name": "Forest of Dreams ",
+            "newpHash": 0,
+            "pHash": 15658676770477058000
+        },
+        {
+            "Cost": 2,
+            "ID": 101024040,
+            "Name": "Trail of Light ",
+            "newpHash": 0,
+            "pHash": 17059957484237370000
+        },
+        {
+            "Cost": 2,
+            "ID": 100011020,
+            "Name": "Fighter ",
+            "newpHash": 0,
+            "pHash": 10888002051965219000
         }
     ],
     "Costs": [
         {
             "number": 1,
-            "pHash": "14295801172119273472"
+            "pHash": 14295801172119273000
         },
         {
             "number": 2,
-            "pHash": "11428195670630711296"
+            "pHash": 11428195670630711000
         },
         {
             "number": 3,
-            "pHash": "4526568191622436864"
+            "pHash": 4526568191622437000
         },
         {
             "number": 4,
-            "pHash": "7758924171549970432"
+            "pHash": 7758924171549970000
         },
         {
             "number": 5,
-            "pHash": "16616432476099500032"
+            "pHash": 16616432476099500000
         },
         {
             "number": 6,
-            "pHash": "7370927391165914112"
+            "pHash": 7370927391165914000
         },
         {
             "number": 7,
-            "pHash": "10240793271293239296"
+            "pHash": 10240793271293240000
         },
         {
             "number": 8,
-            "pHash": "16605786779981074432"
+            "pHash": 16605786779981074000
         },
         {
             "number": 9,
-            "pHash": "10996774170507728896"
+            "pHash": 10996774170507729000
         },
         {
             "number": 10,
-            "pHash": "10723726927345156096"
+            "pHash": 10723726927345156000
         },
         {
             "number": 18,
-            "pHash": "2351957157611961856"
+            "pHash": 2351957157611962000
         }
     ]
 }

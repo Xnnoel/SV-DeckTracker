@@ -415,15 +415,10 @@ void frmWindow::createActions()
     NoxAction->setCheckable(true);
     connect(NoxAction, &QAction::triggered, this, &frmWindow::slotNox);
 
-    BluestacksAction = new QAction(tr("&Bluestacks 2"), this);
-    BluestacksAction->setToolTip(tr("Use Bluestacks 2 Settings"));
+    BluestacksAction = new QAction(tr("&Bluestacks"), this);
+    BluestacksAction->setToolTip(tr("Use Bluestacks Settings"));
     BluestacksAction->setCheckable(true);
     connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
-
-    BluestacksOrigAction = new QAction(tr("&Bluestacks 1"), this);
-    BluestacksOrigAction->setToolTip(tr("Use Bluestacks 1 Settings"));
-    BluestacksOrigAction->setCheckable(true);
-    connect(BluestacksOrigAction, &QAction::triggered, this, &frmWindow::slotBluestacksOrig);
 
     UpdateHashAction = new QAction(tr("Update Hash"), this);
     UpdateHashAction->setToolTip("Update card hash using deck preview");
@@ -468,7 +463,6 @@ void frmWindow::createMenus()
     menuBar()->addMenu(EmuMenu);
     EmuMenu->addAction(NoxAction);
     EmuMenu->addAction(BluestacksAction);
-    EmuMenu->addAction(BluestacksOrigAction);
     EmuMenu->addSeparator();
     EmuMenu->addAction(UpdateHashAction);
 
@@ -736,7 +730,6 @@ void frmWindow::slotNox()
     settingsMap.insert("Rightborder","2");
     settingsMap.insert("RefreshRate","80");
     BluestacksAction->setChecked(false);
-    BluestacksOrigAction->setChecked(false);
     NoxAction->setChecked(true);
 
     //try and setup the handle?
@@ -778,7 +771,6 @@ void frmWindow::slotBluestacks()
     settingsMap.insert("RefreshRate","60");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(true);
-    BluestacksOrigAction->setChecked(false);
 
     //try and setup the handle?
     std::string appName = settingsMap.value("Windowname").toStdString();
@@ -807,49 +799,9 @@ void frmWindow::slotBluestacks()
     }
 }
 
-
-void frmWindow::slotBluestacksOrig()
-{
-    settingsMap.insert("Windowname","BlueStacks App Player");
-    settingsMap.insert("Topborder","0");
-    settingsMap.insert("Leftborder","0");
-    settingsMap.insert("Botborder","48");
-    settingsMap.insert("Rightborder","0");
-    settingsMap.insert("RefreshRate","60");
-    NoxAction->setChecked(false);
-    BluestacksAction->setChecked(false);
-    BluestacksOrigAction->setChecked(true);
-
-    //try and setup the handle?
-    std::string appName = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-
-    handle = 0;
-    handle = ::FindWindow(NULL, result);
-
-    if (handle != 0)
-    {
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-
-        RECT rc;
-        GetClientRect(handle, &rc);
-        width = (rc.right - rc.left) ;
-        height = (rc.bottom - rc.top) - 48;
-        top = rc.top+40;
-        left = rc.left+68;
-
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width , height);
-        SelectObject(hdc, hbmp);
-    }
-}
-
 void frmWindow::slotUpdateHash()
 {
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked() && !BluestacksOrigAction->isChecked())
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
     {
         QMessageBox::StandardButton errorMessage;
         errorMessage = QMessageBox::information(this, tr(""),
@@ -882,7 +834,6 @@ void frmWindow::slotUpdateHash()
         boxRect.setRect(Left + (HorGap * std::floor(i/2)), Top + (VerGap * (i%2)), Width, Height);
         drawer = pixmap.copy(boxRect);
         resultMat = ASM::QPixmapToCvMat(drawer);
-        cv::imwrite(std::to_string(i) + ".png", resultMat);
         imagePHash = PerceptualHash::phash(resultMat);
 
         // update playingdeck
