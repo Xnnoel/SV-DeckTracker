@@ -591,6 +591,12 @@ void frmWindow::slotLoadURL()
 
     if (ok && !text.isEmpty())
     {
+        if (text.contains("shadowverse-portal.com/deckbuilder/create/"))
+        {
+            QStringRef urlHash(&text,57,text.length()-57);
+            text = "https://shadowverse-portal.com/deck/" + urlHash.toString();
+        }
+
         QNetworkAccessManager *manager = new QNetworkAccessManager(this);
         connect(manager, SIGNAL(finished(QNetworkReply*)),
                 this, SLOT(replyFinished(QNetworkReply*)));
@@ -1195,6 +1201,7 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         // Extract number and card from http page
         int classType;
         char buf[1024];
+
         while (!reply->atEnd())
         {
             qint64 lineLength = reply->readLine(buf, sizeof(buf));
@@ -1217,19 +1224,17 @@ void frmWindow::replyFinished(QNetworkReply * reply)
                 {
                     QStringRef numberLine(&newLine,77,1);
                     classType = numberLine.toInt() - 1;
-
                 }
             }
             else
                 break;
         }
-
         //if no size, then no cards gotten
         if (deckVector.size() == 0)
         {
             QMessageBox::StandardButton errorMessage;
             errorMessage = QMessageBox::information(this, tr(""),
-                                             tr("No cards detected."));
+                                             tr("No cards found. Make sure you're not in the deckbuilder."));
             emit signalGenerateDeck();
             return;
         }
