@@ -15,6 +15,7 @@ public:
     svDatabase();
     void addCard(int id, Card card);
     Card getCard(int id);
+    void updateCard(int id, Card card);
     const QPixmap *getPortrait(int id);
     const QPixmap *getCost(int cost);
     std::vector<ulong64> getCostPHash();

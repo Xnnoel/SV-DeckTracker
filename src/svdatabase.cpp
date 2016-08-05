@@ -28,6 +28,11 @@ Card svDatabase::getCard(int id)
     return cardMap.value(id);
 }
 
+void svDatabase::updateCard(int id, Card card)
+{
+    cardMap.insert(id, card);
+}
+
 const QPixmap * svDatabase::getPortrait(int id)
 {
     return &portraitMap.value(id);
@@ -79,15 +84,11 @@ void svDatabase::load(){
             Card card;
             QJsonObject cardObject = cards[cardIndex].toObject();
 
-            card.ID = cardObject["ID"].toString().toInt();
+            card.ID = cardObject["ID"].toInt();
             card.manaCost = cardObject["Cost"].toInt();
             card.name = cardObject["Name"].toString();
-
-            QString pHashString = cardObject["pHash"].toString();
-            card.pHash = pHashString.toDouble();
-
-            QString newpHashString = cardObject["newpHash"].toString();
-            card.newpHash = newpHashString.toDouble();
+            card.pHash = cardObject["pHash"].toDouble();
+            card.newpHash = cardObject["newpHash"].toDouble();
 
             addCard(card.ID, card);
         }
@@ -111,9 +112,69 @@ void svDatabase::load(){
         ulong64 cardpHash = pHashString.toDouble();
 
         costPHashMap.insert(cost,cardpHash) ;
-
-
     }
 
     loadFile.close();
+}
+
+void svDatabase::save()
+{
+    // Saves database into json
+    QDir dir(".");
+    QString filename= dir.absolutePath() + "/data/database.json";
+
+    //Serialize into JSON
+    QFile saveFile(filename);
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+       qWarning("Couldn't open save file.");
+   }
+    QJsonObject gameObject;
+    //fill stuff in here
+    QJsonArray cardArray;
+
+    QHash<int, Card>::iterator i;
+    for (i = cardMap.begin(); i != cardMap.end(); ++i)
+    {
+        QJsonObject card;
+        int id = i.key();
+        Card tempcard = i.value();
+
+        card["ID"] = id;
+        card["Cost"] = tempcard.manaCost;
+        card["pHash"] = (double)tempcard.pHash;
+        card["newpHash"] = (double)tempcard.newpHash;
+        card["Name"] = tempcard.name;
+
+        cardArray.append(card);
+    }
+    gameObject["Cards"] = cardArray;
+
+
+    QJsonArray numberHash;
+
+    for (int j = 1; j < 11; ++j)
+    {
+        QJsonObject card;
+
+        card["pHash"] = (double)costPHashMap.value(j);
+        card["number"] = j;
+
+        numberHash.append(card);
+    }
+    QJsonObject card;
+
+    card["pHash"] = (double)costPHashMap.value(18);
+    card["number"] = 18;
+
+    numberHash.append(card);
+
+    gameObject["Costs"] = numberHash;
+
+
+    QJsonDocument saveDoc(gameObject);
+    saveFile.write(saveDoc.toJson());
+    saveFile.close();
+
+
+
 }
