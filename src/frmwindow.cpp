@@ -963,6 +963,7 @@ void frmWindow::slotLoadEdit(int)
 
     int subClass = playingDeck.getClass();
 
+
     if (neutralBox->isChecked())
     {
         //Load nuetrals into edit

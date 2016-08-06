@@ -92,7 +92,8 @@ void svDatabase::load(){
 
             addCard(card.ID, card);
         }
-
+    // Sort list here
+    qSort(cardID);
 
     // Save all cost icon
     for (int i = 1; i < 21; i++)
