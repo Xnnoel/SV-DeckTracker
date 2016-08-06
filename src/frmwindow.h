@@ -90,6 +90,8 @@ private:
     ulong64 matTexturePhash;
     ulong64 theirTexturePhash;
 
+    void closeEvent(QCloseEvent *event);
+
     cv::Mat mat;
 
     HDC hdcScreen;

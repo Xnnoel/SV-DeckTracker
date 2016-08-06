@@ -57,6 +57,7 @@ frmWindow::frmWindow(QWidget *parent) :
     createMenus();
 
 
+
     // Set up model view
     model = new SVListModel;
     model->setPointer(&cardDatabase, &playingDeck);
@@ -478,6 +479,17 @@ void frmWindow::createMenus()
 
 void frmWindow::slotElf()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(0);
     loadDeck(model);
@@ -487,6 +499,17 @@ void frmWindow::slotElf()
 
 void frmWindow::slotRoyal()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(1);
     loadDeck(model);
@@ -496,6 +519,17 @@ void frmWindow::slotRoyal()
 
 void frmWindow::slotWitch()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(2);
     loadDeck(model);
@@ -505,6 +539,17 @@ void frmWindow::slotWitch()
 
 void frmWindow::slotDragon()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(3);
     loadDeck(model);
@@ -514,6 +559,17 @@ void frmWindow::slotDragon()
 
 void frmWindow::slotNecro()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(4);
     loadDeck(model);
@@ -523,6 +579,17 @@ void frmWindow::slotNecro()
 
 void frmWindow::slotVampire()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(5);
     loadDeck(model);
@@ -532,6 +599,17 @@ void frmWindow::slotVampire()
 
 void frmWindow::slotBishop()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     playingDeck.clear();
     playingDeck.setClass(6);
     loadDeck(model);
@@ -541,9 +619,19 @@ void frmWindow::slotBishop()
 
 void frmWindow::slotLoad()
 {
-
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Save Deck as"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
+        tr("Open Deck"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
     QFile loadfile(fileName);
     if (!loadfile.open(QIODevice::ReadOnly))
     {
@@ -587,6 +675,18 @@ void frmWindow::slotLoad()
 
 void frmWindow::slotLoadURL()
 {
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+            return;
+        }
+    }
+
     bool ok;
     QString text = QInputDialog::getText(this, tr(""),
                                     tr("Shadowverse Portal link:"), QLineEdit::Normal,
@@ -641,9 +741,7 @@ void frmWindow::slotSaveAs()
            return;
     }
     playingDeck.setFileName(fileName);
-
     playingDeck.setName(textname.toStdString());
-
 
     std::string final = playingDeck.getName() + '\n';
     savefile.write(final.c_str());
@@ -658,6 +756,7 @@ void frmWindow::slotSaveAs()
         }
     }
     savefile.close();
+    needSave = false;
 }
 
 void frmWindow::slotSave()
@@ -684,25 +783,24 @@ void frmWindow::slotSave()
            qWarning("Couldn't open save from slotSave");
            return;
     }
-    else
-    {
-        QString textname = DeckNameEdit->text();
-        playingDeck.setName(textname.toStdString());
 
-        std::string final = playingDeck.getName() + '\n';
-        savefile.write(final.c_str());
-        std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
-        savefile.write(classnum.c_str());
-        for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
+    QString textname = DeckNameEdit->text();
+    playingDeck.setName(textname.toStdString());
+
+    std::string final = playingDeck.getName() + '\n';
+    savefile.write(final.c_str());
+    std::string classnum = std::to_string(playingDeck.getClass()) + '\n';
+    savefile.write(classnum.c_str());
+    for (int i = 0; i < playingDeck.cardsInDeck.size(); i++ )
+    {
+        for (int j = 0; j < playingDeck.countInDeck[i]; j++)
         {
-            for (int j = 0; j < playingDeck.countInDeck[i]; j++)
-            {
-                std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
-                savefile.write(writeID.c_str());
-            }
+            std::string writeID = std::to_string( playingDeck.cardsInDeck[i]) + '\n';
+            savefile.write(writeID.c_str());
         }
     }
     savefile.close();
+    needSave = false;
 }
 
 void frmWindow::slotAbout()
@@ -1257,4 +1355,19 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         loadDeck(model);
         emit signalGenerateDeck();
     }
+}
+
+void frmWindow::closeEvent(QCloseEvent *event)
+{
+    if (needSave)
+    {
+        //do some slot
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Unsaved Deck"), tr("The deck is unsaved. Do you want to save?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            slotSave();
+        }
+    }
+    event->accept();
 }
