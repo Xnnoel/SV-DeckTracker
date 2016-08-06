@@ -89,23 +89,6 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
-
-    // Load in application settings
-    QFile file(dir.absolutePath() + "/data/settings.ini");
-    if (!file.open(QIODevice::ReadOnly)){
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Couldn't find settings.ini."));
-        return;
-    }
-    QTextStream in(&file);
-
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList splitLines = line.split("=");
-        settingsMap.insert(splitLines[0],splitLines[1]);
-    }
-    file.close();
 }
 
 frmWindow::~frmWindow()
@@ -179,8 +162,6 @@ void frmWindow::update()
     /// In the update function, we will continous loop to try
     /// and guess what state the program is in. Mainly want to
     /// see if a game had started or not.
-    //decrement all if exist
-
     //otherwise check for card
     if (handleValid && ::IsWindow(handle))
     {
@@ -305,7 +286,7 @@ void frmWindow::update()
 
                 imagePHash = PerceptualHash::phash(resultMat);
 
-                std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(3, imagePHash, playingDeck.deckPHash);
+                std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(5, imagePHash, playingDeck.deckPHash);
 
                 if (ignoreNext < 1 && (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt() || costDistance < settingsMap.value("CostGuessSens").toInt()))
                 {
@@ -318,7 +299,7 @@ void frmWindow::update()
                     int costConf = 4 * std::min(10, std::max(0, settingsMap.value("CostGuessSens").toInt() - (costDistance-5)));
                     int confidence = cardConf + costConf;
                     // if card art matches well, assume that the card is true
-                    if (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt())
+                    if (bestguess[0].distance <= settingsMap.value("BestGuessSens").toInt())
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[0].index]);
                         QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[0].index]).name;
@@ -328,7 +309,7 @@ void frmWindow::update()
                     }
 
                     //Matches best 3 to cost, hopefully one matches
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 5; i++)
                     if (cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).manaCost == cost)
                     {
                         model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
@@ -635,7 +616,7 @@ void frmWindow::slotLoad()
     QFile loadfile(fileName);
     if (!loadfile.open(QIODevice::ReadOnly))
     {
-        qWarning("Couldn't open");
+        qWarning("Couldn't open from slotload");
         return;
     }
     QTextStream textStream(&loadfile);
@@ -912,7 +893,7 @@ void frmWindow::slotUpdateHash()
 
     //get constants
     int Top = (int)round(0.43115 * height) + top;
-    int Left = (int)round(0.025039 * width) + left;
+    int Left = (int)round(0.025839 * width) + left;
     int Width = (int)round(0.0954 * width);
     int Height = (int)round(0.21001 * height);
     int HorGap = (int)round(0.1212833 * width);
@@ -1155,6 +1136,14 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Select an emulator from the emulator tab."));
+        return;
+    }
+
     //Begin the app loop
     std::string appName = settingsMap.value("Windowname").toStdString();
     std::wstring stemp = s2ws(appName);
@@ -1168,6 +1157,13 @@ void frmWindow::slotStart()
     int botborder = settingsMap.value("Botborder").toInt();
     int leftborder = settingsMap.value("Leftborder").toInt();
     int rightborder = settingsMap.value("Rightborder").toInt();
+
+    //Add some values for other settings for now, maybe add slider later?
+    settingsMap.insert("TurnSens","18");
+    settingsMap.insert("GameEndSens","15");
+    settingsMap.insert("BestGuessSens","18");
+    settingsMap.insert("WorstGuessSens","25");
+    settingsMap.insert("CostGuessSens","15");
 
 
     //Window rect
@@ -1264,6 +1260,12 @@ void frmWindow::slotStart()
         menuBar()->setEnabled(false);
 
         loadDeck(model);
+    }
+    else
+    {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Could not find the application window."));
     }
 }
 

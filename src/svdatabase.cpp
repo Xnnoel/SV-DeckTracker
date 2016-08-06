@@ -87,30 +87,28 @@ void svDatabase::load(){
             card.ID = cardObject["ID"].toInt();
             card.manaCost = cardObject["Cost"].toInt();
             card.name = cardObject["Name"].toString();
-            card.pHash = cardObject["pHash"].toDouble();
-            card.newpHash = cardObject["newpHash"].toDouble();
+            card.pHash = cardObject["pHash"].toString().toDouble();
+            card.newpHash = cardObject["newpHash"].toString().toDouble();
 
             addCard(card.ID, card);
         }
     // Sort list here
     qSort(cardID);
 
-    // Save all cost icon
+    // load all cost icon
     for (int i = 1; i < 21; i++)
     {
         QPixmap image( dir.absolutePath() + "/data/Cost/cost_" + QString::number(i) + ".png");
         costMap.insert(i, image);
     }
 
-    //save all phash values
+    // load all phash values
     QJsonArray costs = database["Costs"].toArray();
     for (int costIndex = 0; costIndex < costs.size(); costIndex++)
     {
         QJsonObject costObject = costs[costIndex].toObject();
         int cost = costObject["number"].toInt();
-
-        QString pHashString = costObject["pHash"].toString();
-        ulong64 cardpHash = pHashString.toDouble();
+        ulong64 cardpHash = costObject["pHash"].toString().toDouble();
 
         costPHashMap.insert(cost,cardpHash) ;
     }
@@ -142,8 +140,8 @@ void svDatabase::save()
 
         card["ID"] = id;
         card["Cost"] = tempcard.manaCost;
-        card["pHash"] = (double)tempcard.pHash;
-        card["newpHash"] = (double)tempcard.newpHash;
+        card["pHash"] = QString::number((double)tempcard.pHash,'g',64);
+        card["newpHash"] = QString::number((double)tempcard.newpHash,'g',64);
         card["Name"] = tempcard.name;
 
         cardArray.append(card);
@@ -157,14 +155,14 @@ void svDatabase::save()
     {
         QJsonObject card;
 
-        card["pHash"] = (double)costPHashMap.value(j);
+        card["pHash"] = QString::number((double)costPHashMap.value(j),'g',64);
         card["number"] = j;
 
         numberHash.append(card);
     }
     QJsonObject card;
 
-    card["pHash"] = (double)costPHashMap.value(18);
+    card["pHash"] = QString::number((double)costPHashMap.value(18),'g',64);
     card["number"] = 18;
 
     numberHash.append(card);
@@ -175,7 +173,5 @@ void svDatabase::save()
     QJsonDocument saveDoc(gameObject);
     saveFile.write(saveDoc.toJson());
     saveFile.close();
-
-
 
 }
