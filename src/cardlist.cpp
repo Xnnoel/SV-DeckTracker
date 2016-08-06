@@ -5,6 +5,14 @@ cardlist::cardlist(svDatabase* database):
 {
 }
 
+double cardlist::makeDeckHash()
+{
+    double retVal = 0;
+    for (int i = 0; i < cardsInDeck.size(); i++)
+        retVal += cardsInDeck[i] + countInDeck[i];
+    return retVal;
+}
+
 void cardlist::addCard(int id)
 {
     Card card = databasePtr->getCard(id);

@@ -83,6 +83,8 @@ private:
     Ui::frmWindow *ui;
     bool forceUpdateHash;
 
+    bool needSave;
+    double saveHash;
 
     cv::Mat matTexture;
     ulong64 matTexturePhash;

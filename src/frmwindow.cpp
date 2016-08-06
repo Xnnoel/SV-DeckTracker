@@ -48,6 +48,8 @@ frmWindow::frmWindow(QWidget *parent) :
     mat = 0;
     matTexture = 0;
     setWindowTitle("Shadowverse Deck Tracker");
+    needSave = false;
+    saveHash = 0;
 
     //add menubar?
     this->setMyLayout();
@@ -580,6 +582,7 @@ void frmWindow::slotLoad()
     neutralBox->setGeometry(0,0,0,0);
     classBox->setGeometry(0,0,0,0);
     setFixedWidth(WINWIDTH);
+    needSave = false;
 }
 
 void frmWindow::slotLoadURL()
@@ -611,7 +614,7 @@ void frmWindow::slotLoadURL()
         connect(this, SIGNAL(signalGenerateDeck()), msgBox, SLOT(reject()));
         msgBox->exec();
     }
-
+    needSave = true;
 }
 
 void frmWindow::slotSaveAs()
@@ -949,6 +952,9 @@ void frmWindow::slotButtonPushed()
     delegate->editMode = false;
     loadDeck(model);
     menuBar()->setEnabled(true);
+
+    if (saveHash != playingDeck.makeDeckHash())
+        needSave = true;
 }
 
 void frmWindow::slotLoadEdit(int)
@@ -1045,6 +1051,7 @@ void frmWindow::slotEditMode()
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
+    saveHash = playingDeck.makeDeckHash();
 }
 
 void frmWindow::slotStart()
