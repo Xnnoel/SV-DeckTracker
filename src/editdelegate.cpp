@@ -72,8 +72,6 @@ void editDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->setFont(font);
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
 
-    painter->drawPixmap(QPoint(plusRect.left(), plusRect.top()) , plus );
-
     painter->restore();
 }
 
@@ -92,15 +90,8 @@ bool editDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
     // Emit a signal when the icon is clicked
     if(event->type() == QEvent::MouseButtonRelease)
     {
-
-        QRect plusRect;
-        plusRect.setTop(option.rect.top() + 10);
-        plusRect.setLeft(option.rect.left() + 225);
-        plusRect.setRight(option.rect.left() + 240);
-        plusRect.setBottom(option.rect.bottom() - 10);
-
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-        if(plusRect.contains(mouseEvent->pos()))
+        if(option.rect.contains(mouseEvent->pos()))
         {
             emit plusClicked(index.row());
         }

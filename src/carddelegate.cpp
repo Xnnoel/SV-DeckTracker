@@ -90,16 +90,6 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
     painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
 
-    //draw buttons for up and down maybe?
-    if (!editMode)
-    {
-        painter->drawPixmap(QPoint(upRect.left(), upRect.top()) , up );
-        painter->drawPixmap(QPoint(downRect.left(), downRect.top()) , down );
-    }
-    else
-    {
-        painter->drawPixmap(QPoint(minusRect.left(), minusRect.top()), minus);
-    }
     // Restore painter info
     painter->restore();
 }
@@ -123,23 +113,9 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
     {
         if(event->type() == QEvent::MouseButtonRelease)
         {
-            QRect upRect;
-            upRect.setTop(option.rect.top() + 3);
-            upRect.setLeft(option.rect.right() - 15);
-            upRect.setRight(option.rect.right() - 2);
-            upRect.setBottom(option.rect.top() + 16);
-
-            QRect downRect;
-            downRect.setTop(option.rect.top() + 19);
-            downRect.setLeft(option.rect.right() - 15);
-            downRect.setRight(option.rect.right() - 2);
-            downRect.setBottom(option.rect.top() + 32);
-
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-            if(upRect.contains(mouseEvent->pos()))
+            if(option.rect.contains(mouseEvent->pos()))
             {
-                emit upClicked(index.row());
-            } else if (downRect.contains(mouseEvent->pos())) {
                 emit downClicked(index.row());
             }
         }
@@ -148,14 +124,8 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
     {
         if(event->type() == QEvent::MouseButtonRelease)
         {
-            QRect minusRect;
-            minusRect.setTop(option.rect.top() + 10);
-            minusRect.setLeft(option.rect.left() + 240);
-            minusRect.setRight(option.rect.left() + 255);
-            minusRect.setBottom(option.rect.bottom() - 10);
-
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-            if(minusRect.contains(mouseEvent->pos()))
+            if(option.rect.contains(mouseEvent->pos()))
             {
                 emit minusClicked(index.row());
             }
