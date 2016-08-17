@@ -31,6 +31,7 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 
 #define WINWIDTH 550
 #define EDITWINWIDTH 850
+#define PORTRAITHEIGHT 30
 
 std::wstring s2ws(const std::string& s);
 
@@ -138,7 +139,8 @@ void frmWindow::loadDeck(SVListModel* model)
         model->setCount(id, count);
     }
     setFixedWidth(WINWIDTH);
-    int listsize = playingDeck.cardsInDeck.size() * 35 + 4;
+
+    int listsize = playingDeck.cardsInDeck.size() * PORTRAITHEIGHT + 4;
     PlayingDeckList->setFixedHeight(std::max(listsize,400));
     setFixedHeight(PlayingDeckList->height() + 70);
     //Set text description
@@ -404,9 +406,13 @@ void frmWindow::createActions()
     BluestacksAction->setCheckable(true);
     connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
 
-    UpdateHashAction = new QAction(tr("Update Hash"), this);
-    UpdateHashAction->setToolTip("Update card hash using deck preview");
-    connect(UpdateHashAction, &QAction::triggered, this, &frmWindow::slotUpdateHash);
+    UpdateHashLAction = new QAction(tr("Update Hash L"), this);
+    UpdateHashLAction->setToolTip("Update card hash using deck preview Left");
+    connect(UpdateHashLAction, &QAction::triggered, this, &frmWindow::slotUpdateHashL);
+
+    UpdateHashRAction = new QAction(tr("Update Hash R"), this);
+    UpdateHashRAction->setToolTip("Update card hash using deck preview Right");
+    connect(UpdateHashRAction, &QAction::triggered, this, &frmWindow::slotUpdateHashR);
 
     HelpAction = new QAction(tr("&Help"), this);
     HelpAction->setToolTip(tr("Open the help text"));
@@ -448,7 +454,8 @@ void frmWindow::createMenus()
     EmuMenu->addAction(NoxAction);
     EmuMenu->addAction(BluestacksAction);
     EmuMenu->addSeparator();
-    EmuMenu->addAction(UpdateHashAction);
+    EmuMenu->addAction(UpdateHashLAction);
+    EmuMenu->addAction(UpdateHashRAction);
 
     HelpMenu = new Menu();
     HelpMenu->setTitle(tr("&Help"));
@@ -881,7 +888,7 @@ void frmWindow::slotBluestacks()
     }
 }
 
-void frmWindow::slotUpdateHash()
+void frmWindow::slotUpdateHashL()
 {
     if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
     {
@@ -898,7 +905,6 @@ void frmWindow::slotUpdateHash()
     int Height = (int)round(0.21001 * height);
     int HorGap = (int)round(0.1212833 * width);
     int VerGap = (int)round(0.30876 * height);
-    int RightStart = (int)round(0.8795 * width);
 
     // Take a snapshot of screen
     PrintWindow(handle, hdc, PW_CLIENTONLY);
@@ -916,6 +922,72 @@ void frmWindow::slotUpdateHash()
         boxRect.setRect(Left + (HorGap * std::floor(i/2)), Top + (VerGap * (i%2)), Width, Height);
         drawer = pixmap.copy(boxRect);
         resultMat = ASM::QPixmapToCvMat(drawer);
+        cv::imwrite(std::to_string(i) + ".jpg",resultMat);
+        imagePHash = PerceptualHash::phash(resultMat);
+
+        // update playingdeck
+        playingDeck.deckPHash[i] = imagePHash;
+
+        //update database
+        int id = playingDeck.cardsInDeck[i];
+        Card addCard = cardDatabase.getCard(id);
+        addCard.newpHash = imagePHash;
+        cardDatabase.updateCard(id,addCard);
+    }
+    cardDatabase.save();
+
+    // Save database??
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::information(this, tr("Done"), tr("Updated Deck Hash"));
+}
+
+
+void frmWindow::slotUpdateHashR()
+{
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Could not detect window."));
+        return;
+    }
+
+    if (playingDeck.cardsInDeck.size() < 17)
+    {
+        QMessageBox::StandardButton errorMessage;
+        errorMessage = QMessageBox::information(this, tr(""),
+                                         tr("Too few cards in deck. Use Update Hash L"));
+        return;
+    }
+
+    //get constants
+    int Top = (int)round(0.43115 * height) + top;
+    int Width = (int)round(0.0954 * width);
+    int Height = (int)round(0.21001 * height);
+    int HorGap = (int)round(0.1212833 * width);
+    int VerGap = (int)round(0.30876 * height);
+    int RightStart = (int)round(0.8825 * width);
+    int NewLeft = RightStart - 7 * HorGap + left;
+
+    // Take a snapshot of screen
+    PrintWindow(handle, hdc, PW_CLIENTONLY);
+    QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
+
+    QRect boxRect;
+    QPixmap drawer;
+    ulong64 imagePHash;
+
+    int decksize = playingDeck.cardsInDeck.size();
+
+    for (int i = decksize - 16 + decksize%2; i < decksize ;i++)
+    {
+        // get new imagephash
+        boxRect.setRect(NewLeft + (HorGap * std::floor((i - (decksize - 16 + decksize%2))/2)),
+                        Top + (VerGap * (i%2)), Width, Height);
+        drawer = pixmap.copy(boxRect);
+        resultMat = ASM::QPixmapToCvMat(drawer);
+        cv::imwrite(std::to_string(i) + ".jpg",resultMat);
+
         imagePHash = PerceptualHash::phash(resultMat);
 
         // update playingdeck

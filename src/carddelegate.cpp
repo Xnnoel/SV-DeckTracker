@@ -60,7 +60,7 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     iconRect.setRight(iconRect.left() + 40);
     headerRect.setLeft(iconRect.right());
 
-    subheaderRect.setLeft(subheaderRect.right() - 40);
+    subheaderRect.setLeft(subheaderRect.right() - 20);
 
     headerRect.setRight(subheaderRect.left());
     QStringList stringData = qvariant_cast<QStringList>(index.data());
