@@ -57,8 +57,6 @@ frmWindow::frmWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-
-
     // Set up model view
     model = new SVListModel;
     model->setPointer(&cardDatabase, &playingDeck);
@@ -848,10 +846,8 @@ void frmWindow::slotNox()
         top = rc.top+36;
         left = rc.left+2;
 
-
         hbmp = CreateCompatibleBitmap(hdcScreen,
             width + 2, height + 36);
-
         SelectObject(hdc, hbmp);
     }
 }
@@ -899,10 +895,10 @@ void frmWindow::slotBluestacks()
 void frmWindow::slotMemu()
 {
     settingsMap.insert("Windowname","MEmu 2.7.2 - MEmu");
-    settingsMap.insert("Topborder","40");
-    settingsMap.insert("Leftborder","68");
-    settingsMap.insert("Botborder","0");
-    settingsMap.insert("Rightborder","0");
+    settingsMap.insert("Topborder","34");
+    settingsMap.insert("Leftborder","4");
+    settingsMap.insert("Botborder","4");
+    settingsMap.insert("Rightborder","44");
     settingsMap.insert("RefreshRate","60");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(false);
@@ -924,13 +920,13 @@ void frmWindow::slotMemu()
 
         RECT rc;
         GetClientRect(handle, &rc);
-        width = (rc.right - rc.left);
-        height = (rc.bottom - rc.top) ;
-        top = rc.top;
-        left = rc.left;
+        width = (rc.right - rc.left) - 4 - 44;
+        height = (rc.bottom - rc.top) - 4 - 34;
+        top = rc.top + 34;
+        left = rc.left + 4;
 
         hbmp = CreateCompatibleBitmap(hdcScreen,
-            width , height);
+            width + 4, height + 34);
         SelectObject(hdc, hbmp);
     }
 }
@@ -1256,34 +1252,6 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
-    std::string appName2 = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp2 = s2ws(appName2);
-    LPCWSTR result2 = stemp2.c_str();
-
-    handle = ::FindWindow(NULL, result2);
-
-    //PrintWindow(handle, hdc, 0);
-    RECT adb;
-    GetClientRect(handle, &adb);
-    width = (adb.right - adb.left);
-    height = (adb.bottom - adb.top);
-    top = adb.top;
-    left = adb.left;
-
-    POINT corner;
-    corner.x = left;
-    corner.y = top;
-    ClientToScreen(handle, &corner);
-    BitBlt( hdc, 0, 0, width, height, hdcScreen, corner.x, corner.y, SRCCOPY );
-
-    QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
-
-    resultMat = ASM::QPixmapToCvMat(pixmap);
-
-    cv::imwrite("dskt.jpg", resultMat);
-    return;
-
-
     if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
     {
         QMessageBox::StandardButton errorMessage;
@@ -1520,4 +1488,22 @@ void frmWindow::closeEvent(QCloseEvent *event)
         }
     }
     event->accept();
+}
+
+QPixmap frmWindow::getMap()
+{
+    QPixmap retval;
+
+    if (printMethod == 1)
+        PrintWindow(handle, hdc, PW_CLIENTONLY);
+    else {
+        POINT corner;
+        corner.x = 0;
+        corner.y = 0;
+        ClientToScreen(handle, &corner);
+        BitBlt( hdc, 0, 0, width + left, height + top, hdcScreen, corner.x, corner.y, SRCCOPY );
+    }
+    retval = qt_pixmapFromWinHBITMAP(hbmp);
+
+    return retval;
 }
