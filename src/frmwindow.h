@@ -71,6 +71,7 @@ private slots:
 
     void slotNox();
     void slotBluestacks();
+    void slotMemu();
     void slotUpdateHashL();
     void slotUpdateHashR();
 
@@ -154,6 +155,7 @@ private:
     //emulator actions
     QAction* NoxAction;
     QAction* BluestacksAction;
+    QAction* MemuAction;
     QAction* UpdateHashLAction;
     QAction* UpdateHashRAction;
 
@@ -210,7 +212,9 @@ private:
     ulong64 resultWinPhash;
     ulong64 resultLosePhash;
 
-    //debug stuff
+    //debug stuff?
+    int printMethod;
+    QPixmap getMap();
     cv::Mat resultMat;
     int refreshRate;
     int ignoreNext;

@@ -168,7 +168,6 @@ void frmWindow::update()
     if (handleValid && ::IsWindow(handle))
     {
         PrintWindow(handle, hdc, PW_CLIENTONLY);
-
         QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
 
         QRect boxRect;
@@ -406,6 +405,11 @@ void frmWindow::createActions()
     BluestacksAction->setCheckable(true);
     connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
 
+    MemuAction = new QAction(tr("&Memu"), this);
+    MemuAction->setToolTip(tr("Use Memu Settings"));
+    MemuAction->setCheckable(true);
+    connect(MemuAction, &QAction::triggered, this, &frmWindow::slotMemu);
+
     UpdateHashLAction = new QAction(tr("Update Hash L"), this);
     UpdateHashLAction->setToolTip("Update card hash using deck preview Left");
     connect(UpdateHashLAction, &QAction::triggered, this, &frmWindow::slotUpdateHashL);
@@ -453,6 +457,7 @@ void frmWindow::createMenus()
     menuBar()->addMenu(EmuMenu);
     EmuMenu->addAction(NoxAction);
     EmuMenu->addAction(BluestacksAction);
+    EmuMenu->addAction(MemuAction);
     EmuMenu->addSeparator();
     EmuMenu->addAction(UpdateHashLAction);
     EmuMenu->addAction(UpdateHashRAction);
@@ -820,6 +825,7 @@ void frmWindow::slotNox()
     settingsMap.insert("RefreshRate","80");
     BluestacksAction->setChecked(false);
     NoxAction->setChecked(true);
+    MemuAction->setChecked(false);
 
     //try and setup the handle?
     std::string appName = settingsMap.value("Windowname").toStdString();
@@ -860,6 +866,7 @@ void frmWindow::slotBluestacks()
     settingsMap.insert("RefreshRate","60");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(true);
+    MemuAction->setChecked(false);
 
     //try and setup the handle?
     std::string appName = settingsMap.value("Windowname").toStdString();
@@ -888,9 +895,50 @@ void frmWindow::slotBluestacks()
     }
 }
 
+
+void frmWindow::slotMemu()
+{
+    settingsMap.insert("Windowname","MEmu 2.7.2 - MEmu");
+    settingsMap.insert("Topborder","40");
+    settingsMap.insert("Leftborder","68");
+    settingsMap.insert("Botborder","0");
+    settingsMap.insert("Rightborder","0");
+    settingsMap.insert("RefreshRate","60");
+    NoxAction->setChecked(false);
+    BluestacksAction->setChecked(false);
+    MemuAction->setChecked(true);
+
+    //try and setup the handle?
+    std::string appName = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp = s2ws(appName);
+    LPCWSTR result = stemp.c_str();
+
+    handle = 0;
+    handle = ::FindWindow(NULL, result);
+
+    if (handle != 0)
+    {
+        //create bitmap and screen to save rect
+        hdcScreen = GetDC(NULL);
+        hdc = CreateCompatibleDC(hdcScreen);
+
+        RECT rc;
+        GetClientRect(handle, &rc);
+        width = (rc.right - rc.left);
+        height = (rc.bottom - rc.top) ;
+        top = rc.top;
+        left = rc.left;
+
+        hbmp = CreateCompatibleBitmap(hdcScreen,
+            width , height);
+        SelectObject(hdc, hbmp);
+    }
+}
+
+
 void frmWindow::slotUpdateHashL()
 {
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
     {
         QMessageBox::StandardButton errorMessage;
         errorMessage = QMessageBox::information(this, tr(""),
@@ -944,7 +992,7 @@ void frmWindow::slotUpdateHashL()
 
 void frmWindow::slotUpdateHashR()
 {
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
     {
         QMessageBox::StandardButton errorMessage;
         errorMessage = QMessageBox::information(this, tr(""),
@@ -1208,7 +1256,35 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked())
+    std::string appName2 = settingsMap.value("Windowname").toStdString();
+    std::wstring stemp2 = s2ws(appName2);
+    LPCWSTR result2 = stemp2.c_str();
+
+    handle = ::FindWindow(NULL, result2);
+
+    //PrintWindow(handle, hdc, 0);
+    RECT adb;
+    GetClientRect(handle, &adb);
+    width = (adb.right - adb.left);
+    height = (adb.bottom - adb.top);
+    top = adb.top;
+    left = adb.left;
+
+    POINT corner;
+    corner.x = left;
+    corner.y = top;
+    ClientToScreen(handle, &corner);
+    BitBlt( hdc, 0, 0, width, height, hdcScreen, corner.x, corner.y, SRCCOPY );
+
+    QPixmap pixmap = qt_pixmapFromWinHBITMAP(hbmp);
+
+    resultMat = ASM::QPixmapToCvMat(pixmap);
+
+    cv::imwrite("dskt.jpg", resultMat);
+    return;
+
+
+    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
     {
         QMessageBox::StandardButton errorMessage;
         errorMessage = QMessageBox::information(this, tr(""),
