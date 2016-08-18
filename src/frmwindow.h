@@ -213,7 +213,6 @@ private:
     ulong64 resultLosePhash;
 
     //debug stuff?
-    int printMethod;
     QPixmap getMap();
     cv::Mat resultMat;
     int refreshRate;

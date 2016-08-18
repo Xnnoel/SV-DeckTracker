@@ -29,8 +29,8 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Gdi32.lib")
 
-#define WINWIDTH 550
-#define EDITWINWIDTH 850
+#define WINWIDTH 350
+#define EDITWINWIDTH 500
 #define PORTRAITHEIGHT 30
 
 std::wstring s2ws(const std::string& s);
@@ -68,7 +68,6 @@ frmWindow::frmWindow(QWidget *parent) :
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
-
     PlayingDeckList->setModel(model);
     PlayingDeckList->setItemDelegate(delegate);
     loadDeck(model);        //load data into model
@@ -88,6 +87,32 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
+
+    QFile file(dir.absolutePath() + "/data/settings.ini");
+
+    if (!file.open(QIODevice::ReadOnly)){
+    QMessageBox::StandardButton errorMessage;
+     errorMessage = QMessageBox::information(this, tr(""),
+                                      tr("Couldn't find settings.ini."));
+     return;
+    }
+    QTextStream in(&file);
+
+    while (!in.atEnd()) {
+     QString line = in.readLine();
+     QStringList splitLines = line.split("=");
+     settingsMap.insert(splitLines[0],splitLines[1]);
+    }
+    file.close();
+
+    std::string wName = settingsMap.value("Windowname").toStdString();
+    if (wName.find("Bluestacks") != std::string::npos)
+        slotBluestacks();
+    else if (wName.find("Nox") != std::string::npos)
+        slotNox();
+    if (wName.find("MEmu") != std::string::npos)
+        slotMemu();
+
 }
 
 frmWindow::~frmWindow()
@@ -140,7 +165,7 @@ void frmWindow::loadDeck(SVListModel* model)
 
     int listsize = playingDeck.cardsInDeck.size() * PORTRAITHEIGHT + 4;
     PlayingDeckList->setFixedHeight(std::max(listsize,400));
-    setFixedHeight(PlayingDeckList->height() + 70);
+    setFixedHeight(400);
     //Set text description
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
     int decksize = playingDeck.getDeckSize();
@@ -821,6 +846,7 @@ void frmWindow::slotNox()
     settingsMap.insert("Botborder","2");
     settingsMap.insert("Rightborder","2");
     settingsMap.insert("RefreshRate","80");
+    settingsMap.insert("CaptureVal", "0");
     BluestacksAction->setChecked(false);
     NoxAction->setChecked(true);
     MemuAction->setChecked(false);
@@ -860,6 +886,7 @@ void frmWindow::slotBluestacks()
     settingsMap.insert("Botborder","0");
     settingsMap.insert("Rightborder","0");
     settingsMap.insert("RefreshRate","60");
+    settingsMap.insert("CaptureVal", "1");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(true);
     MemuAction->setChecked(false);
@@ -900,6 +927,7 @@ void frmWindow::slotMemu()
     settingsMap.insert("Botborder","4");
     settingsMap.insert("Rightborder","44");
     settingsMap.insert("RefreshRate","60");
+    settingsMap.insert("CaptureVal", "0");
     NoxAction->setChecked(false);
     BluestacksAction->setChecked(false);
     MemuAction->setChecked(true);
@@ -1074,6 +1102,9 @@ void frmWindow::setMyLayout()
     PlayingDeckList = new QListView();
     PlayingDeckList->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
     PlayingDeckList->setFixedWidth(270);
+    PlayingDeckList->setWindowTitle("Deck List");
+    PlayingDeckList->setWindowFlags(Qt::WindowTitleHint);
+
 
     startButton = new QPushButton("Start");
     editButton = new QPushButton("Edit");
@@ -1088,7 +1119,7 @@ void frmWindow::setMyLayout()
     mainLayout->addWidget(labelBlank, 3, 0);
     mainLayout->addWidget(labelCards, 0, 1);
     mainLayout->addWidget(editButton, 0, 2);
-    mainLayout->addWidget(PlayingDeckList, 1, 1,5,2, Qt::AlignTop);
+    //mainLayout->addWidget(PlayingDeckList, 1, 1,5,2, Qt::AlignTop);
 
     ui->centralWidget->setLayout(mainLayout);
 
@@ -1111,10 +1142,10 @@ void frmWindow::setMyLayout()
 void frmWindow::createEditor()
 {
     // This spawns an editor to the right side that you can use to click on the deck with
-    mainLayout->addWidget(okButton, 0, 3);
-    mainLayout->addWidget(neutralBox, 0, 4);
-    mainLayout->addWidget(classBox, 0, 5);
-    mainLayout->addWidget(EditDeckList, 1, 3,5,3);
+    mainLayout->addWidget(okButton, 0, 2);
+    mainLayout->addWidget(neutralBox, 0, 3);
+    mainLayout->addWidget(classBox, 0, 4);
+    mainLayout->addWidget(EditDeckList, 1, 1,5,4);
     mainLayout->removeWidget(editButton);
     mainLayout->removeWidget(startButton);
     editButton->setGeometry(0,0,0,0);
@@ -1125,8 +1156,8 @@ void frmWindow::createEditor()
     setFixedWidth(EDITWINWIDTH);
 
     delegate->editMode = true;
-    PlayingDeckList->setFixedHeight(810-68);
-    setFixedHeight(810);
+    PlayingDeckList->setFixedHeight(600);
+    setFixedHeight(700);
 
     menuBar()->setEnabled(false);
 }
@@ -1487,6 +1518,21 @@ void frmWindow::closeEvent(QCloseEvent *event)
             slotSave();
         }
     }
+    QFile file(dir.absolutePath() + "/data/settings.ini");
+    if (!file.open(QIODevice::WriteOnly)){
+       QMessageBox::StandardButton errorMessage;
+       errorMessage = QMessageBox::information(this, tr(""),
+                                        tr("Couldn't save settings"));
+       return;
+    }
+
+    QTextStream out(&file);
+    for (auto e: settingsMap.toStdMap()){
+        out << e.first << '=' << e.second << "\r\n";
+    }
+
+    file.close();
+    PlayingDeckList->close();
     event->accept();
 }
 
@@ -1494,7 +1540,7 @@ QPixmap frmWindow::getMap()
 {
     QPixmap retval;
 
-    if (printMethod == 1)
+    if (settingsMap.value("CaptureVal").toInt() == 1)
         PrintWindow(handle, hdc, PW_CLIENTONLY);
     else {
         POINT corner;
