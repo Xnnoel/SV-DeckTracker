@@ -69,12 +69,6 @@ private slots:
     void slotHelp();
     void slotAbout();
 
-    void slotNox();
-    void slotBluestacks();
-    void slotMemu();
-    void slotUpdateHashL();
-    void slotUpdateHashR();
-
     void slotButtonPushed();
     void slotEditMode();
     void slotLoadEdit(int);
@@ -134,7 +128,6 @@ private:
     Menu *NewMenu;
     Menu *DeckMenu;
     Menu *HelpMenu;
-    Menu *EmuMenu;
 
     // Class Create New
     QAction* NewElf;
@@ -152,12 +145,6 @@ private:
     //Help
     QAction* HelpAction;
     QAction* About;
-    //emulator actions
-    QAction* NoxAction;
-    QAction* BluestacksAction;
-    QAction* MemuAction;
-    QAction* UpdateHashLAction;
-    QAction* UpdateHashRAction;
 
     QDir dir;
     bool handleValid;
@@ -208,15 +195,6 @@ private:
     int resultsTop;
     int resultsWidth;
     int resultsHeight;
-
-    ulong64 resultWinPhash;
-    ulong64 resultLosePhash;
-
-    //debug stuff?
-    QPixmap getMap();
-    cv::Mat resultMat;
-    int refreshRate;
-    int ignoreNext;
 
     int turnDraw;
 };

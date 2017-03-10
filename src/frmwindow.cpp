@@ -24,19 +24,12 @@
 #include <Windows.h>
 #include <iostream>
 
-Q_GUI_EXPORT QPixmap qt_pixmapFromWinHBITMAP(HBITMAP bitmap, int hbitmapFormat=0);
-
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Gdi32.lib")
 
 #define WINWIDTH 350
 #define EDITWINWIDTH 500
-#define PORTRAITHEIGHT 30
-#define NBEST 3
-
-std::wstring s2ws(const std::string& s);
-
-std::vector<int> bestID;
+#define PORTRAITHEIGHT 35
 
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,9 +45,10 @@ frmWindow::frmWindow(QWidget *parent) :
     setWindowTitle("Shadowverse Deck Tracker");
     needSave = false;
     saveHash = 0;
+    handleValid = false;
 
     //add menubar?
-    this->setMyLayout();
+    setMyLayout();
     createActions();
     createMenus();
 
@@ -71,8 +65,9 @@ frmWindow::frmWindow(QWidget *parent) :
 
     PlayingDeckList->setModel(model);
     PlayingDeckList->setItemDelegate(delegate);
-    loadDeck(model);        //load data into model
     PlayingDeckList->show();
+
+    loadDeck(model);        //load data into model
 
     //set up edit model view and stuff
     editmodel = new SVEditModel;
@@ -88,32 +83,6 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
-
-    QFile file(dir.absolutePath() + "/data/settings.ini");
-
-    if (!file.open(QIODevice::ReadOnly)){
-    QMessageBox::StandardButton errorMessage;
-     errorMessage = QMessageBox::information(this, tr(""),
-                                      tr("Couldn't find settings.ini."));
-     return;
-    }
-    QTextStream in(&file);
-
-    while (!in.atEnd()) {
-     QString line = in.readLine();
-     QStringList splitLines = line.split("=");
-     settingsMap.insert(splitLines[0],splitLines[1]);
-    }
-    file.close();
-
-    std::string wName = settingsMap.value("Windowname").toStdString();
-    if (wName.find("Bluestacks") != std::string::npos)
-        slotBluestacks();
-    else if (wName.find("Nox") != std::string::npos)
-        slotNox();
-    if (wName.find("MEmu") != std::string::npos)
-        slotMemu();
-
 }
 
 frmWindow::~frmWindow()
@@ -165,7 +134,8 @@ void frmWindow::loadDeck(SVListModel* model)
     setFixedWidth(WINWIDTH);
 
     int listsize = playingDeck.cardsInDeck.size() * PORTRAITHEIGHT + 4;
-    PlayingDeckList->setFixedHeight(std::max(listsize,400));
+    PlayingDeckList->setFixedHeight(std::max(listsize,0));
+    PlayingDeckList->setSizePolicy(QSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored));
     setFixedHeight(400);
     //Set text description
     DeckNameEdit->setText(QString::fromStdString(playingDeck.getName()));
@@ -191,16 +161,15 @@ void frmWindow::update()
     //otherwise check for card
     if (handleValid && ::IsWindow(handle))
     {
-        QPixmap pixmap = getMap();
 
         QRect boxRect;
         QPixmap drawer;
-        ulong64 imagePHash;
 
         switch (curState)
         {
             case Ui::STATE::MYTURN:
             {
+            /*
                 // Get the best match for 3 cards on screen
                 for (int i = 0; i < 3; i++)
                 {
@@ -227,14 +196,18 @@ void frmWindow::update()
                 // Their turn scanbox
                 boxRect.setRect(theirLeft,theirTop,theirWidth,theirHeight);
                 drawer = pixmap.copy(boxRect);
-                mat = ASM::QPixmapToCvMat(drawer);
-                imagePHash = PerceptualHash::phash(mat);
+                resultMat = ASM::QPixmapToCvMat(drawer);
+                imagePHash = PerceptualHash::phash(resultMat);
 
                 int distance2 = PerceptualHash::hammingDistance(theirTexturePhash, imagePHash);
                 int distanceSens = settingsMap.value("TurnSens").toInt();
 
+                setWindowTitle(QString::number(distance1) + ", " + QString::number(distance2));
                 if (distance1 < distanceSens || distance2 < distanceSens)
                 {
+                    cv::imwrite("myturn.jpg", resultMat);
+                    cv::imwrite("theirturn.jpg", mat);
+
                     //Remove guessed cards from active list
                     turnLog->append("Started with...");
                     for (int i = 0; i < 3; i++)
@@ -247,11 +220,12 @@ void frmWindow::update()
                     turnLog->append("-------------");
                     curState = Ui::STATE::FINDCARD;
                 }
-
+*/
                 break;
             }
             case Ui::STATE::FINDCARD:
             {
+            /*
                 if (ignoreNext > 0)
                     ignoreNext--;
                 if (ignoreNext < 1){
@@ -320,7 +294,7 @@ void frmWindow::update()
                     lambda = cv::getPerspectiveTransform(input,output);
                     cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
                     imagePHash = PerceptualHash::phash(resultMat);
-                    std::vector<PerceptualHash::ComparisonResult> bestguess2 = PerceptualHash::nbest(NBEST, imagePHash, playingDeck.deckPHash);
+                    PerceptualHash::ComparisonResult bestguess2 = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
 
                     // Once more for part 3
                     input[0] = cv::Point2f(0.5688f * width + left,0.69372f * height + top);
@@ -332,11 +306,12 @@ void frmWindow::update()
                     lambda = cv::getPerspectiveTransform(input,output);
                     cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
                     imagePHash = PerceptualHash::phash(resultMat);
-                    std::vector<PerceptualHash::ComparisonResult> bestguess3 = PerceptualHash::nbest(NBEST, imagePHash, playingDeck.deckPHash);
+                    PerceptualHash::ComparisonResult bestguess3 = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
 
 
 
-                    if (bestguess[0].distance < settingsMap.value("BestGuessSens").toInt() || costDistance < settingsMap.value("CostGuessSens").toInt())
+                    if ((bestguess[0].distance < settingsMap.value("BestGuessSens").toInt() || costDistance < settingsMap.value("CostGuessSens").toInt() )
+                            && bestguess[0].distance < bestguess2.distance && bestguess[0].distance < bestguess3.distance)
                     {
                         // if card art is way off, cost could randomly spike below
                         if (bestguess[0].distance > settingsMap.value("WorstGuessSens").toInt())
@@ -366,20 +341,22 @@ void frmWindow::update()
                             break;
                         }
                     }
-                    else if (bestguess2[0].distance < settingsMap.value("BestGuessSens").toInt() || bestguess3[0].distance < settingsMap.value("BestGuessSens").toInt())
+                    else if ((bestguess2.distance < settingsMap.value("BestGuessSens").toInt() && (bestguess3.distance - 5) < settingsMap.value("BestGuessSens").toInt()) ||
+                             bestguess3.distance < settingsMap.value("BestGuessSens").toInt() && (bestguess2.distance - 5) < settingsMap.value("BestGuessSens").toInt())
                     {
-                        //Matches best 3 to cost, hopefully one matches
-                        model->subCard(playingDeck.cardsInDeck[bestguess2[0].index]);
-                        model->subCard(playingDeck.cardsInDeck[bestguess3[0].index]);
-                        QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess2[0].index]).name;
-                        QString cardname2 = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess3[0].index]).name;
-                        turnLog->append("Drew " + cardname + "\n-------");
-                        turnLog->append("Drew " + cardname2 + "\n-------");
+                        model->subCard(playingDeck.cardsInDeck[bestguess2.index]);
+                        model->subCard(playingDeck.cardsInDeck[bestguess3.index]);
+                        QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess2.index]).name;
+                        QString cardname2 = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess3.index]).name;
+                        turnLog->append("Drew " + cardname + " + " + cardname2 + ", num = " + QString::number(bestguess2.distance) + "," + QString::number(bestguess3.distance) + "\n-------");
+                        cv::imwrite("draw3.jpg", resultMat);
+                        cv::imwrite("everything.jpg", mat);
                         ignoreNext = (int)round(700/refreshRate);
                         break;
                     }
 
                 }
+                */
                 break;
             }
         }
@@ -455,29 +432,6 @@ void frmWindow::createActions()
     HelpAction->setToolTip(tr("Open the help text"));
     connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
 
-    NoxAction = new QAction(tr("&Nox"), this);
-    NoxAction->setToolTip(tr("Use Nox Settings"));
-    NoxAction->setCheckable(true);
-    connect(NoxAction, &QAction::triggered, this, &frmWindow::slotNox);
-
-    BluestacksAction = new QAction(tr("&Bluestacks"), this);
-    BluestacksAction->setToolTip(tr("Use Bluestacks Settings"));
-    BluestacksAction->setCheckable(true);
-    connect(BluestacksAction, &QAction::triggered, this, &frmWindow::slotBluestacks);
-
-    MemuAction = new QAction(tr("&Memu"), this);
-    MemuAction->setToolTip(tr("Use Memu Settings"));
-    MemuAction->setCheckable(true);
-    connect(MemuAction, &QAction::triggered, this, &frmWindow::slotMemu);
-
-    UpdateHashLAction = new QAction(tr("Update Hash L"), this);
-    UpdateHashLAction->setToolTip("Update card hash using deck preview Left");
-    connect(UpdateHashLAction, &QAction::triggered, this, &frmWindow::slotUpdateHashL);
-
-    UpdateHashRAction = new QAction(tr("Update Hash R"), this);
-    UpdateHashRAction->setToolTip("Update card hash using deck preview Right");
-    connect(UpdateHashRAction, &QAction::triggered, this, &frmWindow::slotUpdateHashR);
-
     HelpAction = new QAction(tr("&Help"), this);
     HelpAction->setToolTip(tr("Open the help text"));
     connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
@@ -510,17 +464,6 @@ void frmWindow::createMenus()
     DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
-
-
-    EmuMenu = new Menu();
-    EmuMenu->setTitle(tr("&Emulator"));
-    menuBar()->addMenu(EmuMenu);
-    EmuMenu->addAction(NoxAction);
-    EmuMenu->addAction(BluestacksAction);
-    EmuMenu->addAction(MemuAction);
-    EmuMenu->addSeparator();
-    EmuMenu->addAction(UpdateHashLAction);
-    EmuMenu->addAction(UpdateHashRAction);
 
     HelpMenu = new Menu();
     HelpMenu->setTitle(tr("&Help"));
@@ -875,243 +818,6 @@ void frmWindow::slotHelp()
     proc->start("notepad.exe "+path);
 }
 
-void frmWindow::slotNox()
-{
-    settingsMap.insert("Windowname","Nox App Player");
-    settingsMap.insert("Topborder","36");
-    settingsMap.insert("Leftborder","2");
-    settingsMap.insert("Botborder","2");
-    settingsMap.insert("Rightborder","2");
-    settingsMap.insert("RefreshRate","80");
-    settingsMap.insert("CaptureVal", "1");
-    BluestacksAction->setChecked(false);
-    NoxAction->setChecked(true);
-    MemuAction->setChecked(false);
-
-    //try and setup the handle?
-    std::string appName = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-
-    handle = 0;
-    handle = ::FindWindow(NULL, result);
-
-    if (handle != 0)
-    {
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-
-        RECT rc;
-        GetClientRect(handle, &rc);
-        width = (rc.right - rc.left) - 2 - 2;
-        height = (rc.bottom - rc.top) - 36 - 2;
-        top = rc.top+36;
-        left = rc.left+2;
-
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width + 2, height + 36);
-        SelectObject(hdc, hbmp);
-    }
-}
-
-void frmWindow::slotBluestacks()
-{
-    settingsMap.insert("Windowname","BlueStacks App Player");
-    settingsMap.insert("Topborder","40");
-    settingsMap.insert("Leftborder","68");
-    settingsMap.insert("Botborder","0");
-    settingsMap.insert("Rightborder","0");
-    settingsMap.insert("RefreshRate","60");
-    settingsMap.insert("CaptureVal", "1");
-    NoxAction->setChecked(false);
-    BluestacksAction->setChecked(true);
-    MemuAction->setChecked(false);
-
-    //try and setup the handle?
-    std::string appName = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-
-    handle = 0;
-    handle = ::FindWindow(NULL, result);
-
-    if (handle != 0)
-    {
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-
-        RECT rc;
-        GetClientRect(handle, &rc);
-        width = (rc.right - rc.left) - 68;
-        height = (rc.bottom - rc.top) - 40;
-        top = rc.top+40;
-        left = rc.left+68;
-
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width + 68, height + 40);
-        SelectObject(hdc, hbmp);
-    }
-}
-
-
-void frmWindow::slotMemu()
-{
-    settingsMap.insert("Windowname","MEmu 2.7.2 - MEmu");
-    settingsMap.insert("Topborder","34");
-    settingsMap.insert("Leftborder","4");
-    settingsMap.insert("Botborder","4");
-    settingsMap.insert("Rightborder","44");
-    settingsMap.insert("RefreshRate","60");
-    settingsMap.insert("CaptureVal", "0");
-    NoxAction->setChecked(false);
-    BluestacksAction->setChecked(false);
-    MemuAction->setChecked(true);
-
-    //try and setup the handle?
-    std::string appName = settingsMap.value("Windowname").toStdString();
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-
-    handle = 0;
-    handle = ::FindWindow(NULL, result);
-
-    if (handle != 0)
-    {
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-
-        RECT rc;
-        GetClientRect(handle, &rc);
-        width = (rc.right - rc.left) - 4 - 44;
-        height = (rc.bottom - rc.top) - 4 - 34;
-        top = rc.top + 34;
-        left = rc.left + 4;
-
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width + 4, height + 34);
-        SelectObject(hdc, hbmp);
-    }
-}
-
-
-void frmWindow::slotUpdateHashL()
-{
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
-    {
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Could not detect window."));
-        return;
-    }
-
-    //get constants
-    int Top = (int)round(0.43115 * height) + top;
-    int Left = (int)round(0.025839 * width) + left;
-    int Width = (int)round(0.0954 * width);
-    int Height = (int)round(0.21001 * height);
-    int HorGap = (int)round(0.1212833 * width);
-    int VerGap = (int)round(0.30876 * height);
-
-    // Take a snapshot of screen
-    QPixmap pixmap = getMap();
-
-    QRect boxRect;
-    QPixmap drawer;
-    ulong64 imagePHash;
-
-    int decksize = playingDeck.cardsInDeck.size();
-
-    for (int i = 0; i < std::min(16, decksize);i++)
-    {
-        // get new imagephash
-        boxRect.setRect(Left + (HorGap * std::floor(i/2)), Top + (VerGap * (i%2)), Width, Height);
-        drawer = pixmap.copy(boxRect);
-        resultMat = ASM::QPixmapToCvMat(drawer);
-        cv::imwrite(std::to_string(i) + ".jpg",resultMat);
-        imagePHash = PerceptualHash::phash(resultMat);
-
-        // update playingdeck
-        playingDeck.deckPHash[i] = imagePHash;
-
-        //update database
-        int id = playingDeck.cardsInDeck[i];
-        Card addCard = cardDatabase.getCard(id);
-        addCard.newpHash = imagePHash;
-        cardDatabase.updateCard(id,addCard);
-    }
-    cardDatabase.save();
-
-    // Save database??
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::information(this, tr("Done"), tr("Updated Deck Hash"));
-}
-
-
-void frmWindow::slotUpdateHashR()
-{
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
-    {
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Could not detect window."));
-        return;
-    }
-
-    if (playingDeck.cardsInDeck.size() < 17)
-    {
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Too few cards in deck. Use Update Hash L"));
-        return;
-    }
-
-    //get constants
-    int Top = (int)round(0.43115 * height) + top;
-    int Width = (int)round(0.0954 * width);
-    int Height = (int)round(0.21001 * height);
-    int HorGap = (int)round(0.1212833 * width);
-    int VerGap = (int)round(0.30876 * height);
-    int RightStart = (int)round(0.8825 * width);
-    int NewLeft = RightStart - 7 * HorGap + left;
-
-    // Take a snapshot of screen
-    QPixmap pixmap = getMap();
-
-    QRect boxRect;
-    QPixmap drawer;
-    ulong64 imagePHash;
-
-    int decksize = playingDeck.cardsInDeck.size();
-
-    for (int i = decksize - 16 + decksize%2; i < decksize ;i++)
-    {
-        // get new imagephash
-        boxRect.setRect(NewLeft + (HorGap * std::floor((i - (decksize - 16 + decksize%2))/2)),
-                        Top + (VerGap * (i%2)), Width, Height);
-        drawer = pixmap.copy(boxRect);
-        resultMat = ASM::QPixmapToCvMat(drawer);
-        cv::imwrite(std::to_string(i) + ".jpg",resultMat);
-
-        imagePHash = PerceptualHash::phash(resultMat);
-
-        // update playingdeck
-        playingDeck.deckPHash[i] = imagePHash;
-
-        //update database
-        int id = playingDeck.cardsInDeck[i];
-        Card addCard = cardDatabase.getCard(id);
-        addCard.newpHash = imagePHash;
-        cardDatabase.updateCard(id,addCard);
-    }
-    cardDatabase.save();
-
-    // Save database??
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::information(this, tr("Done"), tr("Updated Deck Hash"));
-}
 
 void frmWindow::setMyLayout()
 {
@@ -1135,11 +841,9 @@ void frmWindow::setMyLayout()
     DeckNameEdit->setPlaceholderText(tr(" Deck name here"));
 
     PlayingDeckList = new QListView();
-    PlayingDeckList->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-    PlayingDeckList->setFixedWidth(270);
+    PlayingDeckList->setFixedWidth(230);
     PlayingDeckList->setWindowTitle("Deck List");
     PlayingDeckList->setWindowFlags(Qt::WindowTitleHint);
-
 
     startButton = new QPushButton("Start");
     editButton = new QPushButton("Edit");
@@ -1154,7 +858,6 @@ void frmWindow::setMyLayout()
     mainLayout->addWidget(labelBlank, 3, 0);
     mainLayout->addWidget(labelCards, 0, 1);
     mainLayout->addWidget(editButton, 0, 2);
-    //mainLayout->addWidget(PlayingDeckList, 1, 1,5,2, Qt::AlignTop);
 
     ui->centralWidget->setLayout(mainLayout);
 
@@ -1318,20 +1021,12 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
-    if (!NoxAction->isChecked() && !BluestacksAction->isChecked()&& !MemuAction->isChecked())
-    {
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Select an emulator from the emulator tab."));
-        return;
-    }
 
     //Begin the app loop
-    std::string appName = settingsMap.value("Windowname").toStdString();
+    handle = 0;
+    std::string appName = "Shadowverse";
     std::wstring stemp = s2ws(appName);
     LPCWSTR result = stemp.c_str();
-
-    handle = 0;
     handle = ::FindWindow(NULL, result);
 
     //load values we pulled from the file
@@ -1341,12 +1036,11 @@ void frmWindow::slotStart()
     int rightborder = settingsMap.value("Rightborder").toInt();
 
     //Add some values for other settings for now, maybe add slider later?
-    settingsMap.insert("TurnSens","18");
+    settingsMap.insert("TurnSens","22");
     settingsMap.insert("GameEndSens","15");
     settingsMap.insert("BestGuessSens","18");
     settingsMap.insert("WorstGuessSens","25");
-    settingsMap.insert("CostGuessSens","15");
-
+    settingsMap.insert("CostGuessSens","18");
 
     //Window rect
     RECT rc;
@@ -1388,7 +1082,7 @@ void frmWindow::slotStart()
     {
         setWindowTitle("Shadowverse Deck Tracker");
 
-        refreshRate = settingsMap.value("RefreshRate").toInt();
+        PlayingDeckList->raise();
         handleValid = true;
 
         //create bitmap and screen to save rect
@@ -1401,23 +1095,11 @@ void frmWindow::slotStart()
         //Guess the current state of the image
         curState = Ui::STATE::MYTURN;
 
-        //Create a "you start" mat
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic.png");
-        matTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/pic2.png");
-        theirTexturePhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/results.png");
-        resultWinPhash = PerceptualHash::phash(matTexture);
-        matTexture = cv::imread(dir.absolutePath().toStdString() +"/data/Markers/results2.png");
-        resultLosePhash = PerceptualHash::phash(matTexture);
-
-        ignoreNext = 0;
         passed = false;
         turnDraw =0;
 
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-        timer->start(refreshRate);
 
         //Remove edit button
         mainLayout->removeWidget(editButton);
@@ -1436,9 +1118,6 @@ void frmWindow::slotStart()
         labelBlank->setGeometry(0,0,0,0);
         turnLog->clear();
         turnLog->append("Draw Log\n******************\n");
-
-        //result init group
-        bestID = std::vector<int>(6,0);
         menuBar()->setEnabled(false);
 
         loadDeck(model);
@@ -1558,6 +1237,10 @@ void frmWindow::closeEvent(QCloseEvent *event)
        QMessageBox::StandardButton errorMessage;
        errorMessage = QMessageBox::information(this, tr(""),
                                         tr("Couldn't save settings"));
+
+       file.close();
+       PlayingDeckList->close();
+       event->accept();
        return;
     }
 
@@ -1569,22 +1252,4 @@ void frmWindow::closeEvent(QCloseEvent *event)
     file.close();
     PlayingDeckList->close();
     event->accept();
-}
-
-QPixmap frmWindow::getMap()
-{
-    QPixmap retval;
-
-    if (settingsMap.value("CaptureVal").toInt() == 1)
-        PrintWindow(handle, hdc, PW_CLIENTONLY);
-    else {
-        POINT corner;
-        corner.x = 0;
-        corner.y = 0;
-        ClientToScreen(handle, &corner);
-        BitBlt( hdc, 0, 0, width + left, height + top, hdcScreen, corner.x, corner.y, SRCCOPY );
-    }
-    retval = qt_pixmapFromWinHBITMAP(hbmp);
-
-    return retval;
 }
