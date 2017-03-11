@@ -39,9 +39,9 @@ frmWindow::frmWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    pr.update();
+
     // Set up some inits
-    mat = 0;
-    matTexture = 0;
     setWindowTitle("Shadowverse Deck Tracker");
     needSave = false;
     saveHash = 0;
@@ -159,7 +159,7 @@ void frmWindow::update()
     /// and guess what state the program is in. Mainly want to
     /// see if a game had started or not.
     //otherwise check for card
-    if (handleValid && ::IsWindow(handle))
+    if (1)
     {
 
         QRect boxRect;
@@ -1021,113 +1021,40 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotStart()
 {
+    setWindowTitle("Shadowverse Deck Tracker");
 
-    //Begin the app loop
-    handle = 0;
-    std::string appName = "Shadowverse";
-    std::wstring stemp = s2ws(appName);
-    LPCWSTR result = stemp.c_str();
-    handle = ::FindWindow(NULL, result);
+    PlayingDeckList->raise();
+    handleValid = true;
 
-    //load values we pulled from the file
-    int topborder = settingsMap.value("Topborder").toInt();
-    int botborder = settingsMap.value("Botborder").toInt();
-    int leftborder = settingsMap.value("Leftborder").toInt();
-    int rightborder = settingsMap.value("Rightborder").toInt();
+    //create bitmap and screen to save rect
 
-    //Add some values for other settings for now, maybe add slider later?
-    settingsMap.insert("TurnSens","22");
-    settingsMap.insert("GameEndSens","15");
-    settingsMap.insert("BestGuessSens","18");
-    settingsMap.insert("WorstGuessSens","25");
-    settingsMap.insert("CostGuessSens","18");
 
-    //Window rect
-    RECT rc;
-    GetClientRect(handle, &rc);
-    width = (rc.right - rc.left) - rightborder - leftborder;
-    height = (rc.bottom - rc.top) - topborder - botborder;
-    top = rc.top+topborder;
-    left = rc.left+leftborder;
+    //Guess the current state of the image
+    curState = Ui::STATE::MYTURN;
 
-    boxLeft = (int)round(0.2617 * width) + left;
-    boxTop = (int)round(0.3528 * height) + top;
-    boxWidth = (int)round(0.468 * width);
-    boxHeight = (int)round(0.1777 * height);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
-    theirLeft = (int)round(0.1742 * width) + left;
-    theirTop = (int)round(0.3514 * height) + top;
-    theirWidth = (int)round(0.6508 * width);
-    theirHeight = (int)round(0.1736 * height);
+    //Remove edit button
+    mainLayout->removeWidget(editButton);
+    editButton->setGeometry(0,0,0,0);
 
-    costLeft = (int)round(0.5792 * width) + left;
-    costTop = (int)round(0.4465 * height) + top;
-    costWidth = (int)round(0.02825 * width);
-    costHeight = (int)round(0.05020 * height);
+    //remove start button
+    mainLayout->removeWidget(startButton);
+    startButton->setGeometry(0,0,0,0);
 
-    resultsLeft = (int)round(0.3773 * width) + left;
-    resultsTop = (int)round(0.06805 * height) + top;
-    resultsWidth = (int)round(0.2453 * width);
-    resultsHeight = (int)round(0.08472 * height);
+    //add stop button
+    mainLayout->addWidget(stopButton,4,0);
 
-    selectLeft[0] = (int) round(0.22169 * width) + left;
-    selectLeft[1] = (int) round(0.44337 * width) + left;
-    selectLeft[2] = (int) round(0.66484 * width) + left;
-    selectTop = (int) round(0.64591 * height) + top;
-    selectWidth = (int) round(0.1133 * width);
-    selectHeight = (int) round(0.2515 * height);
+    //replace blank space with turn log
+    mainLayout->addWidget(turnLog,5,0);
+    mainLayout->removeWidget(labelBlank);
+    labelBlank->setGeometry(0,0,0,0);
+    turnLog->clear();
+    turnLog->append("Draw Log\n******************\n");
+    menuBar()->setEnabled(false);
 
-    // If we found the application, load this
-    if (handle != 0)
-    {
-        setWindowTitle("Shadowverse Deck Tracker");
-
-        PlayingDeckList->raise();
-        handleValid = true;
-
-        //create bitmap and screen to save rect
-        hdcScreen = GetDC(NULL);
-        hdc = CreateCompatibleDC(hdcScreen);
-        hbmp = CreateCompatibleBitmap(hdcScreen,
-            width + leftborder, height + topborder);
-        SelectObject(hdc, hbmp);
-
-        //Guess the current state of the image
-        curState = Ui::STATE::MYTURN;
-
-        passed = false;
-        turnDraw =0;
-
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-
-        //Remove edit button
-        mainLayout->removeWidget(editButton);
-        editButton->setGeometry(0,0,0,0);
-
-        //remove start button
-        mainLayout->removeWidget(startButton);
-        startButton->setGeometry(0,0,0,0);
-
-        //add stop button
-        mainLayout->addWidget(stopButton,4,0);
-
-        //replace blank space with turn log
-        mainLayout->addWidget(turnLog,5,0);
-        mainLayout->removeWidget(labelBlank);
-        labelBlank->setGeometry(0,0,0,0);
-        turnLog->clear();
-        turnLog->append("Draw Log\n******************\n");
-        menuBar()->setEnabled(false);
-
-        loadDeck(model);
-    }
-    else
-    {
-        QMessageBox::StandardButton errorMessage;
-        errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("Could not find the application window."));
-    }
+    loadDeck(model);
 }
 
 void frmWindow::slotStop()

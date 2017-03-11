@@ -13,18 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    perceptualhash.cpp \
         frmwindow.cpp \
     cardlist.cpp \
     svdatabase.cpp \
     carddelegate.cpp \
     svlistmodel.cpp \
     sveditmodel.cpp \
-    editdelegate.cpp
+    editdelegate.cpp \
+    processreader.cpp
 
 
 HEADERS  += frmwindow.h \
-    perceptualhash.h \
     asmopencv.h \
     cardlist.h \
     svdatabase.h \
@@ -33,7 +32,8 @@ HEADERS  += frmwindow.h \
     svlistmodel.h \
     menu.h \
     sveditmodel.h \
-    editdelegate.h
+    editdelegate.h \
+    processreader.h
 
 
 FORMS    += frmwindow.ui

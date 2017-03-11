@@ -1,7 +1,6 @@
 #ifndef FRMWINDOW_H
 #define FRMWINDOW_H
 
-#include "perceptualhash.h"
 #include "cardlist.h"
 #include "svdatabase.h"
 #include "svlistmodel.h"
@@ -9,6 +8,7 @@
 #include "carddelegate.h"
 #include "sveditmodel.h"
 #include "editdelegate.h"
+#include "processreader.h"
 
 #include <vector>
 
@@ -82,45 +82,9 @@ private:
     bool needSave;
     double saveHash;
 
-    cv::Mat matTexture;
-    ulong64 matTexturePhash;
-    ulong64 theirTexturePhash;
-
     void closeEvent(QCloseEvent *event);
 
-    cv::Mat mat;
-
-    HDC hdcScreen;
-    HDC hdc;
-    HBITMAP hbmp;
-    HWND handle;
-    bool passed;
-
     QMap<QString, QString> settingsMap;
-
-    // bounding box for window
-    int height;
-    int width;
-    int left;
-    int top;
-
-    // bounding box for "MY TURN"
-    int boxHeight;
-    int boxWidth;
-    int boxLeft;
-    int boxTop;
-
-    // bounding box for "MY TURN"
-    int theirHeight;
-    int theirWidth;
-    int theirLeft;
-    int theirTop;
-
-    // bounding box for "cost"
-    int costHeight;
-    int costWidth;
-    int costLeft;
-    int costTop;
 
     // Menu stuff
     void createActions();
@@ -160,6 +124,7 @@ private:
 
     // Database of all the cards in the game
     svDatabase cardDatabase;
+    ProcessReader pr;
 
     // Stuff pertaining to grid layout
     QGridLayout* mainLayout;
@@ -174,7 +139,6 @@ private:
     QPushButton* startButton;
     QTimer* timer;
 
-
     QListView* EditDeckList;
     QPushButton* okButton;
     SVEditModel* editmodel;
@@ -185,18 +149,6 @@ private:
     QPushButton* editButton;
     QPushButton* stopButton;
     QTextEdit* turnLog;
-
-    int selectLeft[3];
-    int selectTop;
-    int selectWidth;
-    int selectHeight;
-
-    int resultsLeft;
-    int resultsTop;
-    int resultsWidth;
-    int resultsHeight;
-
-    int turnDraw;
 };
 
 #endif // FRMWINDOW_H

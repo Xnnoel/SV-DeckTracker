@@ -2,7 +2,6 @@
 #define CARDLIST_H
 
 #include "card.h"
-#include "perceptualhash.h"
 #include "svdatabase.h"
 
 #include <vector>

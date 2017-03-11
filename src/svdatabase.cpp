@@ -4,8 +4,6 @@
 #include "QJsonArray"
 #include "QFile"
 #include "QDir"
-
-#include "perceptualhash.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
