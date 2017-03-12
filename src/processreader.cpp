@@ -49,6 +49,11 @@ std::vector<int> ProcessReader::update()
     return ret;
 }
 
+void ProcessReader::setBase(int base)
+{
+    baseAddress = base;
+}
+
 std::vector<int> ProcessReader::getHand(int size)
 {
     std::vector<int> cardsInHand;

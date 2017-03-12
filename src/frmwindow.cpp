@@ -514,6 +514,10 @@ void frmWindow::createActions()
     SaveAction->setShortcuts(QKeySequence::Save);
     connect(SaveAction, &QAction::triggered, this, &frmWindow::slotSave);
 
+    SetBaseAction = new QAction(tr("&Set base address"), this);
+    SaveAction->setToolTip(tr("Set base address in hex"));
+    connect(SetBaseAction, &QAction::triggered, this, &frmWindow::slotSetBase);
+
     HelpAction = new QAction(tr("&Help"), this);
     HelpAction->setToolTip(tr("Open the help text"));
     connect(HelpAction, &QAction::triggered, this, &frmWindow::slotHelp);
@@ -1096,6 +1100,18 @@ void frmWindow::slotEditMode()
     slotLoadEdit(0);
     saveHash = playingDeck.makeDeckHash();
 }
+
+void frmWindow::slotSetBase()
+{
+    // create a window to take in a string
+
+    QString text = QInputDialog::getText(this, tr("Set Base Pointer in Hex"),
+                                         tr("Base:"), QLineEdit::Normal,
+                                         tr("00000000"), &ok);
+    int base = text.toInt(nullptr, 16);
+
+}
+
 
 void frmWindow::replyFinished(QNetworkReply * reply)
 {

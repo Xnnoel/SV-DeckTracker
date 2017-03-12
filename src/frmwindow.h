@@ -68,6 +68,7 @@ private slots:
 
     void slotHelp();
     void slotAbout();
+    void slotSetBase();
 
     void slotButtonPushed();
     void slotEditMode();
@@ -104,6 +105,7 @@ private:
     QAction* LoadURLAction;
     QAction* SaveAsAction;
     QAction* SaveAction;
+    QAction* SetBaseAction;
     //Help
     QAction* HelpAction;
     QAction* About;
