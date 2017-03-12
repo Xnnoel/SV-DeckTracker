@@ -1,6 +1,5 @@
 #include "carddelegate.h"
 #include "card.h"
-#include <algorithm>
 #include <QMouseEvent>
 #include <QDir>
 

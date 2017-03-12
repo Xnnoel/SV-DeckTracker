@@ -21,6 +21,7 @@
 
 #include <qtimer.h>
 #include <Windows.h>
+#include <algorithm>
 #include <iostream>
 
 #pragma comment(lib, "user32.lib")
@@ -205,7 +206,7 @@ void frmWindow::update()
                 indexA++;
             }
 
-            //Played cards added
+            //Played cards
             int i;
             for (i = indexA; i < prevHand.size();++i)
             {
@@ -218,7 +219,7 @@ void frmWindow::update()
                 model->blink(playingDeck.getPosition(playedCards[i]));
             }
 
-            // Cards added, all the last one
+            // Cards added, all the last ones
             for (i = indexB; i < nums.size();++i)
             {
                 if (playingDeck.cardExists(nums[i]))
@@ -228,7 +229,6 @@ void frmWindow::update()
                     blinker[rownum] = 40;
                     delegate->blinkEffect(rownum,0);
                 }
-
                 QString cardname = cardDatabase.getCard(nums[i]).name;
                 turnLog->append("Drew " + cardname + '\n');
             }
@@ -250,203 +250,6 @@ void frmWindow::update()
         }
 
         last = valid;
-
-        switch (curState)
-        {
-            case Ui::STATE::MYTURN:
-            {
-
-            /*
-                // Get the best match for 3 cards on screen
-                for (int i = 0; i < 3; i++)
-                {
-                    boxRect.setRect(selectLeft[i],selectTop,selectWidth,selectHeight);
-                    drawer = pixmap.copy(boxRect);
-                    resultMat = ASM::QPixmapToCvMat(drawer);
-                    imagePHash = PerceptualHash::phash(resultMat);
-                    PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
-                    if (result.distance < 18)
-                    {
-                        bestID[i+3] = bestID[i];
-                        bestID[i] = playingDeck.cardsInDeck[result.index];
-                    }
-                }
-
-                // My turn scanbox
-                boxRect.setRect(boxLeft,boxTop,boxWidth,boxHeight);
-                drawer = pixmap.copy(boxRect);
-                mat = ASM::QPixmapToCvMat(drawer);
-                imagePHash = PerceptualHash::phash(mat);
-
-                int distance1 = PerceptualHash::hammingDistance(matTexturePhash, imagePHash);
-
-                // Their turn scanbox
-                boxRect.setRect(theirLeft,theirTop,theirWidth,theirHeight);
-                drawer = pixmap.copy(boxRect);
-                resultMat = ASM::QPixmapToCvMat(drawer);
-                imagePHash = PerceptualHash::phash(resultMat);
-
-                int distance2 = PerceptualHash::hammingDistance(theirTexturePhash, imagePHash);
-                int distanceSens = settingsMap.value("TurnSens").toInt();
-
-                setWindowTitle(QString::number(distance1) + ", " + QString::number(distance2));
-                if (distance1 < distanceSens || distance2 < distanceSens)
-                {
-                    cv::imwrite("myturn.jpg", resultMat);
-                    cv::imwrite("theirturn.jpg", mat);
-
-                    //Remove guessed cards from active list
-                    turnLog->append("Started with...");
-                    for (int i = 0; i < 3; i++)
-                        if (bestID[i] > 0)
-                        {
-                            model->subCard(bestID[i]);
-                            QString cardname = cardDatabase.getCard(bestID[i]).name;
-                            turnLog->append(cardname + ',');
-                        }
-                    turnLog->append("-------------");
-                    curState = Ui::STATE::FINDCARD;
-                }
-*/
-                break;
-            }
-            case Ui::STATE::FINDCARD:
-            {
-            /*
-                if (ignoreNext > 0)
-                    ignoreNext--;
-                if (ignoreNext < 1){
-                    //First check for matching win/lose screen
-                    boxRect.setRect(resultsLeft,resultsTop,resultsWidth,resultsHeight);
-                    drawer = pixmap.copy(boxRect);
-                    mat = ASM::QPixmapToCvMat(drawer);
-                    imagePHash = PerceptualHash::phash(mat);
-                    int victoryDistance = PerceptualHash::hammingDistance(resultWinPhash, imagePHash);
-                    int loseDistance = PerceptualHash::hammingDistance(resultLosePhash, imagePHash);
-
-                    int gameEndDist = settingsMap.value("GameEndSens").toInt();
-                    if (victoryDistance < gameEndDist || loseDistance < gameEndDist)
-                    {
-                        turnLog->append("Game ended\n----Resetting deck---");
-                        loadDeck(model);
-                        curState = Ui::STATE::MYTURN;
-                        break;
-                    }
-
-                    //Get the card cost (hopefully)
-                    //Try and find what the cost is?
-                    boxRect.setRect(costLeft,costTop,costWidth,costHeight);
-                    drawer = pixmap.copy(boxRect);
-                    mat = ASM::QPixmapToCvMat(drawer);
-                    imagePHash = PerceptualHash::phash(mat);
-
-                    std::vector<ulong64> numberPHash = cardDatabase.getCostPHash();
-
-                    PerceptualHash::ComparisonResult result = PerceptualHash::best(imagePHash, numberPHash);
-
-                    int cost = cardDatabase.getCostfromPHash(numberPHash[result.index]);
-                    int costDistance = result.distance;
-
-                    //Perspective shift on card for better readability (why are they tilted)
-                    mat = ASM::QPixmapToCvMat(pixmap);
-                    cv::Point2f input[4];
-                    cv::Point2f output[4];
-
-                    //in case of window size changed, use percentages // ADD SHIFT
-                    input[0] = cv::Point2f(0.6047f * width + left,0.8208f * height + top);
-                    input[1] = cv::Point2f(0.5968f * width + left,0.4958f * height + top);
-                    input[2] = cv::Point2f(0.7359f * width + left,0.4958f * height + top);
-                    input[3] = cv::Point2f(0.7492f * width + left,0.8194f * height + top);
-
-                    //doesnt matter here, so long as output size fits here
-                    output[0] = cv::Point2f(0,200);
-                    output[1] = cv::Point2f(0,0);
-                    output[2] = cv::Point2f(133,0);
-                    output[3] = cv::Point2f(133,200);
-
-                    cv::Mat lambda( 2, 4, CV_32FC1 );
-                    lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
-                    lambda = cv::getPerspectiveTransform(input,output);
-                    cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
-                    imagePHash = PerceptualHash::phash(resultMat);
-                    std::vector<PerceptualHash::ComparisonResult> bestguess = PerceptualHash::nbest(NBEST, imagePHash, playingDeck.deckPHash);
-
-                    // Check in case of draw second
-                    input[0] = cv::Point2f(0.23767f * width + left,0.69372f * height + top);
-                    input[1] = cv::Point2f(0.25754f * width + left,0.29712f * height + top);
-                    input[2] = cv::Point2f(0.43855f * width + left,0.30105f * height + top);
-                    input[3] = cv::Point2f(0.43341f * width + left,0.69372f * height + top);
-
-                    lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
-                    lambda = cv::getPerspectiveTransform(input,output);
-                    cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
-                    imagePHash = PerceptualHash::phash(resultMat);
-                    PerceptualHash::ComparisonResult bestguess2 = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
-
-                    // Once more for part 3
-                    input[0] = cv::Point2f(0.5688f * width + left,0.69372f * height + top);
-                    input[1] = cv::Point2f(0.56439f * width + left,0.29974f * height + top);
-                    input[2] = cv::Point2f(0.74099f * width + left,0.30236f * height + top);
-                    input[3] = cv::Point2f(0.76012f * width + left,0.69372f * height + top);
-
-                    lambda = cv::Mat::zeros( mat.rows, mat.cols, mat.type() );
-                    lambda = cv::getPerspectiveTransform(input,output);
-                    cv::warpPerspective(mat, resultMat, lambda, cv::Size(133,200));
-                    imagePHash = PerceptualHash::phash(resultMat);
-                    PerceptualHash::ComparisonResult bestguess3 = PerceptualHash::best(imagePHash, playingDeck.deckPHash);
-
-
-
-                    if ((bestguess[0].distance < settingsMap.value("BestGuessSens").toInt() || costDistance < settingsMap.value("CostGuessSens").toInt() )
-                            && bestguess[0].distance < bestguess2.distance && bestguess[0].distance < bestguess3.distance)
-                    {
-                        // if card art is way off, cost could randomly spike below
-                        if (bestguess[0].distance > settingsMap.value("WorstGuessSens").toInt())
-                            break;
-
-                        int cardConf = 6 * std::min(10, std::max(0, settingsMap.value("BestGuessSens").toInt() - (bestguess[0].distance-5)));
-                        int costConf = 4 * std::min(10, std::max(0, settingsMap.value("CostGuessSens").toInt() - (costDistance-5)));
-                        int confidence = cardConf + costConf;
-                        // if card art matches well, assume that the card is true
-                        if (bestguess[0].distance <= settingsMap.value("BestGuessSens").toInt())
-                        {
-                            model->subCard(playingDeck.cardsInDeck[bestguess[0].index]);
-                            QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[0].index]).name;
-                            turnLog->append("Drew " + cardname + ", Confidence = "+ QString::number(confidence)+ "\n-------");
-                            ignoreNext = (int)round(700/refreshRate);
-                            break;
-                        }
-
-                        //Matches best 3 to cost, hopefully one matches
-                        for (int i = 0; i < NBEST; i++)
-                        if (cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).manaCost == cost)
-                        {
-                            model->subCard(playingDeck.cardsInDeck[bestguess[i].index]);
-                            QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess[i].index]).name;
-                            turnLog->append("Drew " + cardname + ", Confidence = "+ QString::number(confidence)+ "\n-------");
-                            ignoreNext = (int)round(700/refreshRate);
-                            break;
-                        }
-                    }
-                    else if ((bestguess2.distance < settingsMap.value("BestGuessSens").toInt() && (bestguess3.distance - 5) < settingsMap.value("BestGuessSens").toInt()) ||
-                             bestguess3.distance < settingsMap.value("BestGuessSens").toInt() && (bestguess2.distance - 5) < settingsMap.value("BestGuessSens").toInt())
-                    {
-                        model->subCard(playingDeck.cardsInDeck[bestguess2.index]);
-                        model->subCard(playingDeck.cardsInDeck[bestguess3.index]);
-                        QString cardname = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess2.index]).name;
-                        QString cardname2 = cardDatabase.getCard(playingDeck.cardsInDeck[bestguess3.index]).name;
-                        turnLog->append("Drew " + cardname + " + " + cardname2 + ", num = " + QString::number(bestguess2.distance) + "," + QString::number(bestguess3.distance) + "\n-------");
-                        cv::imwrite("draw3.jpg", resultMat);
-                        cv::imwrite("everything.jpg", mat);
-                        ignoreNext = (int)round(700/refreshRate);
-                        break;
-                    }
-
-                }
-                */
-                break;
-            }
-        }
     }
     else
     {
@@ -561,6 +364,7 @@ void frmWindow::createMenus()
     HelpMenu->addAction(HelpAction);
     HelpMenu->addSeparator();
     HelpMenu->addAction(About);
+    HelpMenu->addAction(SetBaseAction);
 }
 
 void frmWindow::slotElf()
@@ -1105,11 +909,11 @@ void frmWindow::slotSetBase()
 {
     // create a window to take in a string
 
-    QString text = QInputDialog::getText(this, tr("Set Base Pointer in Hex"),
-                                         tr("Base:"), QLineEdit::Normal,
-                                         tr("00000000"), &ok);
+    QString text = QInputDialog::getText(this, tr("Set Base"),
+                                         tr("Hex:"), QLineEdit::Normal,
+                                         tr("00000000"));
     int base = text.toInt(nullptr, 16);
-
+    pr.setBase(base);
 }
 
 

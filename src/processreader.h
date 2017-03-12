@@ -11,6 +11,7 @@ public:
     ProcessReader();
     std::vector<int> update();
     bool isValid();
+    void setBase(int base);
 private:
     void getBaseAddress();
     std::vector<int> getHand(int size);
