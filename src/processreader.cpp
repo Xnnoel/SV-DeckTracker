@@ -61,7 +61,9 @@ std::vector<int> ProcessReader::getHand(int size)
     {
         DWORD_PTR card[1] = {FIRSTCARD + 0x4 * i};
         DWORD currentCard = FindPointer(1,windowHandle,deckAddr, card);
-        cardsInHand.push_back((int)FindPointer(3,windowHandle, currentCard,CARDNAME ));
+        int value = FindPointer(3,windowHandle, currentCard,CARDNAME);
+        value &= -1 << 1;
+        cardsInHand.push_back(value);
     }
 
     return cardsInHand;

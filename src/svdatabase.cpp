@@ -78,6 +78,14 @@ void svDatabase::load(){
     qSort(cardID);
 
     loadFile.close();
+
+    // load all cost icon
+    for (int i = 1; i < 21; i++)
+    {
+        QPixmap image( dir.absolutePath() + "/data/Cost/cost_" + QString::number(i) + ".png");
+        costMap.insert(i, image);
+    }
+
 }
 
 void svDatabase::save()

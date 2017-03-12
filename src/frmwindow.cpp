@@ -101,7 +101,7 @@ frmWindow::frmWindow(QWidget *parent) :
     mainLayout->removeWidget(labelBlank);
     labelBlank->setGeometry(0,0,0,0);
     turnLog->clear();
-    turnLog->append("Draw Log\n******************\n");
+    turnLog->append("Finding window\n******************\n");
 
     loadDeck(model);
 }
@@ -189,6 +189,8 @@ void frmWindow::update()
             {
                 // do initial set up here
                 // reset log? reset list
+                turnLog->append("******************\nStarting Game\n******************\n");
+
                 prevHand.clear();
                 loadDeck(model);
             }
