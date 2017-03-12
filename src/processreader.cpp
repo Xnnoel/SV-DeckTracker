@@ -8,6 +8,7 @@ DWORD_PTR HANDSIZE[7] = {0x0,0xAC,0x14,0x20,0x2c,0xc,0xc};
 DWORD_PTR DECKLIST[7] = {0x0,0xAC,0x14,0x20,0x2c,0xc,0x8};
 DWORD_PTR FIRSTCARD = 0x10;
 DWORD_PTR CARDNAME[3] = {0x30,0x8,0x30};
+DWORD_PTR ZERO[1] = {0x0};
 
 DWORD_PTR FindPointer(int offset, HANDLE pHandle,DWORD_PTR baseaddr, DWORD_PTR offsets[]);
 DWORD_PTR dwGetModuleBaseAddress(DWORD dwProcID, const char *szModuleName);
@@ -15,15 +16,27 @@ DWORD_PTR dwGetModuleBaseAddress(DWORD dwProcID, const char *szModuleName);
 ProcessReader::ProcessReader()
 {
     baseAddress = 0;
+    hasHandle = false;
+    pid = 0;
+    windowHandle = 0;
 }
 
 std::vector<int> ProcessReader::update()
 {
     std::vector<int> ret;
 
+
+
     // do stuff here
     if (baseAddress)
     {
+        HWND window = FindWindowA(NULL, "Shadowverse");
+        if (!IsWindow(window))
+        {
+            baseAddress = 0;
+            return ret;
+        }
+
         unsigned int handSize = FindPointer(7,windowHandle, baseAddress, HANDSIZE);
 
         //if hand size is valid
@@ -54,9 +67,25 @@ std::vector<int> ProcessReader::getHand(int size)
     return cardsInHand;
 }
 
+bool ProcessReader::isValid()
+{
+    HWND window = FindWindowA(NULL, "Shadowverse");
+
+    if (baseAddress && IsWindow(window))
+    {
+        unsigned int handSize = FindPointer(7,windowHandle, baseAddress, HANDSIZE);
+        DWORD_PTR baseValid = FindPointer(1,windowHandle,baseAddress, ZERO );
+        return (handSize > 9?false:true && (baseValid != 0));
+    }
+    return 0;
+}
+
 void ProcessReader::getBaseAddress()
 {
     HWND window = FindWindowA(NULL, "Shadowverse");
+    if (!IsWindow(window))
+        return;
+
     GetWindowThreadProcessId(window, &pid);
 
     windowHandle = OpenProcess(PROCESS_VM_READ, false, pid);

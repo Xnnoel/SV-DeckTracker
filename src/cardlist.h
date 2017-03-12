@@ -20,6 +20,7 @@ public:
     cardlist(svDatabase* database);          //name of card
     bool getMode(){return editMode;}
     void setMode(bool mode){editMode = mode;}
+    bool cardExists(int id);
     int getClass(){return myClass;}
     void setClass(int classnum){myClass = classnum;}
     int getDeckSize();

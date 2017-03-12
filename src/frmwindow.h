@@ -123,6 +123,8 @@ private:
     // Database of all the cards in the game
     svDatabase cardDatabase;
     ProcessReader pr;
+    bool last;
+    std::vector<int> prevHand;
 
     // Stuff pertaining to grid layout
     QGridLayout* mainLayout;

@@ -13,6 +13,16 @@ double cardlist::makeDeckHash()
     return retVal;
 }
 
+bool cardlist::cardExists(int id)
+{
+    for (int i = 0; i <cardsInDeck.size(); i++)
+    {
+        if (cardsInDeck[i] == id)
+            return true;
+    }
+    return false;
+}
+
 void cardlist::addCard(int id)
 {
     Card card = databasePtr->getCard(id);

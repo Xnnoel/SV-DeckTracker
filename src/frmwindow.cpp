@@ -37,6 +37,7 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck(&cardDatabase)
 {
     ui->setupUi(this);
+    last = false;
 
     // Set up some inits
     setWindowTitle("Shadowverse Deck Tracker");
@@ -178,9 +179,55 @@ void frmWindow::update()
     //otherwise check for card
     if (1)
     {
+
+        bool valid = pr.isValid();
         std::vector<int> nums = pr.update();
 
+        if (valid)
+        {
+            if (last != valid)
+            {
+                // do initial set up here
+                // reset log? reset list
+                prevHand.clear();
+                loadDeck(model);
+            }
 
+            // compare to prev hand
+            int indexA = 0,indexB = 0;
+            std::vector<int> playedCards;
+            while (indexA < prevHand.size() && indexB < nums.size())
+            {
+                if (prevHand[indexA] == nums[indexB])
+                    indexB++;
+                else
+                    playedCards.push_back(prevHand[indexA]);
+                indexA++;
+            }
+
+            //Played cards added
+            for (int i = indexA; i < prevHand.size();++i)
+            {
+                playedCards.push_back(prevHand[i]);
+            }
+
+            // Cards added, all the last one
+            for (int i = indexB; i < nums.size();++i)
+            {
+                // TODO: some cards are showing up as blank
+
+                if (playingDeck.cardExists(nums[i]))
+                    model->subCard(nums[i]);
+
+                QString cardname = cardDatabase.getCard(nums[i]).name;
+                turnLog->append("Drew " + cardname + '\n');
+            }
+
+
+            prevHand = nums;
+        }
+
+        last = valid;
 
         switch (curState)
         {
@@ -644,7 +691,7 @@ void frmWindow::slotLoad()
         }
     }
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Deck"), dir.absolutePath() + "/Decks/NewDeck", tr("Image Files (*.dck)"));
+        tr("Open Deck"), dir.absolutePath() + "/Decks/NewDeck.dck", tr("Image Files (*.dck)"));
     QFile loadfile(fileName);
     if (!loadfile.open(QIODevice::ReadOnly))
     {
