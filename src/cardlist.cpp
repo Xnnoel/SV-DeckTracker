@@ -30,11 +30,6 @@ void cardlist::addCard(int id)
     //if card doesn't exist, create new card
     cardsInDeck.push_back(id);
     countInDeck.push_back(1);
-
-    if (card.newpHash != 0)
-        deckPHash.push_back(card.newpHash);
-    else
-        deckPHash.push_back(card.pHash);
 }
 
 void cardlist::removeCard(int id)

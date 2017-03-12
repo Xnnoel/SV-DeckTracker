@@ -24,7 +24,6 @@ SOURCES += main.cpp\
 
 
 HEADERS  += frmwindow.h \
-    asmopencv.h \
     cardlist.h \
     svdatabase.h \
     card.h \

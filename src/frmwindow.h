@@ -73,8 +73,6 @@ private slots:
     void slotEditMode();
     void slotLoadEdit(int);
 
-    void slotStart();
-    void slotStop();
 private:
     Ui::frmWindow *ui;
     bool forceUpdateHash;
@@ -136,7 +134,6 @@ private:
     QListView* PlayingDeckList;
     CardDelegate * delegate;
     SVListModel* model;
-    QPushButton* startButton;
     QTimer* timer;
 
     QListView* EditDeckList;
@@ -147,7 +144,6 @@ private:
     QCheckBox* classBox;
 
     QPushButton* editButton;
-    QPushButton* stopButton;
     QTextEdit* turnLog;
 };
 

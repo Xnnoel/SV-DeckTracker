@@ -1,6 +1,5 @@
 #include "frmwindow.h"
 #include "ui_frmwindow.h"
-#include "asmopencv.h"
 
 #include <QtWinExtras/QtWin>
 #include <QPixmap>
@@ -38,8 +37,6 @@ frmWindow::frmWindow(QWidget *parent) :
     playingDeck(&cardDatabase)
 {
     ui->setupUi(this);
-
-    pr.update();
 
     // Set up some inits
     setWindowTitle("Shadowverse Deck Tracker");
@@ -83,6 +80,29 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
+
+    // setup from start slot
+    setWindowTitle("Shadowverse Deck Tracker");
+
+    //Guess the current state of the image
+    curState = Ui::STATE::MYTURN;
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(500);
+
+    //Remove edit button
+    mainLayout->removeWidget(editButton);
+    editButton->setGeometry(0,0,0,0);
+
+    //replace blank space with turn log
+    mainLayout->addWidget(turnLog,5,0);
+    mainLayout->removeWidget(labelBlank);
+    labelBlank->setGeometry(0,0,0,0);
+    turnLog->clear();
+    turnLog->append("Draw Log\n******************\n");
+
+    loadDeck(model);
 }
 
 frmWindow::~frmWindow()
@@ -102,13 +122,10 @@ void frmWindow::sortDeck()
         {
             int tempCard = playingDeck.cardsInDeck[j];
             int tempCount = playingDeck.countInDeck[j];
-            ulong64 tempHash = playingDeck.deckPHash[j];
             playingDeck.cardsInDeck[j] = playingDeck.cardsInDeck[j-1];
             playingDeck.countInDeck[j] = playingDeck.countInDeck[j-1];
-            playingDeck.deckPHash[j] = playingDeck.deckPHash[j-1];
             playingDeck.cardsInDeck[j-1] = tempCard;
             playingDeck.countInDeck[j-1] = tempCount;
-            playingDeck.deckPHash[j-1] = tempHash;
             j--;
         }
     }
@@ -161,14 +178,15 @@ void frmWindow::update()
     //otherwise check for card
     if (1)
     {
+        std::vector<int> nums = pr.update();
 
-        QRect boxRect;
-        QPixmap drawer;
+
 
         switch (curState)
         {
             case Ui::STATE::MYTURN:
             {
+
             /*
                 // Get the best match for 3 cards on screen
                 for (int i = 0; i < 3; i++)
@@ -365,7 +383,6 @@ void frmWindow::update()
     {
         handleValid = false;
         setWindowTitle("Can't Find Window...");
-        slotStop();
     }
 }
 
@@ -845,16 +862,11 @@ void frmWindow::setMyLayout()
     PlayingDeckList->setWindowTitle("Deck List");
     PlayingDeckList->setWindowFlags(Qt::WindowTitleHint);
 
-    startButton = new QPushButton("Start");
     editButton = new QPushButton("Edit");
-    stopButton = new QPushButton("Stop");
     connect(editButton, SIGNAL(released()), this, SLOT(slotEditMode()));
-    connect(startButton,SIGNAL(released()), this, SLOT(slotStart()));
-    connect(stopButton, SIGNAL(released()), this, SLOT(slotStop()));
 
     mainLayout->addWidget(labelDeckName, 0, 0);
     mainLayout->addWidget(DeckNameEdit, 1, 0);
-    mainLayout->addWidget(startButton,2,0);
     mainLayout->addWidget(labelBlank, 3, 0);
     mainLayout->addWidget(labelCards, 0, 1);
     mainLayout->addWidget(editButton, 0, 2);
@@ -885,9 +897,7 @@ void frmWindow::createEditor()
     mainLayout->addWidget(classBox, 0, 4);
     mainLayout->addWidget(EditDeckList, 1, 1,5,4);
     mainLayout->removeWidget(editButton);
-    mainLayout->removeWidget(startButton);
     editButton->setGeometry(0,0,0,0);
-    startButton->setGeometry(0,0,0,0);
     neutralBox->setChecked(true);
     classBox->setChecked(true);
 
@@ -907,7 +917,6 @@ void frmWindow::slotButtonPushed()
     mainLayout->removeWidget(neutralBox);
     mainLayout->removeWidget(classBox);
     mainLayout->addWidget(editButton,0,2);
-    mainLayout->addWidget(startButton,2,0);
     EditDeckList->setGeometry(0,0,0,0);
     okButton->setGeometry(0,0,0,0);
     neutralBox->setGeometry(0,0,0,0);
@@ -1017,60 +1026,6 @@ void frmWindow::slotEditMode()
     createEditor();
     slotLoadEdit(0);
     saveHash = playingDeck.makeDeckHash();
-}
-
-void frmWindow::slotStart()
-{
-    setWindowTitle("Shadowverse Deck Tracker");
-
-    PlayingDeckList->raise();
-    handleValid = true;
-
-    //create bitmap and screen to save rect
-
-
-    //Guess the current state of the image
-    curState = Ui::STATE::MYTURN;
-
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-
-    //Remove edit button
-    mainLayout->removeWidget(editButton);
-    editButton->setGeometry(0,0,0,0);
-
-    //remove start button
-    mainLayout->removeWidget(startButton);
-    startButton->setGeometry(0,0,0,0);
-
-    //add stop button
-    mainLayout->addWidget(stopButton,4,0);
-
-    //replace blank space with turn log
-    mainLayout->addWidget(turnLog,5,0);
-    mainLayout->removeWidget(labelBlank);
-    labelBlank->setGeometry(0,0,0,0);
-    turnLog->clear();
-    turnLog->append("Draw Log\n******************\n");
-    menuBar()->setEnabled(false);
-
-    loadDeck(model);
-}
-
-void frmWindow::slotStop()
-{
-    timer->stop();
-    mainLayout->removeWidget(stopButton);
-    stopButton->setGeometry(0,0,0,0);
-    mainLayout->addWidget(startButton,2,0);
-    mainLayout->addWidget(editButton,0,2);
-
-    mainLayout->removeWidget(turnLog);
-    turnLog->setGeometry(0,0,0,0);
-    mainLayout->addWidget(labelBlank,5,0);
-
-    menuBar()->setEnabled(true);
-    loadDeck(model);
 }
 
 void frmWindow::replyFinished(QNetworkReply * reply)

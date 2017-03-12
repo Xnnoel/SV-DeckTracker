@@ -9,9 +9,10 @@ class ProcessReader
 {
 public:
     ProcessReader();
-    void update();
+    std::vector<int> update();
 private:
     void getBaseAddress();
+    std::vector<int> getHand(int size);
     DWORD_PTR baseAddress;
     DWORD pid;
     HANDLE windowHandle;
