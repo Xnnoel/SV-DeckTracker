@@ -24,7 +24,6 @@
 #include <iostream>
 
 #pragma comment(lib, "user32.lib")
-#pragma comment(lib, "Gdi32.lib")
 
 #define WINWIDTH 350
 #define EDITWINWIDTH 500
@@ -57,7 +56,6 @@ frmWindow::frmWindow(QWidget *parent) :
     delegate->setPointers(&cardDatabase, &playingDeck);
     delegate->editMode = false;
 
-    connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
@@ -85,12 +83,12 @@ frmWindow::frmWindow(QWidget *parent) :
     // setup from start slot
     setWindowTitle("Shadowverse Deck Tracker");
 
-    //Guess the current state of the image
-    curState = Ui::STATE::MYTURN;
+    // set blinkers to 0
+    memset(blinker, 0 , sizeof(blinker));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(500);
+    timer->start(30);
 
     //Remove edit button
     mainLayout->removeWidget(editButton);
@@ -190,7 +188,7 @@ void frmWindow::update()
                 // do initial set up here
                 // reset log? reset list
                 turnLog->append("******************\nStarting Game\n******************\n");
-
+                memset(blinker, 0 , sizeof(blinker));
                 prevHand.clear();
                 loadDeck(model);
             }
@@ -208,25 +206,47 @@ void frmWindow::update()
             }
 
             //Played cards added
-            for (int i = indexA; i < prevHand.size();++i)
+            int i;
+            for (i = indexA; i < prevHand.size();++i)
             {
                 playedCards.push_back(prevHand[i]);
             }
 
-            // Cards added, all the last one
-            for (int i = indexB; i < nums.size();++i)
+            // For any cards played this turn
+            for (i = 0; i < playedCards.size(); i++)
             {
-                // TODO: some cards are showing up as blank
+                model->blink(playingDeck.getPosition(playedCards[i]));
+            }
 
+            // Cards added, all the last one
+            for (i = indexB; i < nums.size();++i)
+            {
                 if (playingDeck.cardExists(nums[i]))
+                {
+                    int rownum = playingDeck.getPosition(nums[i]);
                     model->subCard(nums[i]);
+                    blinker[rownum] = 40;
+                    delegate->blinkEffect(rownum,0);
+                }
 
                 QString cardname = cardDatabase.getCard(nums[i]).name;
                 turnLog->append("Drew " + cardname + '\n');
             }
 
+            // blinker effect
+            for (i = 0; i < playingDeck.getDeckSize(); i++)
+            {
+                if (blinker[i] > 0)
+                {
+                    blinker[i]--;
+                    delegate->blinkEffect(i, blinker[i]);
+                    model->blink(i);
+                }
+            }
 
             prevHand = nums;
+
+            delegate->setCardsInHand(nums);
         }
 
         last = valid;

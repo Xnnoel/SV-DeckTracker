@@ -21,6 +21,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
+    void blink(int row);
     void addCard(int id);
     void removeCard(int id);
     void subCard(int id);

@@ -25,8 +25,6 @@ std::vector<int> ProcessReader::update()
 {
     std::vector<int> ret;
 
-
-
     // do stuff here
     if (baseAddress)
     {

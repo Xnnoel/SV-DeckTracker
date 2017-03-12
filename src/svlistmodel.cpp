@@ -149,6 +149,12 @@ void SVListModel::slotUp(int row)
     }
 }
 
+void SVListModel::blink(int id)
+{
+    QModelIndex cardIndex = index(id,0);
+    emit dataChanged(cardIndex,cardIndex);
+}
+
 void SVListModel::slotDown(int row)
 {
     if (cardsInDeck[row].second > 0)

@@ -119,6 +119,7 @@ private:
 
     // This is to hold all the info about the deck in the game
     cardlist playingDeck;
+    int blinker[40];
 
     // Database of all the cards in the game
     svDatabase cardDatabase;

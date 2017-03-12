@@ -1,5 +1,6 @@
 #include "carddelegate.h"
 #include "card.h"
+#include <algorithm>
 #include <QMouseEvent>
 #include <QDir>
 
@@ -14,10 +15,16 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
 {
     database = db;
     playingDeck = cd;
-    QDir dir(".");
-    up = QPixmap(dir.absolutePath() +"/data/Markers/up.png");
-    down = QPixmap(dir.absolutePath() +"/data/Markers/down.png");
-    minus = QPixmap(dir.absolutePath() +"/data/Markers/minus.png");
+}
+
+void CardDelegate::setCardsInHand(std::vector<int> cards)
+{
+    cardsInHand = cards;
+}
+
+void CardDelegate::blinkEffect(int row, int amount)
+{
+    cardEffect[row] = amount;
 }
 
 void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -39,27 +46,8 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     QRect subheaderRect = option.rect;
     QRect iconRect = option.rect;
 
-    QRect upRect;
-    upRect.setTop(option.rect.top() + 3);
-    upRect.setLeft(option.rect.right() - 15);
-    upRect.setRight(option.rect.right() - 2);
-    upRect.setBottom(option.rect.top() + 16);
-
-    QRect downRect;
-    downRect.setTop(option.rect.top() + 19);
-    downRect.setLeft(option.rect.right() - 15);
-    downRect.setRight(option.rect.right() - 2);
-    downRect.setBottom(option.rect.top() + 32);
-
-    QRect minusRect;
-    minusRect.setTop(option.rect.top() + 10);
-    minusRect.setLeft(option.rect.left() + 240);
-    minusRect.setRight(option.rect.left() + 255);
-    minusRect.setBottom(option.rect.bottom() - 10);
-
     iconRect.setRight(iconRect.left() + 40);
     headerRect.setLeft(iconRect.right());
-
     subheaderRect.setLeft(subheaderRect.right() - 20);
 
     headerRect.setRight(subheaderRect.left());
@@ -81,14 +69,26 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
     //set color and draw font
     QColor color = QColor(255,255,255);
-    if (mycount < playingDeck->countInDeck[index.row()])
-        color = QColor(200,200,0);
     if (mycount == 0)
         color = QColor(80,80,80);
+    if (std::find(cardsInHand.begin(),cardsInHand.end(),myid)!= cardsInHand.end())
+        color = QColor(200,200,0);
+
     painter->setPen(color);
     painter->setFont(font);
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
     painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
+
+    // draw if card effect active for row
+    if (cardEffect[index.row()] > 0)
+    {
+        int alpha = 220 - qAbs(20 - cardEffect[index.row()]) * 5;
+        QPainterPath path;
+        path.addRect(option.rect);
+        color = QColor(200,200,0,alpha);
+        painter->fillPath(path, color);
+        painter->drawPath(path);
+    }
 
     // Restore painter info
     painter->restore();
@@ -103,7 +103,6 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem &  option ,
 
     QPixmap hi= *(database->getPortrait(myid));
     return(QSize(option.rect.width(),hi.height()));
-
 }
 
 bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index)
