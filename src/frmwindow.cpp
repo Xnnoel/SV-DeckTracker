@@ -711,7 +711,7 @@ void frmWindow::slotAbout()
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
                                      tr("Shadowverse Deck Tracker\n"
-                                        "Version 0.8.2\n"
+                                        "Version 0.8.5\n"
                                         "\n"
                                         "For any comments or questions,\n"
                                         "Send an email to xnnoelx@gmail.com"));
@@ -835,6 +835,12 @@ void frmWindow::slotLoadEdit(int)
 
         for (int i = 85; i < 109; i++)
             editmodel->addCard(cardDatabase.cardID[i]);
+
+        for (int i = 403; i < 414; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
+
+        for (int i = 512; i < 526; i++)
+            editmodel->addCard(cardDatabase.cardID[i]);
     }
 
     if (classBox->isChecked())
@@ -846,11 +852,19 @@ void frmWindow::slotLoadEdit(int)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 109; i < 151; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 414; i < 428; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 526; i < 539; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 1: //royal
             for (int i = 19; i < 30; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 151; i < 193; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 428; i < 442; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 539; i < 552; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 2: //witch
@@ -858,11 +872,19 @@ void frmWindow::slotLoadEdit(int)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 193; i < 235; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 442; i < 456; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 552; i < 565; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 3: //dragon
             for (int i = 41; i < 52; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 235; i < 277; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 456; i < 470; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 565; i < 578; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 4: //necro
@@ -870,17 +892,29 @@ void frmWindow::slotLoadEdit(int)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 277; i < 319; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 470; i < 484; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 578; i < 591; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 5: //blood
             for (int i = 63; i < 74; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 319; i < 361; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 484; i < 498; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 591; i < 604; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
         break;
         case 6: //bishop
             for (int i = 74; i < 85; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
             for (int i = 361; i < 403; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 498; i < 512; i++)
+                editmodel->addCard(cardDatabase.cardID[i]);
+            for (int i = 604; i < 617; i++)
                 editmodel->addCard(cardDatabase.cardID[i]);
         break;
         }
