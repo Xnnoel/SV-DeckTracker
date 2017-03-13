@@ -250,6 +250,8 @@ void frmWindow::update()
         }
 
         last = valid;
+
+        // TODO: Fix counds bounced back counting as cards drawn
     }
     else
     {
@@ -299,6 +301,9 @@ void frmWindow::createActions()
     NewBishop = new QAction(tr("&Bishop"), this);
     NewBishop->setToolTip(tr("Create an Bishop deck"));
     connect(NewBishop, &QAction::triggered, this, &frmWindow::slotBishop);
+
+    ClearDeckAction = new QAction(tr("&Clear Loaded Deck"), this);
+    connect(ClearDeckAction, &QAction::triggered, this, &frmWindow::slotClearDeck);
 
     LoadAction = new QAction(tr("&Load from file"), this);
     LoadAction->setToolTip(tr("Load a deck"));
@@ -354,6 +359,7 @@ void frmWindow::createMenus()
     menuBar()->addMenu(DeckMenu);
     DeckMenu->addAction(LoadAction);
     DeckMenu->addAction(LoadURLAction);
+    DeckMenu->addAction(ClearDeckAction);
     DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
@@ -505,6 +511,13 @@ void frmWindow::slotBishop()
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
+}
+
+void frmWindow::slotClearDeck()
+{
+    playingDeck.clear();
+    loadDeck(model);
+    needSave = false;
 }
 
 void frmWindow::slotLoad()

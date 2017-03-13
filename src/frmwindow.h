@@ -25,10 +25,6 @@
 
 #include <QNetworkReply>
 
-#include<opencv2/core/core.hpp>
-#include<opencv2/highgui/highgui.hpp>
-#include<opencv2/imgproc/imgproc.hpp>
-
 namespace Ui {
 class frmWindow;
 enum class STATE{MYTURN, FINDCARD};
@@ -60,6 +56,7 @@ private slots:
     void slotVampire();
     void slotBishop();
 
+    void slotClearDeck();
     void slotLoad();
     void slotLoadURL();
 
@@ -101,6 +98,7 @@ private:
     QAction* NewVampire;
     QAction* NewBishop;
     //Load/Save Decks
+    QAction* ClearDeckAction;
     QAction* LoadAction;
     QAction* LoadURLAction;
     QAction* SaveAsAction;

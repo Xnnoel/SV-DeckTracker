@@ -14,6 +14,7 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
 {
     database = db;
     playingDeck = cd;
+    memset(cardEffect,0,sizeof(cardEffect));
 }
 
 void CardDelegate::setCardsInHand(std::vector<int> cards)
