@@ -7,6 +7,8 @@
 CardDelegate::CardDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
+    font = QFont("Segoe UI",10);
+    font.setWeight(QFont::DemiBold);
 }
 
 void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
@@ -37,20 +39,18 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     }
     // Save painter info if needed
     painter->save();
-    QFont font = QApplication::font();
-
-    font.setBold(true);
-    font.setPointSize(10);
 
     QRect headerRect = option.rect;
     QRect subheaderRect = option.rect;
     QRect iconRect = option.rect;
 
-    iconRect.setRight(iconRect.left() + 40);
+
+    iconRect.setLeft(iconRect.left()- 3);
+    iconRect.setRight(iconRect.left() + 32);
     headerRect.setLeft(iconRect.right());
     subheaderRect.setLeft(subheaderRect.right() - 20);
 
-    headerRect.setRight(subheaderRect.left());
+    headerRect.setRight(subheaderRect.left()-10);
     QStringList stringData = qvariant_cast<QStringList>(index.data());
     int myid = stringData[0].toInt();
     int mycount = stringData[1].toInt();
@@ -60,6 +60,16 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     QString myname = card.name;
 
     /////// PAINTER HERE DRAW FUNCS ONLY
+    // Get font width
+    QFontMetrics qm(font);
+
+    int width = qm.width(myname);
+    while (width > (headerRect.right() - headerRect.left()))
+    {
+        myname.remove(myname.size()-1,1);
+        width = qm.width(myname);
+    }
+
     //Draw background image of database
     QPixmap image = *(database->getPortrait(myid));
     painter->drawPixmap(QPoint(iconRect.left(), iconRect.top()) , image );
@@ -67,22 +77,24 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     costimage = costimage.scaled(20,20);
     painter->drawPixmap(QPoint(iconRect.left() + iconRect.width()/2 - costimage.width()/2, iconRect.top() + iconRect.height()/2-costimage.height()/2) , costimage);
 
-    //set color and draw font
+    //set color
     QColor color = QColor(255,255,255);
     if (mycount == 0)
         color = QColor(80,80,80);
     if (std::find(cardsInHand.begin(),cardsInHand.end(),myid)!= cardsInHand.end())
         color = QColor(200,200,0);
 
+    //draw text
     painter->setPen(color);
     painter->setFont(font);
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
     painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
 
+
     // draw if card effect active for row
     if (cardEffect[index.row()] > 0)
     {
-        int alpha = 220 - qAbs(20 - cardEffect[index.row()]) * 5;
+        int alpha = 220 - qAbs(25 - cardEffect[index.row()]) * 5;
         QPainterPath path;
         path.addRect(option.rect);
         color = QColor(200,200,0,alpha);

@@ -31,6 +31,7 @@ private:
     cardlist* playingDeck;
     std::vector<int> cardsInHand;
     int cardEffect[40];
+    QFont font;
 signals:
     void downClicked(int row);
     void minusClicked(int row);
