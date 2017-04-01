@@ -40,7 +40,7 @@ frmWindow::frmWindow(QWidget *parent) :
     last = false;
 
     // Set up some inits
-    setWindowTitle("Shadowverse Deck Tracker");
+    setWindowTitle("Shadowverse Deck Trackers");
     needSave = false;
     saveHash = 0;
     handleValid = false;
@@ -82,7 +82,7 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setHidden(true);
 
     // setup from start slot
-    setWindowTitle("Shadowverse Deck Tracker");
+    setWindowTitle("Shadowverse Deck Trackers");
 
     // set blinkers to 0
     memset(blinker, 0 , sizeof(blinker));
@@ -313,6 +313,10 @@ void frmWindow::createActions()
     LoadURLAction->setToolTip(tr("Load using shadowportal URL"));
     connect(LoadURLAction, &QAction::triggered, this, &frmWindow::slotLoadURL);
 
+    ColorAction = new QAction(tr("Change text color"), this);
+    LoadAction->setToolTip(tr("Change deck color to hex"));
+    connect(ColorAction, &QAction::triggered, this, &frmWindow::slotColor);
+
     SaveAsAction = new QAction(tr("&Save deck as..."), this);
     SaveAsAction->setToolTip(tr("Save current deck as"));
     connect(SaveAsAction, &QAction::triggered, this, &frmWindow::slotSaveAs);
@@ -360,6 +364,7 @@ void frmWindow::createMenus()
     DeckMenu->addAction(LoadAction);
     DeckMenu->addAction(LoadURLAction);
     DeckMenu->addAction(ClearDeckAction);
+    DeckMenu->addAction(ColorAction);
     DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
@@ -725,6 +730,15 @@ void frmWindow::slotHelp()
     proc->start("notepad.exe "+path);
 }
 
+void frmWindow::slotColor()
+{
+    //DO SOMETHING WITHC OLOR?
+
+    QString text = QInputDialog::getText(this, tr("Set New Color"),
+                                         tr("RGB Hex:"), QLineEdit::Normal,
+                                         tr("000000"));
+    delegate->setColor(text);
+}
 
 void frmWindow::setMyLayout()
 {
@@ -963,7 +977,6 @@ void frmWindow::slotSetBase()
     pr.setBase(base);
 }
 
-
 void frmWindow::replyFinished(QNetworkReply * reply)
 {
     if ( reply->error() != QNetworkReply::NoError ) {
@@ -986,6 +999,12 @@ void frmWindow::replyFinished(QNetworkReply * reply)
             if (lineLength != -1)
             {
                 QString newLine = QString(buf);
+
+
+                if (newLine.contains("2pick"))
+                {
+                    setWindowTitle("2pick");
+                }
 
                 if (newLine.contains("el-card-list-info-count"))
                 {

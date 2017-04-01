@@ -3,11 +3,11 @@
 #include <tlhelp32.h>
 
 
-DWORD_PTR ADDRESSES[5] = {0x1F40AC,0x240,0x340,0x3C,0x1A8};
+DWORD_PTR ADDRESSES[6] = {0xFFF8F4,0x110,0x568,0x2DC,0x6EC,0x38};
 DWORD_PTR HANDSIZE[7] = {0x0,0xAC,0x14,0x20,0x2c,0xc,0xc};
 DWORD_PTR DECKLIST[7] = {0x0,0xAC,0x14,0x20,0x2c,0xc,0x8};
 DWORD_PTR FIRSTCARD = 0x10;
-DWORD_PTR CARDNAME[3] = {0x30,0x8,0x30};
+DWORD_PTR CARDNAME[3] = {0x40,0x8,0x30};
 DWORD_PTR ZERO[1] = {0x0};
 
 DWORD_PTR FindPointer(int offset, HANDLE pHandle,DWORD_PTR baseaddr, DWORD_PTR offsets[]);
@@ -95,9 +95,9 @@ void ProcessReader::getBaseAddress()
 
     windowHandle = OpenProcess(PROCESS_VM_READ, false, pid);
 
-    std::string windowName = std::string("mono.dll") ;
+    std::string windowName = std::string("Shadowverse.exe") ;
     DWORD_PTR mono = dwGetModuleBaseAddress(pid, windowName.c_str());
-    baseAddress = FindPointer(5,windowHandle, mono, ADDRESSES);
+    baseAddress = FindPointer(6,windowHandle, mono, ADDRESSES);
 }
 
 DWORD_PTR dwGetModuleBaseAddress(DWORD dwProcID, const char *szModuleName)

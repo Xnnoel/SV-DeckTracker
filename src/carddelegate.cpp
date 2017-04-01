@@ -1,5 +1,6 @@
 #include "carddelegate.h"
 #include "card.h"
+#include "QRgba64"
 #include <QMouseEvent>
 #include <QDir>
 
@@ -9,6 +10,7 @@ CardDelegate::CardDelegate(QObject *parent)
 {
     font = QFont("Segoe UI",10);
     font.setWeight(QFont::DemiBold);
+    setColor("c8c800");
 }
 
 void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
@@ -17,6 +19,12 @@ void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
     database = db;
     playingDeck = cd;
     memset(cardEffect,0,sizeof(cardEffect));
+}
+
+void CardDelegate::setColor(QString str)
+{
+    if (!str.toInt())
+        myColor = QColor(QRgba64::fromRgba(str.left(2).toInt(nullptr, 16),str.mid(2,2).toInt(nullptr, 16),str.right(2).toInt(nullptr, 16),0xff));
 }
 
 void CardDelegate::setCardsInHand(std::vector<int> cards)
@@ -49,8 +57,8 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     iconRect.setRight(iconRect.left() + 32);
     headerRect.setLeft(iconRect.right());
     subheaderRect.setLeft(subheaderRect.right() - 20);
-
     headerRect.setRight(subheaderRect.left()-10);
+
     QStringList stringData = qvariant_cast<QStringList>(index.data());
     int myid = stringData[0].toInt();
     int mycount = stringData[1].toInt();
@@ -60,7 +68,7 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     QString myname = card.name;
 
     /////// PAINTER HERE DRAW FUNCS ONLY
-    // Get font width
+    // Get font width and shrink text
     QFontMetrics qm(font);
 
     int width = qm.width(myname);
@@ -82,13 +90,14 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     if (mycount == 0)
         color = QColor(80,80,80);
     if (std::find(cardsInHand.begin(),cardsInHand.end(),myid)!= cardsInHand.end())
-        color = QColor(200,200,0);
+        color = myColor;
 
     //draw text
     painter->setPen(color);
     painter->setFont(font);
     painter->drawText(headerRect.left(), headerRect.top() + headerRect.height()/2 + font.pointSize()/2,myname);
-    painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
+    if (mycount > 0)
+        painter->drawText(subheaderRect.left(), subheaderRect.top() + subheaderRect.height()/2 + font.pointSize()/2, QString::number(mycount));
 
 
     // draw if card effect active for row
@@ -97,8 +106,9 @@ void CardDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         int alpha = 220 - qAbs(25 - cardEffect[index.row()]) * 5;
         QPainterPath path;
         path.addRect(option.rect);
-        color = QColor(200,200,0,alpha);
-        painter->fillPath(path, color);
+        QColor temp(myColor);
+        temp.setAlpha(alpha);
+        painter->fillPath(path, temp);
         painter->drawPath(path);
     }
 

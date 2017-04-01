@@ -17,7 +17,11 @@ void svDatabase::addCard(int id, Card card){
     cardMap.insert(id,card);
 
     QDir dir(".");
-    QPixmap image( dir.absolutePath() + "/data/Portraits/" + QString::number(id) + ".jpg");
+    QString path = dir.absolutePath() + "/data/Portraits/" + QString::number(id) + ".jpg";
+
+    QPixmap image( path);
+    if (image.isNull())
+        image.load(dir.absolutePath() + "/data/Portraits/NoImage.jpg");
     portraitMap.insert(id, image);
     cardID.push_back(id);
 }
@@ -83,7 +87,6 @@ void svDatabase::load(){
         QPixmap image( dir.absolutePath() + "/data/Cost/cost_" + QString::number(i) + ".png");
         costMap.insert(i, image);
     }
-
 }
 
 void svDatabase::save()

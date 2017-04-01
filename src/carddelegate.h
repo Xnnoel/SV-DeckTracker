@@ -23,6 +23,8 @@ public:
                         const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index);
     void blinkEffect(int row, int amount);
+    void setColor(QString rgb);
+
 
     enum datarole {COST = Qt::UserRole + 100,ID = Qt::UserRole+101,COUNT = Qt::UserRole+102,NAME = Qt::UserRole+103};
     bool editMode = false;
@@ -32,6 +34,7 @@ private:
     std::vector<int> cardsInHand;
     int cardEffect[40];
     QFont font;
+    QColor myColor;
 signals:
     void downClicked(int row);
     void minusClicked(int row);

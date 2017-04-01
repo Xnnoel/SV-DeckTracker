@@ -31,8 +31,7 @@ void cardlist::addCard(int id)
     {
         if (cardsInDeck[i] == id)
         {
-            if (countInDeck[i] < 3)
-                countInDeck[i]++;
+            countInDeck[i]++;
             return;
         }
     }
