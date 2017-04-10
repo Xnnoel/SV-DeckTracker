@@ -42,6 +42,7 @@ public slots:
     void updateCount(int);
     void refreshList(int);
     void replyFinished(QNetworkReply*);
+    void replyCodeFinished(QNetworkReply*);
 
 public:
     explicit frmWindow(QWidget *parent = 0);
@@ -80,7 +81,6 @@ private:
     double saveHash;
 
     void closeEvent(QCloseEvent *event);
-
     QMap<QString, QString> settingsMap;
 
     // Menu stuff

@@ -309,7 +309,7 @@ void frmWindow::createActions()
     LoadAction->setToolTip(tr("Load a deck"));
     connect(LoadAction, &QAction::triggered, this, &frmWindow::slotLoad);
 
-    LoadURLAction = new QAction(tr("&Load from url"), this);
+    LoadURLAction = new QAction(tr("&Load using deck code"), this);
     LoadURLAction->setToolTip(tr("Load using shadowportal URL"));
     connect(LoadURLAction, &QAction::triggered, this, &frmWindow::slotLoadURL);
 
@@ -597,32 +597,65 @@ void frmWindow::slotLoadURL()
 
     bool ok;
     QString text = QInputDialog::getText(this, tr(""),
-                                    tr("Shadowverse Portal link:"), QLineEdit::Normal,
+                                    tr("Deck code:"), QLineEdit::Normal,
                                     "", &ok,Qt::WindowSystemMenuHint | Qt::WindowTitleHint);
 
     if (ok && !text.isEmpty())
     {
-        if (text.contains("shadowverse-portal.com/deckbuilder/create/"))
+        if (text.size() == 4)
         {
-            QStringRef urlHash(&text,57,text.length()-57);
-            text = "https://shadowverse-portal.com/deck/" + urlHash.toString();
+            // probably a deck code
+            QNetworkAccessManager *managertemp = new QNetworkAccessManager(this);
+            connect(managertemp, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyCodeFinished(QNetworkReply*)));
+            QString texttwo = "https://shadowverse-portal.com/api/v1/deck/import?format=json&deck_code=" + text;
+            QUrl urltemp(texttwo);
+            QNetworkRequest reqTemp(urltemp);
+            managertemp->get(reqTemp);
         }
-
-        QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-        connect(manager, SIGNAL(finished(QNetworkReply*)),
-                this, SLOT(replyFinished(QNetworkReply*)));
-        QUrl url(text);
-        QNetworkRequest req(url);
-        manager->get(req);
-
-        //Create a dialog box while building deck (prevent user from touching)
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::NoIcon, "", "Building Deck...");
-        msgBox->setStandardButtons(QMessageBox::NoButton);
-        msgBox->setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowTitleHint);
-        connect(this, SIGNAL(signalGenerateDeck()), msgBox, SLOT(reject()));
-        msgBox->exec();
+        else
+        {
+            QMessageBox::StandardButton errorMessage;
+            errorMessage = QMessageBox::information(this, tr(""),
+                                             tr("An error has occured. Please provide a 4 character code."));
+        }
     }
     needSave = true;
+}
+
+void frmWindow::replyCodeFinished(QNetworkReply* reply)
+{
+    if(reply->error() == QNetworkReply::NoError) {
+            QString strReply = (QString)reply->readAll();
+
+            QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
+
+            QJsonObject jsonObject = jsonResponse.object();
+
+            QJsonObject jsonData = jsonObject["data"].toObject();
+
+            QString hashcode = jsonData["hash"].toString();
+
+            QString text = "https://shadowverse-portal.com/deck/" + hashcode;
+
+            QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+            connect(manager, SIGNAL(finished(QNetworkReply*)),
+                    this, SLOT(replyFinished(QNetworkReply*)));
+            QUrl url(text);
+            QNetworkRequest req(url);
+            manager->get(req);
+
+            //Create a dialog box while building deck (prevent user from touching)
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::NoIcon, "", "Building Deck...");
+            msgBox->setStandardButtons(QMessageBox::NoButton);
+            msgBox->setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+            connect(this, SIGNAL(signalGenerateDeck()), msgBox, SLOT(reject()));
+            msgBox->exec();
+
+        } else {
+            qDebug() << "ERROR";
+        }
+
+        delete reply;
 }
 
 void frmWindow::slotSaveAs()
@@ -982,7 +1015,7 @@ void frmWindow::replyFinished(QNetworkReply * reply)
     if ( reply->error() != QNetworkReply::NoError ) {
         QMessageBox::StandardButton errorMessage;
         errorMessage = QMessageBox::information(this, tr(""),
-                                         tr("An error has occured. Please provide a proper URL."));
+                                         tr("An error has occured. Please provide a proper code."));
         emit signalGenerateDeck();
     }
     else
@@ -1031,7 +1064,7 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         {
             QMessageBox::StandardButton errorMessage;
             errorMessage = QMessageBox::information(this, tr(""),
-                                             tr("No cards found. Make sure you're not in the deckbuilder."));
+                                             tr("No cards found. Make sure you're providing a proper code."));
             emit signalGenerateDeck();
             return;
         }
@@ -1055,6 +1088,7 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         loadDeck(model);
         emit signalGenerateDeck();
     }
+    delete reply;
 }
 
 void frmWindow::closeEvent(QCloseEvent *event)
