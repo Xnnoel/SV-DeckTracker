@@ -1,11 +1,11 @@
 # SV-DeckTracker
 An automatic deck tracker for Shadowverse on Steam
 
-##Intro
+## Intro
 
-SV-DeckTracker is an automatic deck tracker for Shadowverse. It shows what cards are in your hand and what cards are left in the deck. Still fairly buggy at the moment, but works at the least. Only tested for windows at the moment.
+SV-DeckTracker is an automatic deck tracker for Shadowverse. It shows what cards are in your hand and what cards are left in the deck. Still fairly buggy at the moment, but works at the least. Only tested for windows at the moment. Please read the help text for all your questions!
 
-##Compiling
+## Compiling
 - QT 5.7
 - Windows functions
 
