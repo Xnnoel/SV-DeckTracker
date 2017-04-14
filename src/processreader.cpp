@@ -82,7 +82,7 @@ bool ProcessReader::isValid()
         DWORD_PTR baseValid = FindPointer(1,windowHandle,baseAddress, ZERO );
         return (handSize > 9?false:true && (baseValid != 0));
     }
-    return 0;
+    return false;
 }
 
 void ProcessReader::getBaseAddress()

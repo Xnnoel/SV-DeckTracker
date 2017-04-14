@@ -40,7 +40,7 @@ frmWindow::frmWindow(QWidget *parent) :
     last = false;
 
     // Set up some inits
-    setWindowTitle("Shadowverse Deck Trackers");
+    setWindowTitle("Shadowverse Deck Tracker");
     needSave = false;
     saveHash = 0;
     handleValid = false;
@@ -82,7 +82,7 @@ frmWindow::frmWindow(QWidget *parent) :
     EditDeckList->setHidden(true);
 
     // setup from start slot
-    setWindowTitle("Shadowverse Deck Trackers");
+    setWindowTitle("Shadowverse Deck Tracker");
 
     // set blinkers to 0
     memset(blinker, 0 , sizeof(blinker));
@@ -172,92 +172,92 @@ void frmWindow::updateCount(int cardsize)
 
 void frmWindow::update()
 {
-    /// In the update function, we will continous loop to try
-    /// and guess what state the program is in. Mainly want to
-    /// see if a game had started or not.
-    //otherwise check for card
-    if (1)
+    /// In the update function, we will
+    /// guess what state the program is in.
+    bool valid = pr.isValid();
+    std::vector<int> nums = pr.update();
+
+    if (valid)
     {
-
-        bool valid = pr.isValid();
-        std::vector<int> nums = pr.update();
-
-        if (valid)
+        if (last != valid)
         {
-            if (last != valid)
-            {
-                // do initial set up here
-                // reset log? reset list
-                turnLog->append("******************\nStarting Game\n******************\n");
-                memset(blinker, 0 , sizeof(blinker));
-                prevHand.clear();
-                loadDeck(model);
-            }
-
-            // compare to prev hand
-            int indexA = 0,indexB = 0;
-            std::vector<int> playedCards;
-            while (indexA < prevHand.size() && indexB < nums.size())
-            {
-                if (prevHand[indexA] == nums[indexB])
-                    indexB++;
-                else
-                    playedCards.push_back(prevHand[indexA]);
-                indexA++;
-            }
-
-            //Played cards
-            int i;
-            for (i = indexA; i < prevHand.size();++i)
-            {
-                playedCards.push_back(prevHand[i]);
-            }
-
-            // For any cards played this turn
-            for (i = 0; i < playedCards.size(); i++)
-            {
-                model->blink(playingDeck.getPosition(playedCards[i]));
-            }
-
-            // Cards added, all the last ones
-            for (i = indexB; i < nums.size();++i)
-            {
-                if (playingDeck.cardExists(nums[i]))
-                {
-                    int rownum = playingDeck.getPosition(nums[i]);
-                    model->subCard(nums[i]);
-                    blinker[rownum] = 40;
-                    delegate->blinkEffect(rownum,0);
-                }
-                QString cardname = cardDatabase.getCard(nums[i]).name;
-                turnLog->append("Drew " + cardname + '\n');
-            }
-
-            // blinker effect
-            for (i = 0; i < playingDeck.getDeckSize(); i++)
-            {
-                if (blinker[i] > 0)
-                {
-                    blinker[i]--;
-                    delegate->blinkEffect(i, blinker[i]);
-                    model->blink(i);
-                }
-            }
-
-            prevHand = nums;
-
-            delegate->setCardsInHand(nums);
+            // do initial set up here
+            // reset log? reset list
+            turnLog->append("******************\nStarting Game\n******************\n");
+            memset(blinker, 0 , sizeof(blinker));
+            prevHand.clear();
+            loadDeck(model);
         }
 
-        last = valid;
+        // compare to prev hand
+        int indexA = 0,indexB = 0;
+        std::vector<int> playedCards;
+        while (indexA < prevHand.size() && indexB < nums.size())
+        {
+            if (prevHand[indexA] == nums[indexB])
+                indexB++;
+            else
+                playedCards.push_back(prevHand[indexA]);
+            indexA++;
+        }
 
-        // TODO: Fix counds bounced back counting as cards drawn
+        //Played cards
+        int i;
+        for (i = indexA; i < prevHand.size();++i)
+        {
+            playedCards.push_back(prevHand[i]);
+        }
+
+        // For any cards played this turn
+        for (i = 0; i < playedCards.size(); i++)
+        {
+            model->blink(playingDeck.getPosition(playedCards[i]));
+        }
+
+        // Cards added, all the last ones
+        for (i = indexB; i < nums.size();++i)
+        {
+            if (playingDeck.cardExists(nums[i]))
+            {
+                int rownum = playingDeck.getPosition(nums[i]);
+                model->subCard(nums[i]);
+                blinker[rownum] = 40;
+                delegate->blinkEffect(rownum,0);
+            }
+            QString cardname = cardDatabase.getCard(nums[i]).name;
+            turnLog->append("Drew " + cardname + '\n');
+        }
+
+        // blinker effect
+        for (i = 0; i < playingDeck.getDeckSize(); i++)
+        {
+            if (blinker[i] > 0)
+            {
+                blinker[i]--;
+                delegate->blinkEffect(i, blinker[i]);
+                model->blink(i);
+            }
+        }
+
+        prevHand = nums;
+
+        delegate->setCardsInHand(nums);
     }
     else
     {
-        handleValid = false;
-        setWindowTitle("Can't Find Window...");
+        // If we reach here then game has ended
+        if (last != valid)
+        {
+            turnLog->append("******************\nGame Ended\n******************\n");
+            prevHand.clear();
+            loadDeck(model);
+        }
     }
+
+    last = valid;
+
+    // TODO: Fix counds bounced back counting as cards drawn
+
 }
 
 std::wstring s2ws(const std::string& s)
@@ -313,10 +313,6 @@ void frmWindow::createActions()
     LoadURLAction->setToolTip(tr("Load using shadowportal URL"));
     connect(LoadURLAction, &QAction::triggered, this, &frmWindow::slotLoadURL);
 
-    ColorAction = new QAction(tr("Change text color"), this);
-    LoadAction->setToolTip(tr("Change deck color to hex"));
-    connect(ColorAction, &QAction::triggered, this, &frmWindow::slotColor);
-
     SaveAsAction = new QAction(tr("&Save deck as..."), this);
     SaveAsAction->setToolTip(tr("Save current deck as"));
     connect(SaveAsAction, &QAction::triggered, this, &frmWindow::slotSaveAs);
@@ -364,7 +360,6 @@ void frmWindow::createMenus()
     DeckMenu->addAction(LoadAction);
     DeckMenu->addAction(LoadURLAction);
     DeckMenu->addAction(ClearDeckAction);
-    DeckMenu->addAction(ColorAction);
     DeckMenu->addSeparator();
     DeckMenu->addAction(SaveAction);
     DeckMenu->addAction(SaveAsAction);
@@ -749,7 +744,7 @@ void frmWindow::slotAbout()
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this, tr("About SV Deck Tracker"),
                                      tr("Shadowverse Deck Tracker\n"
-                                        "Version 0.8.5\n"
+                                        "Version 0.8.6\n"
                                         "\n"
                                         "For any comments or questions,\n"
                                         "Send an email to xnnoelx@gmail.com"));
@@ -761,16 +756,6 @@ void frmWindow::slotHelp()
     QProcess *proc = new QProcess(this);
     QString path = dir.absolutePath() + "/data/help.txt";
     proc->start("notepad.exe "+path);
-}
-
-void frmWindow::slotColor()
-{
-    //DO SOMETHING WITHC OLOR?
-
-    QString text = QInputDialog::getText(this, tr("Set New Color"),
-                                         tr("RGB Hex:"), QLineEdit::Normal,
-                                         tr("000000"));
-    delegate->setColor(text);
 }
 
 void frmWindow::setMyLayout()
@@ -1036,7 +1021,7 @@ void frmWindow::replyFinished(QNetworkReply * reply)
 
                 if (newLine.contains("2pick"))
                 {
-                    setWindowTitle("2pick");
+                    //setWindowTitle("2pick");
                 }
 
                 if (newLine.contains("el-card-list-info-count"))
