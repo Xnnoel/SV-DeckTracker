@@ -43,6 +43,7 @@ public slots:
     void refreshList(int);
     void replyFinished(QNetworkReply*);
     void replyCodeFinished(QNetworkReply*);
+    void clickedRow(int);
 
 public:
     explicit frmWindow(QWidget *parent = 0);

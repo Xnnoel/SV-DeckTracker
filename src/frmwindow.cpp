@@ -59,6 +59,8 @@ frmWindow::frmWindow(QWidget *parent) :
 
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
     connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
+    connect(delegate, SIGNAL(downClicked(int)), this, SLOT(clickedRow(int)));
+    connect(delegate, SIGNAL(upClicked(int)), this, SLOT(clickedRow(int)));
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
     PlayingDeckList->setModel(model);
@@ -160,6 +162,9 @@ void frmWindow::loadDeck(SVListModel* model)
     int decksize = playingDeck.getDeckSize();
 
     updateCount(decksize);
+
+    //reset blinker to 0
+    memset(blinker, 0 , sizeof(blinker));
 
 }
 
@@ -755,7 +760,7 @@ void frmWindow::slotHelp()
 {
     //do nothing for now
     QProcess *proc = new QProcess(this);
-    QString path = dir.absolutePath() + "/data/help.txt";
+    QString path = dir.absolutePath() + "/README.txt";
     proc->start("notepad.exe "+path);
 }
 
@@ -1075,6 +1080,12 @@ void frmWindow::replyFinished(QNetworkReply * reply)
         emit signalGenerateDeck();
     }
     delete reply;
+}
+
+void frmWindow::clickedRow(int row)
+{
+    blinker[row] = 40;
+    delegate->blinkEffect(row,0);
 }
 
 void frmWindow::closeEvent(QCloseEvent *event)
