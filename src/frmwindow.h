@@ -73,11 +73,15 @@ private slots:
     void slotEditMode();
     void slotLoadEdit(int);
 
+    void setDeckListFocus();
+    void onApplicationFocusChanged(QWidget* old, QWidget* now);
+
 private:
     Ui::frmWindow *ui;
     bool forceUpdateHash;
 
     bool needSave;
+    bool deckFocused = false;
     double saveHash;
 
     void closeEvent(QCloseEvent *event);

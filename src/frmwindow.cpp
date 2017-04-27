@@ -80,6 +80,10 @@ frmWindow::frmWindow(QWidget *parent) :
     connect(model, SIGNAL(deckChanged(int)), this, SLOT(refreshList(int)));
     connect(editmodel, SIGNAL(deckChanged(int)), this, SLOT(refreshList(int)));
 
+    // Get focus window
+    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)),
+        this, SLOT(onApplicationFocusChanged(QWidget*,QWidget*)));
+
     EditDeckList->setModel(editmodel);
     EditDeckList->setItemDelegate(editdelegate);
     EditDeckList->setHidden(true);
@@ -1088,8 +1092,28 @@ void frmWindow::clickedRow(int row)
     delegate->blinkEffect(row,0);
 }
 
+void frmWindow::onApplicationFocusChanged(QWidget *old, QWidget *now)
+{
+    if (PlayingDeckList == now){
+        qDebug("focus IN");
+        deckFocused = true;
+        QTimer::singleShot(100,this, SLOT(setDeckListFocus()));
+    }
+    else if (old == PlayingDeckList){
+        qDebug("focus OUT");
+        deckFocused = false;
+        QTimer::singleShot(100,this, SLOT(setDeckListFocus()));
+    }
+}
+
+void frmWindow::setDeckListFocus()
+{
+    delegate->deckFocused = deckFocused;
+}
+
 void frmWindow::closeEvent(QCloseEvent *event)
 {
+
     if (needSave)
     {
         //do some slot

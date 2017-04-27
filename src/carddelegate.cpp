@@ -132,7 +132,7 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
     // Emit a signal when the icon is clicked
     if (!editMode)
     {
-        if(event->type() == QEvent::MouseButtonRelease)
+        if(deckFocused && event->type() == QEvent::MouseButtonRelease)
         {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
@@ -153,6 +153,7 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
             if(option.rect.contains(mouseEvent->pos()))
             {
                 emit minusClicked(index.row());
+
             }
         }
     }

@@ -28,6 +28,7 @@ public:
 
     enum datarole {COST = Qt::UserRole + 100,ID = Qt::UserRole+101,COUNT = Qt::UserRole+102,NAME = Qt::UserRole+103};
     bool editMode = false;
+    bool deckFocused = false;
 private:
     svDatabase *database;
     cardlist* playingDeck;
