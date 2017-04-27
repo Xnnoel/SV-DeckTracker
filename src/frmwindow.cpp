@@ -58,6 +58,7 @@ frmWindow::frmWindow(QWidget *parent) :
     delegate->editMode = false;
 
     connect(delegate, SIGNAL(downClicked(int)), model, SLOT(slotDown(int)));
+    connect(delegate, SIGNAL(upClicked(int)), model, SLOT(slotUp(int)));
     connect(model, SIGNAL(countChanged(int)), this, SLOT(updateCount(int)));
 
     PlayingDeckList->setModel(model);

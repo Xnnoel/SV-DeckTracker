@@ -135,9 +135,13 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
         if(event->type() == QEvent::MouseButtonRelease)
         {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
             if(option.rect.contains(mouseEvent->pos()))
             {
-                emit downClicked(index.row());
+                if (mouseEvent->button() == Qt::LeftButton)
+                    emit downClicked(index.row());
+                else if (mouseEvent->button() == Qt::RightButton)
+                    emit upClicked(index.row());
             }
         }
     }
@@ -150,7 +154,6 @@ bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleO
             {
                 emit minusClicked(index.row());
             }
-
         }
     }
     return false;

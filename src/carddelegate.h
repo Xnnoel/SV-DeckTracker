@@ -38,6 +38,7 @@ private:
 signals:
     void downClicked(int row);
     void minusClicked(int row);
+    void upClicked(int row);
 };
 
 #endif // CARDDELEGATE_H
