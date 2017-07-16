@@ -12,6 +12,7 @@ public:
     std::vector<int> update();
     bool isValid();
     void setBase(int base);
+    DWORD_PTR getBase(){return baseAddress;}
 private:
     void getBaseAddress();
     std::vector<int> getHand(int size);

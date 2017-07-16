@@ -29,11 +29,14 @@ public:
     enum datarole {COST = Qt::UserRole + 100,ID = Qt::UserRole+101,COUNT = Qt::UserRole+102,NAME = Qt::UserRole+103};
     bool editMode = false;
     bool deckFocused = false;
+    int getCardHeight(){return cardHeight;}
 private:
     svDatabase *database;
     cardlist* playingDeck;
     std::vector<int> cardsInHand;
     int cardEffect[40];
+    int cardHeight; // set from options plz
+    int cardWidth;
     QFont font;
     QColor myColor;
 signals:

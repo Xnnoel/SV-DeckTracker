@@ -2,6 +2,7 @@
 #include "QJsonDocument"
 #include "QJsonObject"
 #include "QJsonArray"
+#include "QVariantMap"
 #include "QFile"
 #include "QDir"
 
@@ -65,14 +66,18 @@ void svDatabase::load(){
     QByteArray data = loadFile.readAll();
     QJsonDocument loadDoc(QJsonDocument::fromJson(data));
     QJsonObject database = loadDoc.object();
-    QJsonArray cards = database["Cards"].toArray();
+    QJsonObject card1 = database["data"].toObject();
+
+    QJsonArray cards = card1["cards"].toArray();
+
     for (int cardIndex = 0; cardIndex < cards.size(); cardIndex++) {
             Card card;
             QJsonObject cardObject = cards[cardIndex].toObject();
 
-            card.ID = cardObject["ID"].toInt();
-            card.manaCost = cardObject["Cost"].toInt();
-            card.name = cardObject["Name"].toString();
+            card.clan = cardObject["clan"].toInt();
+            card.ID = cardObject["card_id"].toInt();
+            card.manaCost = cardObject["cost"].toInt();
+            card.name = cardObject["card_name"].toString();
 
             addCard(card.ID, card);
         }
@@ -91,6 +96,7 @@ void svDatabase::load(){
 
 void svDatabase::save()
 {
+    /*
     // Saves database into json
     QDir dir(".");
     QString filename= dir.absolutePath() + "/data/database.json";
@@ -122,5 +128,5 @@ void svDatabase::save()
     QJsonDocument saveDoc(gameObject);
     saveFile.write(saveDoc.toJson());
     saveFile.close();
-
+*/
 }

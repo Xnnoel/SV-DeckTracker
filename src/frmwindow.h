@@ -47,6 +47,7 @@ public slots:
 
 public:
     explicit frmWindow(QWidget *parent = 0);
+    static QMap<QString, QString> settingsMap;
     ~frmWindow();
 
 private slots:
@@ -85,7 +86,7 @@ private:
     double saveHash;
 
     void closeEvent(QCloseEvent *event);
-    QMap<QString, QString> settingsMap;
+
 
     // Menu stuff
     void createActions();

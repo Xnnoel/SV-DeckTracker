@@ -1,3 +1,4 @@
+#include "frmwindow.h"
 #include "carddelegate.h"
 #include "card.h"
 #include "QRgba64"
@@ -10,7 +11,11 @@ CardDelegate::CardDelegate(QObject *parent)
 {
     font = QFont("Segoe UI",10);
     font.setWeight(QFont::DemiBold);
-    setColor("c8c800");
+
+    cardHeight = frmWindow::settingsMap["cardHeight"].toInt();
+    cardWidth = frmWindow::settingsMap["cardWidth"].toInt();
+    setColor(frmWindow::settingsMap["cardColor"]);
+
 }
 
 void CardDelegate::setPointers(svDatabase *db, cardlist * cd)
@@ -124,7 +129,7 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem &  option ,
     int myid = stringData[0].toInt();
 
     QPixmap hi= *(database->getPortrait(myid));
-    return(QSize(option.rect.width(),hi.height()));
+    return(QSize(cardWidth, cardHeight));
 }
 
 bool CardDelegate::editorEvent(QEvent *event, QAbstractItemModel*, const QStyleOptionViewItem &option, const QModelIndex &index)

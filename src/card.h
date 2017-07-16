@@ -6,6 +6,7 @@ struct Card{
     QString name;       //card name to display
     int manaCost;
     int ID;
+    int clan;
 };
 
 #endif // CARD_H

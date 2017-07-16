@@ -23,12 +23,15 @@
 #include <Windows.h>
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 #pragma comment(lib, "user32.lib")
 
 #define WINWIDTH 350
 #define EDITWINWIDTH 500
 #define PORTRAITHEIGHT 35
+
+QMap<QString, QString> frmWindow::settingsMap;
 
 frmWindow::frmWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -44,6 +47,25 @@ frmWindow::frmWindow(QWidget *parent) :
     needSave = false;
     saveHash = 0;
     handleValid = false;
+
+    // Load in application settings
+   QFile file(dir.absolutePath() + "/data/settings.ini");
+   if (!file.open(QIODevice::ReadOnly)){
+       QMessageBox::StandardButton errorMessage;
+       errorMessage = QMessageBox::information(this, tr(""),
+                                        tr("Couldn't find settings.ini."));
+       return;
+   }
+   QTextStream in(&file);
+
+   while (!in.atEnd()) {
+       QString line = in.readLine();
+       QStringList splitLines = line.split("=");
+       settingsMap.insert(splitLines[0],splitLines[1]);
+   }
+   file.close();
+
+    // TODO: Load options from settings and set delegate options (card color, window size)
 
     //add menubar?
     setMyLayout();
@@ -90,6 +112,7 @@ frmWindow::frmWindow(QWidget *parent) :
 
     // setup from start slot
     setWindowTitle("Shadowverse Deck Tracker");
+
 
     // set blinkers to 0
     memset(blinker, 0 , sizeof(blinker));
@@ -157,7 +180,8 @@ void frmWindow::loadDeck(SVListModel* model)
     }
     setFixedWidth(WINWIDTH);
 
-    int listsize = playingDeck.cardsInDeck.size() * PORTRAITHEIGHT + 4;
+    int listsize = playingDeck.cardsInDeck.size() * delegate->getCardHeight() + 4;  // need 4 so no scroll
+
     PlayingDeckList->setFixedHeight(std::max(listsize,0));
     PlayingDeckList->setSizePolicy(QSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored));
     setFixedHeight(400);
@@ -397,7 +421,7 @@ void frmWindow::slotElf()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(0);
+    playingDeck.setClass(1);
     loadDeck(model);
     createEditor(); //spawns an editor on the right side
     slotLoadEdit(0);
@@ -417,7 +441,7 @@ void frmWindow::slotRoyal()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(1);
+    playingDeck.setClass(2);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -437,7 +461,7 @@ void frmWindow::slotWitch()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(2);
+    playingDeck.setClass(3);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -457,7 +481,7 @@ void frmWindow::slotDragon()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(3);
+    playingDeck.setClass(4);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -477,7 +501,7 @@ void frmWindow::slotNecro()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(4);
+    playingDeck.setClass(5);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -497,7 +521,7 @@ void frmWindow::slotVampire()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(5);
+    playingDeck.setClass(6);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -517,7 +541,7 @@ void frmWindow::slotBishop()
         }
     }
     playingDeck.clear();
-    playingDeck.setClass(6);
+    playingDeck.setClass(7);
     loadDeck(model);
     createEditor();
     slotLoadEdit(0);
@@ -790,7 +814,7 @@ void frmWindow::setMyLayout()
     DeckNameEdit->setPlaceholderText(tr(" Deck name here"));
 
     PlayingDeckList = new QListView();
-    PlayingDeckList->setFixedWidth(230);
+    PlayingDeckList->setFixedWidth(settingsMap["cardWidth"].toInt()+4);
     PlayingDeckList->setWindowTitle("Deck List");
     PlayingDeckList->setWindowFlags(Qt::WindowTitleHint);
 
@@ -868,101 +892,8 @@ void frmWindow::slotLoadEdit(int)
 
     int subClass = playingDeck.getClass();
 
+    //TODO: load decklist using class cards
 
-    if (neutralBox->isChecked())
-    {
-        //Load nuetrals into edit
-        for (int i = 0; i < 8; i ++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-
-        for (int i = 85; i < 109; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-
-        for (int i = 403; i < 414; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-
-        for (int i = 512; i < 526; i++)
-            editmodel->addCard(cardDatabase.cardID[i]);
-    }
-
-    if (classBox->isChecked())
-    {
-        switch(subClass)
-        {
-        case 0: //elf
-            for (int i = 8; i < 19; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 109; i < 151; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 414; i < 428; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 526; i < 539; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 1: //royal
-            for (int i = 19; i < 30; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 151; i < 193; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 428; i < 442; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 539; i < 552; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 2: //witch
-            for (int i = 30; i < 41; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 193; i < 235; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 442; i < 456; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 552; i < 565; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 3: //dragon
-            for (int i = 41; i < 52; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 235; i < 277; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 456; i < 470; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 565; i < 578; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 4: //necro
-            for (int i = 52; i < 63; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 277; i < 319; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 470; i < 484; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 578; i < 591; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 5: //blood
-            for (int i = 63; i < 74; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 319; i < 361; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 484; i < 498; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 591; i < 604; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        case 6: //bishop
-            for (int i = 74; i < 85; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 361; i < 403; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 498; i < 512; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-            for (int i = 604; i < 617; i++)
-                editmodel->addCard(cardDatabase.cardID[i]);
-        break;
-        }
-    }
-    //sort editmodel?
-    editmodel->sortList();
     EditDeckList->setHidden(false);
 }
 
@@ -996,11 +927,15 @@ void frmWindow::slotEditMode()
 
 void frmWindow::slotSetBase()
 {
-    // create a window to take in a string
+    // Set up old base pointer in hex
+    int temp = pr.getBase();
+    std::stringstream stream;
+    stream << std::hex << temp;
+    std::string result( stream.str() );
 
     QString text = QInputDialog::getText(this, tr("Set Base"),
                                          tr("Hex:"), QLineEdit::Normal,
-                                         tr("00000000"));
+                                         tr(result.c_str()));
     int base = text.toInt(nullptr, 16);
     pr.setBase(base);
 }
@@ -1095,12 +1030,10 @@ void frmWindow::clickedRow(int row)
 void frmWindow::onApplicationFocusChanged(QWidget *old, QWidget *now)
 {
     if (PlayingDeckList == now){
-        qDebug("focus IN");
         deckFocused = true;
         QTimer::singleShot(100,this, SLOT(setDeckListFocus()));
     }
     else if (old == PlayingDeckList){
-        qDebug("focus OUT");
         deckFocused = false;
         QTimer::singleShot(100,this, SLOT(setDeckListFocus()));
     }
