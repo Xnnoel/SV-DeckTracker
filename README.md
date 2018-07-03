@@ -1,4 +1,7 @@
-# SV-DeckTracker
+## Update 
+This no longer works as of Jan 2018. I'm leaving it here in case someone wants to pick the project up later, since I no longer have the time to work on it. 
+
+## SV-DeckTracker
 An automatic deck tracker for Shadowverse on Steam
 
 ## Intro
